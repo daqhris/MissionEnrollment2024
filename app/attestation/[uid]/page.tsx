@@ -85,26 +85,6 @@ const StatementText = tw.p`
   text-gray-300
 `;
 
-const ResponseWrapper = tw.div`
-  mt-6 
-  p-6 
-  bg-gray-700 
-  rounded-lg 
-  text-white
-`;
-
-const ResponseValidity = tw.p`
-  font-semibold 
-  text-2xl 
-  mb-4 
-  first-letter:uppercase
-`;
-
-const ResponseCritique = tw.p`
-  text-gray-300 
-  leading-relaxed
-`;
-
 const Disclaimer = tw.p`
   text-xs 
   text-gray-400 
@@ -145,7 +125,7 @@ export default function AttestationPage({ params }: AttestationPageProps) {
     );
   }
 
-  const schemaEncoder = new SchemaEncoder("string requestedTextToVerify,string model,string validity,string critique");
+  const schemaEncoder = new SchemaEncoder("string requestedTextToVerify");
 
   const decoded = schemaEncoder.decodeData(attestation.sig.message.data);
 
@@ -168,29 +148,23 @@ export default function AttestationPage({ params }: AttestationPageProps) {
       <ContentWrapper>
         <Card>
           <Title>
-            Is that <TitleSpan>TRUE</TitleSpan>?
+            Attested <TitleSpan>Statement</TitleSpan>
           </Title>
           <div className="space-y-4">
             <StatementWrapper>
-              <SectionTitle>Your statement:</SectionTitle>
+              <SectionTitle>Attested Statement:</SectionTitle>
               <StatementText>{decoded[0].value.value as string}</StatementText>
             </StatementWrapper>
           </div>
-
-          <ResponseWrapper>
-            <SectionTitle>LLM Says:</SectionTitle>
-            <ResponseValidity>{decoded[2].value.value as string}</ResponseValidity>
-            <ResponseCritique>{decoded[3].value.value as string}</ResponseCritique>
-          </ResponseWrapper>
 
           <div className="mt-6">
             <AttestationCard pkg={attestation} />
           </div>
 
           <Disclaimer>
-            *This is an example open-source repo using EAS & OpenAI.
+            *This is an example open-source repo using EAS.
             <br />
-            Results are for example purposes only.
+            Attestations are for demonstration purposes only.
           </Disclaimer>
         </Card>
       </ContentWrapper>
