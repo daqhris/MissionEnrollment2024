@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       signer
     );
 
-    const encodedOffchainAttestation = await offchain.packOffchainAttestation(offchainAttestation);
+    const encodedOffchainAttestation = offchainAttestation;
 
     return res.status(200).json({ result: encodedOffchainAttestation });
   } catch (error) {
