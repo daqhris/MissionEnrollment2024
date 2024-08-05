@@ -163,7 +163,7 @@ const Disclaimer = tw.p`
   text-center
 `;
 
-const TruthVerifier = () => {
+const MissionEnrollment = () => {
   const [statement, setStatement] = useState("");
   const [result, setResult] = useState<AttestationShareablePackageObject | null>(null);
   const [response, setResponse] = useState<{ critique: string; validity: Validity } | null>(null);
@@ -183,12 +183,12 @@ const TruthVerifier = () => {
     setResult(null);
 
     try {
-      const response = await fetch("/api/verify-truth", {
+      const response = await fetch("/api/mission-enrollment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ statement }),
+        body: JSON.stringify({ missionProposal: statement }),
       });
 
       if (!response.ok) {
@@ -202,7 +202,7 @@ const TruthVerifier = () => {
       setResult(pkg);
 
       const schemaEncoder = new SchemaEncoder(
-        "string requestedTextToVerify,string model,string validity,string critique",
+        "string missionProposal,string model,string enrollmentStatus,string evaluation",
       );
 
       const decoded = schemaEncoder.decodeData(pkg.sig.message.data);
@@ -252,26 +252,26 @@ const TruthVerifier = () => {
       <ContentWrapper>
         <Card>
           <Title>
-            Is that <TitleSpan>TRUE</TitleSpan>?
+            Enroll in a <TitleSpan>Mission</TitleSpan>
           </Title>
           <div className="space-y-4">
             {!result ? (
               <TextArea
                 rows={4}
-                placeholder="Type in any statement you want to verify if it's true or not. I will analyze it and attest to the result."
+                placeholder="Describe the mission you want to enroll in. We will analyze your proposal and attest to the result."
                 value={statement}
                 onChange={e => setStatement(e.target.value)}
               />
             ) : (
               <StatementDisplay>
-                <StatementTitle>Your statement:</StatementTitle>
+                <StatementTitle>Your Mission Proposal:</StatementTitle>
                 <StatementText>{statement}</StatementText>
               </StatementDisplay>
             )}
           </div>
           {response && (
             <ResponseWrapper>
-              <ResponseTitle>LLM Says:</ResponseTitle>
+              <ResponseTitle>Mission Evaluation:</ResponseTitle>
               <ResponseValidity>{response.validity}</ResponseValidity>
               <ResponseCritique>{response.critique}</ResponseCritique>
             </ResponseWrapper>
@@ -286,12 +286,12 @@ const TruthVerifier = () => {
               {isLoading ? (
                 <span className="flex items-center justify-center">
                   <Spinner />
-                  <span className={"ml-2"}>Verifying...</span>
+                  <span className={"ml-2"}>Evaluating...</span>
                 </span>
               ) : result ? (
-                "Start Over"
+                "New Mission"
               ) : (
-                "Tell me the Truth"
+                "Submit for Enrollment"
               )}
             </Button>
             {result && (
@@ -299,26 +299,26 @@ const TruthVerifier = () => {
                 {isPublishing ? (
                   <span className="flex items-center justify-center">
                     <Spinner />
-                    <span className={"ml-2"}>Publishing...</span>
+                    <span className={"ml-2"}>Finalizing...</span>
                   </span>
                 ) : (
-                  "Publish Result"
+                  "Confirm Enrollment"
                 )}
               </Button>
             )}
           </ButtonWrapper>
 
           <Disclaimer>
-            *This is an example open-source repo using EAS & OpenAI.
+            *This is an example open-source repo using EAS.
             <br />
-            Results are for example purposes only.
+            Results are for demonstration purposes only.
           </Disclaimer>
         </Card>
 
-        <RecentAttestationsView />
+        <RecentAttestationsView title="Recent Mission Enrollments" />
       </ContentWrapper>
     </Container>
   );
 };
 
-export default TruthVerifier;
+export default MissionEnrollment;

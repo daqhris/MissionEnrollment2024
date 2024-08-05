@@ -187,7 +187,7 @@ export const Header = () => {
             <Image alt="SE2 logo" className="cursor-pointer" fill src="/logo.svg" />
           </LogoContainer>
           <LogoText>
-            <LogoTitle>TruthBot</LogoTitle>
+            <LogoTitle>Onchain Mission Enrollment</LogoTitle>
             {/*<span className="text-xs">Ethereum dev stack</span>*/}
           </LogoText>
         </LogoLink>

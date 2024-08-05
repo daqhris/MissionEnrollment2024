@@ -56,7 +56,7 @@ const RecentAttestations = () => {
       </AnimationWrapper>
       <Overlay />
       <ContentWrapper>
-        <RecentAttestationsView />
+        <RecentAttestationsView title="Recent Mission Enrollments" />
       </ContentWrapper>
     </Container>
   );
