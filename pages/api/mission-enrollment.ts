@@ -1,10 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { ethers } from 'ethers';
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import { ethers } from "ethers";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
   }
 
   try {
@@ -39,10 +39,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         time: BigInt(Math.floor(Date.now() / 1000)),
         schema: missionEnrollmentSchemaUid,
       },
-      signer
+      signer,
     );
 
-    const encodedOffchainAttestation = await offchain.packOffchainAttestation(offchainAttestation);
+    const encodedOffchainAttestation = offchainAttestation;
 
     return res.status(200).json({ result: encodedOffchainAttestation });
   } catch (error) {

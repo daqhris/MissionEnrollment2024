@@ -278,7 +278,7 @@ const MissionEnrollment = () => {
           )}
           {result && (
             <div className="mt-6">
-              <AttestationCard pkg={result} hideVote={true} />
+              <AttestationCard pkg={result} />
             </div>
           )}
           <ButtonWrapper $hasResult={!!result}>

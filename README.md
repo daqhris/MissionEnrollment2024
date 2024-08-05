@@ -6,7 +6,6 @@ Onchain Mission Enrolment is an example web app that leverages blockchain techno
 
 - **Blockchain Attestations**: Creates immutable records of statements using the Ethereum Attestation Service.
 - **Interactive UI**: Offers a user-friendly interface for submitting statements and viewing results.
-- **Voting System**: Allows users to upvote or downvote attestations, adding a layer of community-driven validation.
 - **Recent Attestations**: Displays a list of recent attestations for public viewing.
 
 ## Technology Stack
@@ -57,8 +56,7 @@ Onchain Mission Enrolment is an example web app that leverages blockchain techno
 2. Navigate to the main page and enter a statement you want to attest.
 3. Click "Create Attestation" to submit the statement to the blockchain.
 4. View the created attestation, which is now immutably recorded on the Ethereum network.
-5. Optionally, upvote or downvote the attestation to contribute to community-driven validation.
-6. Explore recent attestations on the "Recent Attestations" page to see other blockchain-verified statements.
+5. Explore recent attestations on the "Recent Attestations" page to see other blockchain-verified statements.
 
 ## Disclaimer
 
