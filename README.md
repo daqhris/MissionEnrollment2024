@@ -1,6 +1,6 @@
-# TruthBot
+# Onchain Mission Enrolment
 
-TruthBot is an example web app that leverages blockchain technology to create immutable attestations for statements. Built with Next.js, React, and the Ethereum Attestation Service (EAS), this project aims to combat misinformation by providing a transparent and decentralized platform for fact-checking.
+Onchain Mission Enrolment is an example web app that leverages blockchain technology to create immutable attestations for statements. Built with Next.js, React, and the Ethereum Attestation Service (EAS), this project aims to combat misinformation by providing a transparent and decentralized platform for mission enrolment.
 
 ## Features
 
@@ -28,8 +28,8 @@ TruthBot is an example web app that leverages blockchain technology to create im
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/truth-verifier.git
-   cd truth-verifier
+   git clone https://github.com/your-username/mission-enrolment.git
+   cd mission-enrolment
    ```
 
 2. Install dependencies:

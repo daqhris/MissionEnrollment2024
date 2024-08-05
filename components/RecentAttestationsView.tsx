@@ -72,13 +72,17 @@ const TimeText = tw.p`
 `;
 
 const LoadingWrapper = tw.div`
-  flex 
-  justify-center 
-  items-center 
+  flex
+  justify-center
+  items-center
   h-64
 `;
 
-export function RecentAttestationsView() {
+interface RecentAttestationsViewProps {
+  title: string;
+}
+
+export function RecentAttestationsView({ title }: RecentAttestationsViewProps) {
   const [attestations, setAttestations] = useState<Attestation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -145,7 +149,7 @@ export function RecentAttestationsView() {
         </LoadingWrapper>
       ) : (
         <>
-          <Title>Recent validations</Title>
+          <Title>{title}</Title>
 
           <AttestationList>
             {attestations.map(attestation => {
