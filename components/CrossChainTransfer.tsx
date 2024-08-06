@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useAccount, useChainId, useSwitchChain } from 'wagmi';
 
 // Note: This is a simplified implementation. In a real-world scenario,
 // you would need to integrate with actual CCIP contracts and handle
@@ -7,8 +7,8 @@ import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 
 const CrossChainTransfer: React.FC<{ onTransferComplete: () => void }> = ({ onTransferComplete }) => {
   const { address } = useAccount();
-  const { chain } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork();
+  const chainId = useChainId();
+  const { switchChain } = useSwitchChain();
   const [isTransferring, setIsTransferring] = useState(false);
   const [transferStatus, setTransferStatus] = useState<string | null>(null);
 
@@ -21,8 +21,8 @@ const CrossChainTransfer: React.FC<{ onTransferComplete: () => void }> = ({ onTr
 
     try {
       // Step 1: Ensure user is on Gnosis Chain
-      if (chain?.id !== gnosisChainId) {
-        await switchNetwork?.(gnosisChainId);
+      if (chainId !== gnosisChainId) {
+        await switchChain({ chainId: gnosisChainId });
         setTransferStatus('Switched to Gnosis Chain');
       }
 
@@ -31,7 +31,7 @@ const CrossChainTransfer: React.FC<{ onTransferComplete: () => void }> = ({ onTr
       setTransferStatus('POAP transferred to OP Chain');
 
       // Step 3: Switch to OP Chain to verify transfer
-      await switchNetwork?.(optimismChainId);
+      await switchChain({ chainId: optimismChainId });
       setTransferStatus('Switched to OP Chain');
 
       // Step 4: Simulate verification on OP Chain
@@ -39,7 +39,7 @@ const CrossChainTransfer: React.FC<{ onTransferComplete: () => void }> = ({ onTr
       setTransferStatus('Transfer verified on OP Chain');
 
       // Step 5: Transfer back to Gnosis Chain
-      await switchNetwork?.(gnosisChainId);
+      await switchChain({ chainId: gnosisChainId });
       setTransferStatus('Transferring back to Gnosis Chain');
 
       // Step 6: Final verification

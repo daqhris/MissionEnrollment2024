@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import IdentityVerification from '../components/IdentityVerification';
 import EventAttendanceVerification from '../components/EventAttendanceVerification';
 import CrossChainTransfer from '../components/CrossChainTransfer';
@@ -10,12 +11,27 @@ type Stage = typeof stages[number];
 const Home: React.FC = () => {
   const [currentStage, setCurrentStage] = useState<Stage>('identity');
   const [verifiedAddress, setVerifiedAddress] = useState<string | null>(null);
+  const [completedStages, setCompletedStages] = useState<Stage[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Prevent direct access to later stages
+    if (completedStages.length === 0 && currentStage !== 'identity') {
+      setCurrentStage('identity');
+    }
+  }, [completedStages, currentStage]);
 
   const handleStageCompletion = (stage: Stage) => {
-    const currentIndex = stages.indexOf(currentStage);
+    setCompletedStages((prev) => [...prev, stage]);
+    const currentIndex = stages.indexOf(stage);
     if (currentIndex < stages.length - 1) {
       setCurrentStage(stages[currentIndex + 1]);
     }
+  };
+
+  const isStageAccessible = (stage: Stage) => {
+    const stageIndex = stages.indexOf(stage);
+    return stageIndex <= completedStages.length;
   };
 
   const renderCurrentStage = () => {
@@ -70,13 +86,16 @@ const Home: React.FC = () => {
             <li
               key={stage}
               className={`${
-                index <= stages.indexOf(currentStage)
-                  ? 'text-green-500'
-                  : 'text-gray-400'
-              }`}
+                isStageAccessible(stage) ? 'text-green-500' : 'text-gray-400'
+              } ${!isStageAccessible(stage) && 'cursor-not-allowed'}`}
+              onClick={() => {
+                if (isStageAccessible(stage)) {
+                  setCurrentStage(stage);
+                }
+              }}
             >
               {stage.charAt(0).toUpperCase() + stage.slice(1)}
-              {index < stages.indexOf(currentStage) && ' ✓'}
+              {completedStages.includes(stage) && ' ✓'}
             </li>
           ))}
         </ul>
