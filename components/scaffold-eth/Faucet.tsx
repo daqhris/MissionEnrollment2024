@@ -8,6 +8,7 @@ import { BanknotesIcon } from "@heroicons/react/24/outline";
 import { Address, AddressInput, Balance, EtherInput } from "~~/components/scaffold-eth";
 import { useTransactor } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
+
 // TODO: Import POAP API client and necessary types
 // import { POAPClient } from '@poap/poap-eth';
 

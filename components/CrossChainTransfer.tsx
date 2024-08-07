@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { useAccount, useChainId, useSwitchChain } from 'wagmi';
+import React, { useState } from "react";
+import { useChainId, useSwitchChain } from "wagmi";
 
 // Note: This is a simplified implementation. In a real-world scenario,
 // you would need to integrate with actual CCIP contracts and handle
 // the complexities of cross-chain transfers.
 
 const CrossChainTransfer: React.FC<{ onTransferComplete: () => void }> = ({ onTransferComplete }) => {
-  const { address } = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const [isTransferring, setIsTransferring] = useState(false);
@@ -17,39 +16,39 @@ const CrossChainTransfer: React.FC<{ onTransferComplete: () => void }> = ({ onTr
 
   const handleTransfer = async () => {
     setIsTransferring(true);
-    setTransferStatus('Initiating transfer...');
+    setTransferStatus("Initiating transfer...");
 
     try {
       // Step 1: Ensure user is on Gnosis Chain
       if (chainId !== gnosisChainId) {
         await switchChain({ chainId: gnosisChainId });
-        setTransferStatus('Switched to Gnosis Chain');
+        setTransferStatus("Switched to Gnosis Chain");
       }
 
       // Step 2: Simulate POAP transfer from Gnosis to OP Chain
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simulating blockchain interaction
-      setTransferStatus('POAP transferred to OP Chain');
+      setTransferStatus("POAP transferred to OP Chain");
 
       // Step 3: Switch to OP Chain to verify transfer
       await switchChain({ chainId: optimismChainId });
-      setTransferStatus('Switched to OP Chain');
+      setTransferStatus("Switched to OP Chain");
 
       // Step 4: Simulate verification on OP Chain
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simulating blockchain interaction
-      setTransferStatus('Transfer verified on OP Chain');
+      setTransferStatus("Transfer verified on OP Chain");
 
       // Step 5: Transfer back to Gnosis Chain
       await switchChain({ chainId: gnosisChainId });
-      setTransferStatus('Transferring back to Gnosis Chain');
+      setTransferStatus("Transferring back to Gnosis Chain");
 
       // Step 6: Final verification
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simulating blockchain interaction
-      setTransferStatus('Transfer completed successfully');
+      setTransferStatus("Transfer completed successfully");
 
       onTransferComplete();
     } catch (error) {
-      console.error('Transfer error:', error);
-      setTransferStatus('Transfer failed. Please try again.');
+      console.error("Transfer error:", error);
+      setTransferStatus("Transfer failed. Please try again.");
     } finally {
       setIsTransferring(false);
     }
@@ -64,11 +63,9 @@ const CrossChainTransfer: React.FC<{ onTransferComplete: () => void }> = ({ onTr
         disabled={isTransferring}
         className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300"
       >
-        {isTransferring ? 'Transferring...' : 'Start Transfer'}
+        {isTransferring ? "Transferring..." : "Start Transfer"}
       </button>
-      {transferStatus && (
-        <p className="mt-4 text-green-500">{transferStatus}</p>
-      )}
+      {transferStatus && <p className="mt-4 text-green-500">{transferStatus}</p>}
     </div>
   );
 };

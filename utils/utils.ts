@@ -1,4 +1,4 @@
-import { AttestationShareablePackageObject } from "@ethereum-attestation-service/eas-sdk";
+import { Attestation } from "../types/attestation";
 
 // @ts-ignore
 BigInt.prototype.toJSON = function () {
@@ -7,7 +7,7 @@ BigInt.prototype.toJSON = function () {
 
 const baseURL = "https://sepolia.easscan.org";
 
-export async function submitSignedAttestation(pkg: AttestationShareablePackageObject): Promise<StoreIPFSActionReturn> {
+export async function submitSignedAttestation(pkg: Attestation): Promise<StoreIPFSActionReturn> {
   const data: StoreAttestationRequest = {
     filename: `eas.txt`,
     textJson: JSON.stringify(pkg),
