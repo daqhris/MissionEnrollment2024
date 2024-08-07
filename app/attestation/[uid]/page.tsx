@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { AttestationShareablePackageObject, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import { Attestation } from "../../../types/attestation";
 import Lottie from "lottie-react";
 import tw from "tailwind-styled-components";
 import { AttestationCard } from "~~/components/AttestationCard";
@@ -106,7 +107,7 @@ const LoadingText = tw.div`
 `;
 
 export default function AttestationPage({ params }: AttestationPageProps) {
-  const [attestation, setAttestation] = useState<AttestationShareablePackageObject | null>(null);
+  const [attestation, setAttestation] = useState<Attestation | null>(null);
   const { uid } = params;
 
   useEffect(() => {
@@ -127,7 +128,7 @@ export default function AttestationPage({ params }: AttestationPageProps) {
 
   const schemaEncoder = new SchemaEncoder("string requestedTextToVerify");
 
-  const decoded = schemaEncoder.decodeData(attestation.sig.message.data);
+  const decoded = schemaEncoder.decodeData(attestation.data);
 
   return (
     <Container>
@@ -158,7 +159,7 @@ export default function AttestationPage({ params }: AttestationPageProps) {
           </div>
 
           <div className="mt-6">
-            <AttestationCard pkg={attestation} />
+            <AttestationCard attestation={attestation} />
           </div>
 
           <Disclaimer>

@@ -1,35 +1,35 @@
-import React, { useState } from 'react';
-import { useEnsName, useEnsAddress } from 'wagmi';
+import React, { useState } from "react";
+import { useEnsAddress, useEnsName } from "wagmi";
 
 const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> = ({ onVerified }) => {
-  const [inputAddress, setInputAddress] = useState('');
+  const [inputAddress, setInputAddress] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const { data: ensName } = useEnsName({ address: inputAddress as `0x${string}` });
   const { data: ensAddress } = useEnsAddress({ name: inputAddress });
 
   const handleVerify = async () => {
     setIsVerifying(true);
-    setError('');
+    setError("");
 
     try {
       let verifiedAddress = inputAddress;
 
-      if (inputAddress.endsWith('.eth')) {
+      if (inputAddress.endsWith(".eth")) {
         if (!ensAddress) {
-          throw new Error('Invalid ENS name');
+          throw new Error("Invalid ENS name");
         }
         verifiedAddress = ensAddress;
-      } else if (!inputAddress.startsWith('0x')) {
-        throw new Error('Invalid Ethereum address format');
+      } else if (!inputAddress.startsWith("0x")) {
+        throw new Error("Invalid Ethereum address format");
       }
 
       // Additional checks can be added here (e.g., checksum validation)
 
       onVerified(verifiedAddress);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Verification failed');
+      setError(err instanceof Error ? err.message : "Verification failed");
     } finally {
       setIsVerifying(false);
     }
@@ -42,7 +42,7 @@ const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> 
       <input
         type="text"
         value={inputAddress}
-        onChange={(e) => setInputAddress(e.target.value)}
+        onChange={e => setInputAddress(e.target.value)}
         className="w-full p-2 border rounded mb-4"
         placeholder="vitalik.eth or 0x..."
       />
@@ -53,7 +53,7 @@ const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> 
         disabled={isVerifying || !inputAddress}
         className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300"
       >
-        {isVerifying ? 'Verifying...' : 'Verify'}
+        {isVerifying ? "Verifying..." : "Verify"}
       </button>
       {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>

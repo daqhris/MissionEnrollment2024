@@ -1,9 +1,9 @@
-import '../styles/globals.css';
-import type { AppProps } from 'next/app';
-import { WagmiConfig, createConfig, http } from 'wagmi';
-import { mainnet, sepolia } from 'wagmi/chains';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { AppProps } from "next/app";
+import "../styles/globals.css";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiConfig, createConfig, http } from "wagmi";
+import { mainnet, sepolia } from "wagmi/chains";
 
 // Configure chains & providers
 const config = createConfig({
@@ -16,7 +16,7 @@ const config = createConfig({
 
 // Configure Apollo Client
 const client = new ApolloClient({
-  uri: 'YOUR_GRAPHQL_ENDPOINT', // Replace with your actual GraphQL endpoint
+  uri: "YOUR_GRAPHQL_ENDPOINT", // Replace with your actual GraphQL endpoint
   cache: new InMemoryCache(),
 });
 

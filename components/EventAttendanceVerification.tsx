@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useAccount, useEnsName } from 'wagmi';
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { useAccount, useEnsName } from "wagmi";
 
 interface POAPEvent {
   id: string;
@@ -11,8 +12,8 @@ interface POAPEvent {
   image_url: string;
 }
 
-const API_KEY = 'YOUR_API_KEY_HERE';
-const API_BASE_URL = 'https://api.poap.tech';
+const API_KEY = "YOUR_API_KEY_HERE";
+const API_BASE_URL = "https://api.poap.tech";
 
 const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onVerified }) => {
   const { address } = useAccount();
@@ -23,43 +24,45 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
   const [imageLoadErrors, setImageLoadErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    if (address) {
-      fetchPOAPs();
-    }
-  }, [address]);
-
-  const fetchPOAPs = async () => {
-    setIsVerifying(true);
-    setVerificationResult(null);
-    try {
-      const response = await fetch(`${API_BASE_URL}/actions/scan/${address}`, {
-        headers: {
-          'X-API-Key': API_KEY,
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to fetch POAPs: ${response.statusText}`);
+    const fetchPOAPs = async () => {
+      if (!address) return;
+      setIsVerifying(true);
+      setVerificationResult(null);
+      try {
+        const response = await fetch(`${API_BASE_URL}/actions/scan/${address}`, {
+          headers: {
+            "X-API-Key": API_KEY,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to fetch POAPs: ${response.statusText}`);
+        }
+        const data = await response.json();
+        const ethGlobalPOAPs = data.filter(
+          (poap: POAPEvent) => poap.name.toLowerCase().includes("ethglobal") && poap.city.toLowerCase() === "brussels",
+        );
+        setPOAPs(ethGlobalPOAPs);
+      } catch (error) {
+        console.error("Error fetching POAPs:", error);
+        setVerificationResult("Failed to verify POAPs. Please try again.");
+      } finally {
+        setIsVerifying(false);
       }
-      const data = await response.json();
-      const ethGlobalPOAPs = data.filter((poap: POAPEvent) =>
-        poap.name.toLowerCase().includes('ethglobal') &&
-        poap.city.toLowerCase() === 'brussels'
-      );
-      setPOAPs(ethGlobalPOAPs);
-    } catch (error) {
-      console.error('Error fetching POAPs:', error);
-      setVerificationResult('Failed to verify POAPs. Please try again.');
-    } finally {
-      setIsVerifying(false);
-    }
-  };
+    };
+
+    fetchPOAPs();
+  }, [address]);
 
   const handleVerify = () => {
     if (poaps.length > 0) {
-      setVerificationResult(`Verification successful! ${ensName || address} has attended an ETHGlobal event in Brussels.`);
+      setVerificationResult(
+        `Verification successful! ${ensName || address} has attended an ETHGlobal event in Brussels.`,
+      );
       onVerified();
     } else {
-      setVerificationResult(`Verification failed. No eligible POAPs found for ${ensName || address} at ETHGlobal events in Brussels.`);
+      setVerificationResult(
+        `Verification failed. No eligible POAPs found for ${ensName || address} at ETHGlobal events in Brussels.`,
+      );
     }
   };
 
@@ -86,13 +89,15 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
             <div className="mt-4">
               <h3 className="text-lg font-semibold">Eligible POAPs:</h3>
               <ul className="list-none pl-0">
-                {poaps.map((poap) => (
+                {poaps.map(poap => (
                   <li key={poap.id} className="flex items-center mb-2">
                     {!imageLoadErrors[poap.id] ? (
-                      <img
+                      <Image
                         src={poap.image_url}
                         alt={poap.name}
-                        className="w-12 h-12 mr-2 rounded"
+                        width={48}
+                        height={48}
+                        className="mr-2 rounded"
                         onError={() => handleImageError(poap.id)}
                       />
                     ) : (
@@ -112,7 +117,7 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
         </>
       )}
       {verificationResult && (
-        <p className={`mt-4 ${verificationResult.includes('successful') ? 'text-green-500' : 'text-red-500'}`}>
+        <p className={`mt-4 ${verificationResult.includes("successful") ? "text-green-500" : "text-red-500"}`}>
           {verificationResult}
         </p>
       )}

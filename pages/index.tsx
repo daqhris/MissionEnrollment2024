@@ -1,28 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import IdentityVerification from '../components/IdentityVerification';
-import EventAttendanceVerification from '../components/EventAttendanceVerification';
-import CrossChainTransfer from '../components/CrossChainTransfer';
-import OnchainAttestation from '../components/OnchainAttestation';
+import React, { useEffect, useState } from "react";
+import CrossChainTransfer from "../components/CrossChainTransfer";
+import EventAttendanceVerification from "../components/EventAttendanceVerification";
+import IdentityVerification from "../components/IdentityVerification";
+import OnchainAttestation from "../components/OnchainAttestation";
 
-const stages = ['identity', 'attendance', 'transfer', 'attestation', 'complete'] as const;
-type Stage = typeof stages[number];
+const stages = ["identity", "attendance", "transfer", "attestation", "complete"] as const;
+type Stage = (typeof stages)[number];
 
 const Home: React.FC = () => {
-  const [currentStage, setCurrentStage] = useState<Stage>('identity');
-  const [verifiedAddress, setVerifiedAddress] = useState<string | null>(null);
+  const [currentStage, setCurrentStage] = useState<Stage>("identity");
   const [completedStages, setCompletedStages] = useState<Stage[]>([]);
-  const router = useRouter();
 
   useEffect(() => {
     // Prevent direct access to later stages
-    if (completedStages.length === 0 && currentStage !== 'identity') {
-      setCurrentStage('identity');
+    if (completedStages.length === 0 && currentStage !== "identity") {
+      setCurrentStage("identity");
     }
   }, [completedStages, currentStage]);
 
   const handleStageCompletion = (stage: Stage) => {
-    setCompletedStages((prev) => [...prev, stage]);
+    setCompletedStages(prev => [...prev, stage]);
     const currentIndex = stages.indexOf(stage);
     if (currentIndex < stages.length - 1) {
       setCurrentStage(stages[currentIndex + 1]);
@@ -36,34 +33,21 @@ const Home: React.FC = () => {
 
   const renderCurrentStage = () => {
     switch (currentStage) {
-      case 'identity':
+      case "identity":
         return (
           <IdentityVerification
-            onVerified={(address) => {
-              setVerifiedAddress(address);
-              handleStageCompletion('identity');
+            onVerified={() => {
+              handleStageCompletion("identity");
             }}
           />
         );
-      case 'attendance':
-        return (
-          <EventAttendanceVerification
-            onVerified={() => handleStageCompletion('attendance')}
-          />
-        );
-      case 'transfer':
-        return (
-          <CrossChainTransfer
-            onTransferComplete={() => handleStageCompletion('transfer')}
-          />
-        );
-      case 'attestation':
-        return (
-          <OnchainAttestation
-            onAttestationComplete={() => handleStageCompletion('attestation')}
-          />
-        );
-      case 'complete':
+      case "attendance":
+        return <EventAttendanceVerification onVerified={() => handleStageCompletion("attendance")} />;
+      case "transfer":
+        return <CrossChainTransfer onTransferComplete={() => handleStageCompletion("transfer")} />;
+      case "attestation":
+        return <OnchainAttestation onAttestationComplete={() => handleStageCompletion("attestation")} />;
+      case "complete":
         return (
           <div className="p-4 bg-white shadow rounded-lg">
             <h2 className="text-2xl font-bold mb-4">Mission Enrolment Complete!</h2>
@@ -82,12 +66,12 @@ const Home: React.FC = () => {
       <div className="mt-8">
         <h3 className="text-xl font-semibold mb-2">Progress:</h3>
         <ul className="list-disc pl-5">
-          {stages.map((stage, index) => (
+          {stages.map(stage => (
             <li
               key={stage}
-              className={`${
-                isStageAccessible(stage) ? 'text-green-500' : 'text-gray-400'
-              } ${!isStageAccessible(stage) && 'cursor-not-allowed'}`}
+              className={`${isStageAccessible(stage) ? "text-green-500" : "text-gray-400"} ${
+                !isStageAccessible(stage) && "cursor-not-allowed"
+              }`}
               onClick={() => {
                 if (isStageAccessible(stage)) {
                   setCurrentStage(stage);
@@ -95,7 +79,7 @@ const Home: React.FC = () => {
               }}
             >
               {stage.charAt(0).toUpperCase() + stage.slice(1)}
-              {completedStages.includes(stage) && ' ✓'}
+              {completedStages.includes(stage) && " ✓"}
             </li>
           ))}
         </ul>

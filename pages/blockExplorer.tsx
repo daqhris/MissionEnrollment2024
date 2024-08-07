@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_ATTESTATIONS } from '../graphql/queries';
-import { AttestationCard } from '../components/AttestationCard';
-import { Attestation } from '../types/attestation';
+import React, { useEffect, useState } from "react";
+import { AttestationCard } from "../components/AttestationCard";
+import { GET_ATTESTATIONS } from "../graphql/queries";
+import { Attestation } from "../types/attestation";
+import { useQuery } from "@apollo/client";
 
 const BlockExplorer: React.FC = () => {
   const [attestations, setAttestations] = useState<Attestation[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const pageSize = 10;
 
   const { loading, error, data } = useQuery(GET_ATTESTATIONS, {
@@ -46,7 +46,7 @@ const BlockExplorer: React.FC = () => {
       </div>
       {attestations.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {attestations.map((attestation) => (
+          {attestations.map(attestation => (
             <AttestationCard key={attestation.id} attestation={attestation} />
           ))}
         </div>

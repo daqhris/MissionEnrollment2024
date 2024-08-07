@@ -1,6 +1,6 @@
 import React from "react";
-import tw from "tailwind-styled-components";
 import { Attestation } from "../types/attestation";
+import tw from "tailwind-styled-components";
 
 const Card = tw.div`
   mt-6
@@ -80,22 +80,26 @@ export const AttestationCard: React.FC<Props> = ({ attestation }) => {
         </div>
         <div>
           <Label>Revocable:</Label>
-          <Value>{attestation.revocable ? 'Yes' : 'No'}</Value>
+          <Value>{attestation.revocable ? "Yes" : "No"}</Value>
         </div>
         <div>
           <Label>Revocation Time:</Label>
-          <Value>{attestation.revocationTime || 'N/A'}</Value>
+          <Value>{attestation.revocationTime || "N/A"}</Value>
         </div>
         <div>
           <Label>Expiration Time:</Label>
-          <Value>{attestation.expirationTime || 'N/A'}</Value>
+          <Value>{attestation.expirationTime || "N/A"}</Value>
         </div>
         <div>
           <Label>Data:</Label>
           <Value>{attestation.data}</Value>
         </div>
         <div>
-          <Link href={`https://sepolia.easscan.org/attestation/view/${attestation.id}`} target="_blank" rel="noopener noreferrer">
+          <Link
+            href={`https://sepolia.easscan.org/attestation/view/${attestation.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             View on EAS Explorer
           </Link>
         </div>
