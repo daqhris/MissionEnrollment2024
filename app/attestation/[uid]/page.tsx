@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { Attestation } from "../../../types/attestation";
+import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import Lottie from "lottie-react";
 import tw from "tailwind-styled-components";
-import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { Attestation } from "../../../types/attestation";
 import { AttestationCard } from "~~/components/AttestationCard";
 import skyAnimation from "~~/public/sky.json";
 
