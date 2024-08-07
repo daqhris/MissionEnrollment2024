@@ -1,16 +1,17 @@
 import React from "react";
-import { AttestationShareablePackageObject, createOffchainURL } from "@ethereum-attestation-service/eas-sdk";
 import tw from "tailwind-styled-components";
-import { Checkmark } from "~~/components/assets/Checkmark";
+import { Attestation } from "../types/attestation";
 
 const Card = tw.div`
   mt-6
   rounded-lg
   overflow-hidden
+  bg-white
+  shadow-md
 `;
 
 const Header = tw.div`
-  bg-info
+  bg-blue-600
   px-4
   py-2
   flex
@@ -25,95 +26,80 @@ const Title = tw.h3`
 `;
 
 const Content = tw.div`
-  p-3
+  p-4
   space-y-3
-  bg-gray-700
 `;
 
 const Label = tw.p`
   text-sm
-  text-gray-400
+  text-gray-600
+  font-semibold
   mb-1
-  mt-0
 `;
 
 const Value = tw.p`
-  font-mono
-  text-xs
+  text-sm
   break-all
-  bg-gray-800
+  bg-gray-100
   p-2
   rounded
-  text-gray-300
-  mt-0
+  text-gray-800
 `;
 
 const Link = tw.a`
-  block
-  text-indigo-400
-  hover:text-indigo-300
+  text-blue-600
+  hover:text-blue-800
   transition-colors
   duration-300
   underline
   text-sm
-  cursor-pointer
 `;
-
-const Footer = tw.div`
-  bg-info
-  px-4
-  py-2
-  flex
-  justify-between
-  items-center
-  rounded-b-lg
-`;
-
-const FooterText = tw.span`
-  text-xs
-  text-indigo-200
-`;
-
-const handleAttestationClick = (result: AttestationShareablePackageObject) => {
-  const url = createOffchainURL(result);
-  window.open(`https://sepolia.easscan.org${url}`, "_blank");
-};
-
-function isAttestationShareablePackageObject(pkg: any): pkg is AttestationShareablePackageObject {
-  return "signer" in pkg && "message" in pkg.sig;
-}
 
 type Props = {
-  pkg: AttestationShareablePackageObject | { sig: { uid: string }; signer: string };
+  attestation: Attestation;
 };
 
-export const AttestationCard = ({ pkg }: Props) => {
+export const AttestationCard: React.FC<Props> = ({ attestation }) => {
   return (
     <Card>
       <Header>
-        <Title>EAS Attestation</Title>
+        <Title>Attestation</Title>
       </Header>
       <Content>
         <div>
-          <Label>Attestation UID:</Label>
-          <Value>{pkg.sig.uid}</Value>
+          <Label>Attester:</Label>
+          <Value>{attestation.attester}</Value>
         </div>
         <div>
-          {isAttestationShareablePackageObject(pkg) ? (
-            <Link onClick={() => handleAttestationClick(pkg)} target="_blank" rel="noopener noreferrer">
-              View Attestation Details
-            </Link>
-          ) : (
-            <Link target="_blank" href={`https://sepolia.easscan.org/offchain/attestation/view/${pkg.sig.uid}`}>
-              View Attestation Details
-            </Link>
-          )}
+          <Label>Recipient:</Label>
+          <Value>{attestation.recipient}</Value>
+        </div>
+        <div>
+          <Label>Reference UID:</Label>
+          <Value>{attestation.refUID}</Value>
+        </div>
+        <div>
+          <Label>Revocable:</Label>
+          <Value>{attestation.revocable ? 'Yes' : 'No'}</Value>
+        </div>
+        <div>
+          <Label>Revocation Time:</Label>
+          <Value>{attestation.revocationTime || 'N/A'}</Value>
+        </div>
+        <div>
+          <Label>Expiration Time:</Label>
+          <Value>{attestation.expirationTime || 'N/A'}</Value>
+        </div>
+        <div>
+          <Label>Data:</Label>
+          <Value>{attestation.data}</Value>
+        </div>
+        <div>
+          <Link href={`https://sepolia.easscan.org/attestation/view/${attestation.id}`} target="_blank" rel="noopener noreferrer">
+            View on EAS Explorer
+          </Link>
         </div>
       </Content>
-      <Footer>
-        <FooterText>Verified by EAS</FooterText>
-        <Checkmark className={"text-indigo-200"} />
-      </Footer>
     </Card>
   );
 };

@@ -11,6 +11,7 @@ import {
   UseScaffoldEventHistoryConfig,
   UseScaffoldEventHistoryData,
 } from "~~/utils/scaffold-eth/contract";
+// import { POAPClient, POAPEvent } from '@poap/poap-eth';
 
 const getEvents = async (
   getLogsParams: GetLogsParameters<AbiEvent | undefined, AbiEvent[] | undefined, boolean, BlockNumber, BlockNumber>,
@@ -51,7 +52,7 @@ const getEvents = async (
 };
 
 /**
- * Reads events from a deployed contract
+ * Reads events from a deployed contract and integrates with POAP protocol
  * @param config - The config settings
  * @param config.contractName - deployed contract name
  * @param config.eventName - name of the event to listen for
@@ -62,6 +63,8 @@ const getEvents = async (
  * @param config.receiptData - if set to true it will return the receipt data for each event (default: false)
  * @param config.watch - if set to true, the events will be updated every pollingInterval milliseconds set at scaffoldConfig (default: false)
  * @param config.enabled - set this to false to disable the hook from running (default: true)
+ * @param config.poapIntegration - if set to true, it will integrate with POAP protocol (default: false)
+ * @param config.address - the address to use for POAP integration
  */
 export const useScaffoldEventHistory = <
   TContractName extends ContractName,
@@ -79,12 +82,36 @@ export const useScaffoldEventHistory = <
   receiptData,
   watch,
   enabled = true,
-}: UseScaffoldEventHistoryConfig<TContractName, TEventName, TBlockData, TTransactionData, TReceiptData>) => {
+  poapIntegration = false,
+  address,
+}: UseScaffoldEventHistoryConfig<TContractName, TEventName, TBlockData, TTransactionData, TReceiptData> & { poapIntegration?: boolean, address?: string }) => {
   const { targetNetwork } = useTargetNetwork();
   const publicClient = usePublicClient({
     chainId: targetNetwork.id,
   });
   const [isFirstRender, setIsFirstRender] = useState(true);
+  const [poapData, setPoapData] = useState<any>(null);
+
+  // POAP integration logic
+  useEffect(() => {
+    if (poapIntegration && config.address) {
+      const fetchPOAPData = async () => {
+        try {
+          // TODO: Replace with actual POAP API call when API key is available
+          const response = await fetch(`https://api.poap.tech/actions/scan/${config.address}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch POAP data');
+          }
+          const poapData = await response.json();
+          // TODO: Process and store POAP data
+          console.log('POAP data:', poapData);
+        } catch (error) {
+          console.error('Error fetching POAP data:', error);
+        }
+      };
+      fetchPOAPData();
+    }
+  }, [poapIntegration, config.address]);
 
   const { data: blockNumber } = useBlockNumber({ watch: watch, chainId: targetNetwork.id });
 

@@ -8,6 +8,8 @@ import { BanknotesIcon } from "@heroicons/react/24/outline";
 import { Address, AddressInput, Balance, EtherInput } from "~~/components/scaffold-eth";
 import { useTransactor } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
+// TODO: Import POAP API client and necessary types
+// import { POAPClient } from '@poap/poap-eth';
 
 // Account index to use from generated hardhat accounts.
 const FAUCET_ACCOUNT_INDEX = 0;
@@ -29,6 +31,11 @@ export const Faucet = () => {
   const { chain: ConnectedChain } = useAccount();
 
   const faucetTxn = useTransactor(localWalletClient);
+
+  // TODO: Integrate POAP API
+  // - Add state for POAP verification
+  // - Implement function to check POAP ownership
+  // - Update UI to show POAP status
 
   useEffect(() => {
     const getFaucetAddress = async () => {
