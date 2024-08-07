@@ -163,9 +163,15 @@ export function RecentAttestationsView({ title }: RecentAttestationsViewProps) {
                   <CritiqueText>{decodedData.critique}</CritiqueText>
                   <TimeText>Attested on: {new Date(parseInt(attestation.time) * 1000).toLocaleString()}</TimeText>
                   <AttestationCard
-                    pkg={{
-                      signer: attestation.attester,
-                      sig: { uid: attestation.id },
+                    attestation={{
+                      id: attestation.id,
+                      attester: attestation.attester,
+                      recipient: decodedData.recipient || '',
+                      refUID: decodedData.refUID || '',
+                      revocable: Boolean(decodedData.revocable),
+                      revocationTime: decodedData.revocationTime || '',
+                      expirationTime: decodedData.expirationTime || '',
+                      data: attestation.decodedDataJson,
                     }}
                   />
                 </AttestationItem>
