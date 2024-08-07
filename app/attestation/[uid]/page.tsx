@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { Attestation } from "../../../types/attestation";
+import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import Lottie from "lottie-react";
 import tw from "tailwind-styled-components";
 import { AttestationCard } from "~~/components/AttestationCard";
@@ -108,17 +108,31 @@ const LoadingText = tw.div`
 
 export default function AttestationPage({ params }: AttestationPageProps) {
   const [attestation, setAttestation] = useState<Attestation | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { uid } = params;
 
   useEffect(() => {
-    fetchAttestationBasedOnUID(uid).then(data => {
-      if (data) {
-        setAttestation(JSON.parse(data.data));
+    async function fetchAttestation() {
+      try {
+        setIsLoading(true);
+        const data = await fetchAttestationBasedOnUID(uid);
+        if (data) {
+          setAttestation(JSON.parse(data.data));
+        } else {
+          setError("Attestation not found");
+        }
+      } catch (err) {
+        setError("Error fetching attestation");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
       }
-    });
+    }
+    fetchAttestation();
   }, [uid]);
 
-  if (!attestation) {
+  if (isLoading) {
     return (
       <LoadingWrapper>
         <LoadingText>Loading...</LoadingText>
@@ -126,8 +140,15 @@ export default function AttestationPage({ params }: AttestationPageProps) {
     );
   }
 
-  const schemaEncoder = new SchemaEncoder("string requestedTextToVerify");
+  if (error || !attestation) {
+    return (
+      <LoadingWrapper>
+        <LoadingText>{error || "Attestation not found"}</LoadingText>
+      </LoadingWrapper>
+    );
+  }
 
+  const schemaEncoder = new SchemaEncoder("string requestedTextToVerify");
   const decoded = schemaEncoder.decodeData(attestation.data);
 
   return (
@@ -173,12 +194,18 @@ export default function AttestationPage({ params }: AttestationPageProps) {
   );
 }
 
-async function fetchAttestationBasedOnUID(uid: string) {
+async function fetchAttestationBasedOnUID(uid: string): Promise<Attestation | null> {
   const query = `
     query ExampleQuery($where: AttestationWhereUniqueInput!) {
       attestation(where: $where) {
         id
         data
+        attester
+        recipient
+        refUID
+        revocable
+        revocationTime
+        expirationTime
       }
     }
   `;
@@ -211,9 +238,13 @@ async function fetchAttestationBasedOnUID(uid: string) {
       throw new Error(result.errors[0].message);
     }
 
-    return result.data.attestation;
+    if (!result.data || !result.data.attestation) {
+      throw new Error("Attestation not found");
+    }
+
+    return result.data.attestation as Attestation;
   } catch (error) {
     console.error("Error fetching attestation:", error);
-    return null;
+    throw error;
   }
 }

@@ -94,24 +94,25 @@ export const useScaffoldEventHistory = <
 
   // POAP integration logic
   useEffect(() => {
-    if (poapIntegration && config.address) {
+    if (poapIntegration && address) {
       const fetchPOAPData = async () => {
         try {
           // TODO: Replace with actual POAP API call when API key is available
-          const response = await fetch(`https://api.poap.tech/actions/scan/${config.address}`);
+          const response = await fetch(`https://api.poap.tech/actions/scan/${address}`);
           if (!response.ok) {
             throw new Error('Failed to fetch POAP data');
           }
           const poapData = await response.json();
           // TODO: Process and store POAP data
           console.log('POAP data:', poapData);
+          setPoapData(poapData);
         } catch (error) {
           console.error('Error fetching POAP data:', error);
         }
       };
       fetchPOAPData();
     }
-  }, [poapIntegration, config.address]);
+  }, [poapIntegration, address]);
 
   const { data: blockNumber } = useBlockNumber({ watch: watch, chainId: targetNetwork.id });
 

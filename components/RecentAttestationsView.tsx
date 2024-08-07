@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { Attestation } from "../types/attestation";
+import { AttestationCard } from "./AttestationCard";
+import { Spinner } from "./assets/Spinner";
 import tw from "tailwind-styled-components";
-import { AttestationCard } from "~~/components/AttestationCard";
-import { Spinner } from "~~/components/assets/Spinner";
 
-interface Attestation {
-  id: string;
-  attester: string;
+interface AttestationWithDecodedData {
   decodedDataJson: string;
   time: string;
 }
+
+type ExtendedAttestation = Attestation & AttestationWithDecodedData;
 
 interface DecodedData {
   name: string;
@@ -83,7 +84,7 @@ interface RecentAttestationsViewProps {
 }
 
 export function RecentAttestationsView({ title }: RecentAttestationsViewProps) {
-  const [attestations, setAttestations] = useState<Attestation[]>([]);
+  const [attestations, setAttestations] = useState<ExtendedAttestation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const parseDecodedData = (decodedDataJson: string): Record<string, string> => {
@@ -130,7 +131,16 @@ export function RecentAttestationsView({ title }: RecentAttestationsViewProps) {
         }
 
         const data = await response.json();
-        setAttestations(data.data.attestations);
+        setAttestations(
+          data.data.attestations.map((attestation: AttestationWithDecodedData) => ({
+            ...attestation,
+            recipient: "",
+            refUID: "",
+            revocable: false,
+            revocationTime: "",
+            expirationTime: "",
+          })),
+        );
       } catch (error) {
         console.error("Error fetching attestations:", error);
       } finally {
@@ -152,7 +162,7 @@ export function RecentAttestationsView({ title }: RecentAttestationsViewProps) {
           <Title>{title}</Title>
 
           <AttestationList>
-            {attestations.map(attestation => {
+            {attestations.map((attestation: ExtendedAttestation) => {
               const decodedData = parseDecodedData(attestation.decodedDataJson);
               return (
                 <AttestationItem key={attestation.id}>
@@ -163,9 +173,15 @@ export function RecentAttestationsView({ title }: RecentAttestationsViewProps) {
                   <CritiqueText>{decodedData.critique}</CritiqueText>
                   <TimeText>Attested on: {new Date(parseInt(attestation.time) * 1000).toLocaleString()}</TimeText>
                   <AttestationCard
-                    pkg={{
-                      signer: attestation.attester,
-                      sig: { uid: attestation.id },
+                    attestation={{
+                      id: attestation.id,
+                      attester: attestation.attester,
+                      recipient: attestation.recipient,
+                      refUID: attestation.refUID,
+                      revocable: attestation.revocable,
+                      revocationTime: attestation.revocationTime,
+                      expirationTime: attestation.expirationTime,
+                      data: attestation.data,
                     }}
                   />
                 </AttestationItem>
