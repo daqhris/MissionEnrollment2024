@@ -1,6 +1,6 @@
-import React from 'react';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { getQueryClient } from './_app';
+import React from "react";
+import { getQueryClient } from "./_app";
+import { QueryClientProvider, dehydrate } from "@tanstack/react-query";
 
 const Custom404: React.FC = () => {
   const queryClient = getQueryClient();
@@ -16,3 +16,17 @@ const Custom404: React.FC = () => {
 };
 
 export default Custom404;
+
+// Ensure the page is statically generated
+export const getStaticProps = async () => {
+  const queryClient = getQueryClient();
+
+  // Prefetch any necessary data here if needed
+  // await queryClient.prefetchQuery(['someKey'], fetchSomeData);
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};
