@@ -1,0 +1,68 @@
+Voting Feature Removal Documentation
+
+This document outlines all instances of the voting system to be removed from the codebase.
+
+1. File: /home/ubuntu/superchain-superhack-2024/components/AttestationCard.tsx
+
+Lines 86-87:
+const VoteButton = tw.button`
+  px-4 
+
+Lines 104-105:
+const UpvoteButton = tw(VoteButton)`
+  bg-teal-600 
+
+Lines 110-111:
+const DownvoteButton = tw(VoteButton)`
+  bg-amber-600 
+
+Line 134:
+  hideVote?: boolean;
+
+Lines 139-141:
+export const AttestationCard = ({ pkg, hideVote }: Props) => {
+  const [isVoting, setIsVoting] = useState<"upvote" | "downvote" | null>(null);
+  const signer = useSigner();
+
+Lines 143-181:
+  const handleVote = async (upvote: boolean) => {
+    const voteType = upvote ? "upvote" : "downvote";
+
+    setIsVoting(voteType);
+    try {
+      // ... (entire function body)
+    } catch (error) {
+      console.error("Error while voting:", error);
+      alert("Error while submitting vote. Please try again.");
+    } finally {
+      setIsVoting(null);
+    }
+  };
+
+Lines 210-218:
+      {!hideVote && (
+        <ButtonContainer>
+          <DownvoteButton onClick={() => handleVote(false)} disabled={isVoting !== null}>
+            {isVoting === "downvote" ? <Spinner /> : "Downvote"}
+          </DownvoteButton>
+          <UpvoteButton onClick={() => handleVote(true)} disabled={isVoting !== null}>
+            {isVoting === "upvote" ? <Spinner /> : "Upvote"}
+          </UpvoteButton>
+        </ButtonContainer>
+
+2. File: /home/ubuntu/superchain-superhack-2024/README.md
+
+Line 9:
+- **Voting System**: Allows users to upvote or downvote attestations, adding a layer of community-driven validation.
+
+Line 60:
+5. Optionally, upvote or downvote the attestation to contribute to community-driven validation.
+
+3. File: /home/ubuntu/superchain-superhack-2024/app/page.tsx
+
+Line 281:
+              <AttestationCard pkg={result} hideVote={true} />
+
+Note: This line should be modified to remove the `hideVote` prop, not entirely removed.
+
+These code snippets represent all instances of the voting system found in the codebase. Removing or modifying these sections will effectively eliminate the voting feature from the application.
