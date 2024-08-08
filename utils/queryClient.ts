@@ -2,7 +2,7 @@ import { QueryClient } from '@tanstack/react-query';
 
 let queryClientInstance: QueryClient | null = null;
 
-export function getQueryClient() {
+const getQueryClient = () => {
   if (typeof window === 'undefined') {
     // Server-side: Always create a new QueryClient
     return new QueryClient({
@@ -28,4 +28,6 @@ export function getQueryClient() {
   }
 
   return queryClientInstance;
-}
+};
+
+export default getQueryClient;

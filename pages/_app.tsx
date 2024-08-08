@@ -6,7 +6,7 @@ import { DehydratedState, HydrationBoundary, QueryClientProvider } from "@tansta
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { WagmiConfig, createConfig, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
-import { getQueryClient } from "../utils/queryClient";
+import getQueryClient from "../utils/queryClient";
 
 // Configure chains & providers
 const config = createConfig({
