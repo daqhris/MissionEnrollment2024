@@ -1,113 +1,143 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
-import { useAccount, useEnsName } from "wagmi";
+import { useEnsAddress } from "wagmi";
 
 interface POAPEvent {
-  id: string;
-  name: string;
-  city: string;
-  country: string;
-  start_date: string;
-  end_date: string;
-  image_url: string;
+  event: {
+    id: number;
+    name: string;
+    description: string;
+    start_date: string;
+    end_date: string;
+    city: string;
+  };
+  tokenId: string;
+  owner: string;
+  chain: string;
+  created: string;
+  imageUrl: string;
 }
 
-const API_KEY = "YOUR_API_KEY_HERE";
-const API_BASE_URL = "https://api.poap.tech";
+const API_BASE_URL = "/api/mockPoapApi";
 
 const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onVerified }) => {
-  const { address } = useAccount();
-  const { data: ensName } = useEnsName({ address });
+  const [inputAddress, setInputAddress] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationResult, setVerificationResult] = useState<string | null>(null);
   const [poaps, setPOAPs] = useState<POAPEvent[]>([]);
   const [imageLoadErrors, setImageLoadErrors] = useState<Record<string, boolean>>({});
 
+  const { data: ensAddress } = useEnsAddress({
+    name: inputAddress,
+  });
+
   useEffect(() => {
-    const fetchPOAPs = async () => {
-      if (!address) return;
-      setIsVerifying(true);
-      setVerificationResult(null);
-      try {
-        const response = await fetch(`${API_BASE_URL}/actions/scan/${address}`, {
-          headers: {
-            "X-API-Key": API_KEY,
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`Failed to fetch POAPs: ${response.statusText}`);
-        }
-        const data = await response.json();
-        const ethGlobalPOAPs = data.filter(
-          (poap: POAPEvent) => poap.name.toLowerCase().includes("ethglobal") && poap.city.toLowerCase() === "brussels",
-        );
-        setPOAPs(ethGlobalPOAPs);
-      } catch (error) {
-        console.error("Error fetching POAPs:", error);
-        setVerificationResult("Failed to verify POAPs. Please try again.");
-      } finally {
-        setIsVerifying(false);
+    if (ensAddress || inputAddress) {
+      fetchPOAPs(ensAddress || inputAddress);
+    }
+  }, [ensAddress, inputAddress]);
+
+  const fetchPOAPs = useCallback(async (address: string) => {
+    setIsVerifying(true);
+    setVerificationResult(null);
+    try {
+      const response = await fetch(`/api/mockPoapApi?address=${address}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch POAPs: ${response.statusText}`);
       }
-    };
+      const data = await response.json();
+      if (!Array.isArray(data) || data.length === 0) {
+        throw new Error('No POAPs found for this address');
+      }
+      const ethGlobalPOAPs = data.filter(
+        (poap: POAPEvent) =>
+          poap.event.name.toLowerCase().includes("ethglobal") &&
+          poap.event.city.toLowerCase() === "brussels"
+      );
+      setPOAPs(ethGlobalPOAPs);
+      if (ethGlobalPOAPs.length === 0) {
+        setVerificationResult("No eligible POAPs found for ETHGlobal events in Brussels.");
+      }
+    } catch (error) {
+      console.error("Error fetching POAPs:", error);
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        setVerificationResult("Network error. Please check your internet connection and try again.");
+      } else {
+        setVerificationResult(error instanceof Error ? error.message : "Failed to verify POAPs. Please try again.");
+      }
+    } finally {
+      setIsVerifying(false);
+    }
+  }, []);
 
-    fetchPOAPs();
-  }, [address]);
-
-  const handleVerify = () => {
+  const handleVerify = useCallback(() => {
     if (poaps.length > 0) {
       setVerificationResult(
-        `Verification successful! ${ensName || address} has attended an ETHGlobal event in Brussels.`,
+        `Verification successful! ${inputAddress} has attended an ETHGlobal event in Brussels.`,
       );
       onVerified();
     } else {
       setVerificationResult(
-        `Verification failed. No eligible POAPs found for ${ensName || address} at ETHGlobal events in Brussels.`,
+        `Verification failed. No eligible POAPs found for ${inputAddress} at ETHGlobal events in Brussels.`,
       );
     }
-  };
+  }, [poaps, inputAddress, onVerified]);
 
-  const handleImageError = (poapId: string) => {
-    setImageLoadErrors(prev => ({ ...prev, [poapId]: true }));
+  const handleImageError = (tokenId: string) => {
+    setImageLoadErrors(prev => ({ ...prev, [tokenId]: true }));
   };
 
   return (
     <div className="p-4 bg-white shadow rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Event Attendance Verification</h2>
-      <p className="mb-4">Verify your attendance at an ETHGlobal event in Brussels:</p>
+      <p className="mb-4">Enter your Ethereum address or ENS name to verify your attendance at an ETHGlobal event in Brussels:</p>
+      <input
+        type="text"
+        value={inputAddress}
+        onChange={(e) => setInputAddress(e.target.value)}
+        placeholder="Enter Ethereum address or ENS name"
+        className="w-full p-2 mb-4 border rounded"
+      />
+      <div className="flex space-x-4 mb-4">
+        <button
+          onClick={() => fetchPOAPs(ensAddress || inputAddress)}
+          disabled={!inputAddress || isVerifying}
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300 flex-1"
+        >
+          Fetch POAPs
+        </button>
+        <button
+          onClick={handleVerify}
+          disabled={isVerifying || poaps.length === 0}
+          className="bg-green-500 text-white p-2 rounded hover:bg-green-600 disabled:bg-gray-300 flex-1"
+        >
+          Verify Attendance
+        </button>
+      </div>
       {isVerifying ? (
-        <p>Verifying POAPs for {ensName || address}...</p>
+        <p>Verifying POAPs for {ensAddress || inputAddress}...</p>
       ) : (
         <>
-          <button
-            onClick={handleVerify}
-            disabled={poaps.length === 0}
-            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300"
-          >
-            Verify Attendance
-          </button>
           {poaps.length > 0 && (
             <div className="mt-4">
               <h3 className="text-lg font-semibold">Eligible POAPs:</h3>
               <ul className="list-none pl-0">
                 {poaps.map(poap => (
-                  <li key={poap.id} className="flex items-center mb-2">
-                    {!imageLoadErrors[poap.id] ? (
+                  <li key={poap.tokenId} className="flex items-center mb-2">
+                    <div className="w-12 h-12 mr-2 rounded overflow-hidden">
                       <Image
-                        src={poap.image_url}
-                        alt={poap.name}
+                        src={imageLoadErrors[poap.tokenId] ? "/placeholder-poap.png" : poap.imageUrl}
+                        alt={poap.event.name}
                         width={48}
                         height={48}
-                        className="mr-2 rounded"
-                        onError={() => handleImageError(poap.id)}
+                        className="object-cover"
+                        onError={() => handleImageError(poap.tokenId)}
+                        unoptimized
                       />
-                    ) : (
-                      <div className="w-12 h-12 mr-2 rounded bg-gray-200 flex items-center justify-center">
-                        <span className="text-xs text-gray-500">No image</span>
-                      </div>
-                    )}
+                    </div>
                     <div>
-                      <p className="font-semibold">{poap.name}</p>
-                      <p className="text-sm text-gray-600">{new Date(poap.start_date).toLocaleDateString()}</p>
+                      <p className="font-semibold">{poap.event.name}</p>
+                      <p className="text-sm text-gray-600">{new Date(poap.event.start_date).toLocaleDateString()}</p>
                     </div>
                   </li>
                 ))}

@@ -17,6 +17,9 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  images: {
+    domains: ['api.poap.tech', 'placehold.co'],
+  },
 };
 
 module.exports = nextConfig;
