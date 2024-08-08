@@ -36,13 +36,18 @@ let queryClientInstance: QueryClient | null = null;
 
 // Function to get or create QueryClient
 export function getQueryClient() {
+  console.log("getQueryClient called, isServer:", typeof window === "undefined");
   if (typeof window === "undefined") {
     // Server-side: Always create a new QueryClient
+    console.log("Creating new QueryClient for server-side");
     return new QueryClient(queryClientOptions);
   } else {
     // Client-side: Create the QueryClient once in the client
     if (!queryClientInstance) {
+      console.log("Creating new QueryClient for client-side");
       queryClientInstance = new QueryClient(queryClientOptions);
+    } else {
+      console.log("Reusing existing QueryClient for client-side");
     }
     return queryClientInstance;
   }
@@ -55,7 +60,9 @@ type MyAppProps = AppProps & {
 };
 
 function MyApp({ Component, pageProps }: MyAppProps) {
+  console.log("MyApp rendering");
   const queryClient = getQueryClient();
+  console.log("QueryClient obtained:", queryClient);
 
   return (
     <QueryClientProvider client={queryClient}>
