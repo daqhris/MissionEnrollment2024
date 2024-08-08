@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_RECENT_ATTESTATIONS } from "../graphql/queries";
+import { GET_ATTESTATIONS } from "../graphql/queries";
 import { AttestationCard } from "../components/AttestationCard";
 import { Attestation } from "../types/attestation";
 
 const RecentPage: React.FC = () => {
   const [recentAttestations, setRecentAttestations] = useState<Attestation[]>([]);
-  const { loading, error, data } = useQuery(GET_RECENT_ATTESTATIONS, {
+  const { loading, error, data } = useQuery(GET_ATTESTATIONS, {
     variables: { limit: 10 }, // Fetch the 10 most recent attestations
   });
 
