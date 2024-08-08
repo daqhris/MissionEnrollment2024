@@ -5,6 +5,7 @@ import { DehydratedState, HydrationBoundary, QueryClient, QueryClientProvider } 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { WagmiConfig, createConfig, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
+import React from 'react';
 
 // Configure chains & providers
 const config = createConfig({
@@ -21,15 +22,19 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-function MyApp({ Component, pageProps }: AppProps<{ dehydratedState: DehydratedState }>) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 5 * 60 * 1000, // 5 minutes
-      },
+// Create a client
+const queryClientOptions = {
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
     },
-  });
+  },
+};
 
+// Create a QueryClient instance outside of the component
+const queryClient = new QueryClient(queryClientOptions);
+
+function MyApp({ Component, pageProps }: AppProps<{ dehydratedState: DehydratedState }>) {
   return (
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={pageProps.dehydratedState}>
