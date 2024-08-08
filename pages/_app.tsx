@@ -1,7 +1,8 @@
+import React from "react";
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DehydratedState, HydrationBoundary, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { WagmiConfig, createConfig, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
@@ -21,25 +22,36 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-// Create a client
-const queryClient = new QueryClient({
+// Create QueryClient options
+const queryClientOptions = {
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
-      retry: false,
       staleTime: 5 * 60 * 1000, // 5 minutes
     },
   },
-});
+};
 
-function MyApp({ Component, pageProps }: AppProps) {
+type MyAppProps = AppProps & {
+  pageProps: {
+    dehydratedState?: DehydratedState;
+  };
+};
+
+function MyApp({ Component, pageProps }: MyAppProps) {
+  const queryClientRef = React.useRef<QueryClient>();
+  if (!queryClientRef.current) {
+    queryClientRef.current = new QueryClient(queryClientOptions);
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <WagmiConfig config={config}>
-        <ApolloProvider client={client}>
-          <Component {...pageProps} />
-        </ApolloProvider>
-      </WagmiConfig>
+    <QueryClientProvider client={queryClientRef.current}>
+      <HydrationBoundary state={pageProps.dehydratedState}>
+        <WagmiConfig config={config}>
+          <ApolloProvider client={client}>
+            <Component {...pageProps} />
+          </ApolloProvider>
+        </WagmiConfig>
+      </HydrationBoundary>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

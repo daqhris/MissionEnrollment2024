@@ -58,8 +58,6 @@ We recommend using the following wallets for the best experience with MissionEnr
    ```
    NEXT_PUBLIC_ALCHEMY_API_KEY=your_alchemy_api_key
    ETH_KEY=attester_key
-   NEXT_PUBLIC_POAP_API_KEY=your_poap_api_key
-   NEXT_PUBLIC_CHAINLINK_NODE_URL=your_chainlink_node_url
    ```
 
 4. Run the development server:
