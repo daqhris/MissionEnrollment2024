@@ -1,10 +1,13 @@
 import type { AppProps } from "next/app";
-import "../styles/globals.css";
+import { useRef } from "react";
+import { Suspense } from "react";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DehydratedState, QueryClient, QueryClientProvider, Hydrate } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { WagmiConfig, createConfig, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
+
+import "../styles/globals.css";
 
 // Configure chains & providers
 const config = createConfig({
@@ -21,25 +24,29 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-// Create a client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-    },
-  },
-});
+function MyApp({ Component, pageProps }: AppProps<{ dehydratedState: DehydratedState }>) {
+  const queryClientRef = useRef<QueryClient>();
+  if (!queryClientRef.current) {
+    queryClientRef.current = new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 5 * 60 * 1000, // 5 minutes
+        },
+      },
+    });
+  }
 
-function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <WagmiConfig config={config}>
-        <ApolloProvider client={client}>
-          <Component {...pageProps} />
-        </ApolloProvider>
-      </WagmiConfig>
+    <QueryClientProvider client={queryClientRef.current}>
+      <Hydrate state={pageProps.dehydratedState}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <WagmiConfig config={config}>
+            <ApolloProvider client={client}>
+              <Component {...pageProps} />
+            </ApolloProvider>
+          </WagmiConfig>
+        </Suspense>
+      </Hydrate>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
