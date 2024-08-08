@@ -1,8 +1,7 @@
 import type { AppProps } from "next/app";
-import { useRef } from "react";
-import { Suspense } from "react";
+import { useState } from "react";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { DehydratedState, QueryClient, QueryClientProvider, Hydrate } from "@tanstack/react-query";
+import { DehydratedState, HydrationBoundary, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { WagmiConfig, createConfig, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
@@ -25,28 +24,26 @@ const client = new ApolloClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps<{ dehydratedState: DehydratedState }>) {
-  const queryClientRef = useRef<QueryClient>();
-  if (!queryClientRef.current) {
-    queryClientRef.current = new QueryClient({
-      defaultOptions: {
-        queries: {
-          staleTime: 5 * 60 * 1000, // 5 minutes
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 5 * 60 * 1000, // 5 minutes
+          },
         },
-      },
-    });
-  }
+      })
+  );
 
   return (
-    <QueryClientProvider client={queryClientRef.current}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <WagmiConfig config={config}>
-            <ApolloProvider client={client}>
-              <Component {...pageProps} />
-            </ApolloProvider>
-          </WagmiConfig>
-        </Suspense>
-      </Hydrate>
+    <QueryClientProvider client={queryClient}>
+      <HydrationBoundary state={pageProps.dehydratedState}>
+        <WagmiConfig config={config}>
+          <ApolloProvider client={client}>
+            <Component {...pageProps} />
+          </ApolloProvider>
+        </WagmiConfig>
+      </HydrationBoundary>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
