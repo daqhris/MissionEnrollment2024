@@ -1,6 +1,6 @@
-import React from 'react';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { getQueryClient } from './_app';
+import React from "react";
+import { getQueryClient } from "./_app";
+import { QueryClientProvider } from "@tanstack/react-query";
 
 const Custom404 = () => {
   const queryClient = getQueryClient();
