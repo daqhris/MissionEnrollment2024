@@ -35,7 +35,7 @@ const queryClientOptions = {
 let queryClientInstance: QueryClient | null = null;
 
 // Function to get or create QueryClient
-function getQueryClient() {
+export function getQueryClient() {
   if (typeof window === 'undefined') {
     // Server-side: Always create a new QueryClient
     return new QueryClient(queryClientOptions);
