@@ -31,7 +31,7 @@ const queryClientOptions = {
   },
 };
 
-// Create a QueryClient instance outside of the component
+// Instantiate the QueryClient outside of the MyApp function
 const queryClient = new QueryClient(queryClientOptions);
 
 function MyApp({ Component, pageProps }: AppProps<{ dehydratedState: DehydratedState }>) {
