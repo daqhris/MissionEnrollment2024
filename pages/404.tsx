@@ -16,8 +16,3 @@ const Custom404 = () => {
 };
 
 export default Custom404;
-
-// Add getStaticProps to ensure this page is statically generated
-export async function getStaticProps() {
-  return { props: {} };
-}
