@@ -31,6 +31,28 @@ const queryClientOptions = {
   },
 };
 
+// Module-level variable to store the QueryClient instance
+let queryClientInstance: QueryClient | null = null;
+
+// Function to get or create QueryClient
+export function getQueryClient() {
+  console.log("getQueryClient called, isServer:", typeof window === "undefined");
+  if (typeof window === "undefined") {
+    // Server-side: Always create a new QueryClient
+    console.log("Creating new QueryClient for server-side");
+    return new QueryClient(queryClientOptions);
+  } else {
+    // Client-side: Create the QueryClient once in the client
+    if (!queryClientInstance) {
+      console.log("Creating new QueryClient for client-side");
+      queryClientInstance = new QueryClient(queryClientOptions);
+    } else {
+      console.log("Reusing existing QueryClient for client-side");
+    }
+    return queryClientInstance;
+  }
+}
+
 type MyAppProps = AppProps & {
   pageProps: {
     dehydratedState?: DehydratedState;
@@ -38,13 +60,12 @@ type MyAppProps = AppProps & {
 };
 
 function MyApp({ Component, pageProps }: MyAppProps) {
-  const queryClientRef = React.useRef<QueryClient>();
-  if (!queryClientRef.current) {
-    queryClientRef.current = new QueryClient(queryClientOptions);
-  }
+  console.log("MyApp rendering");
+  const queryClient = getQueryClient();
+  console.log("QueryClient obtained:", queryClient);
 
   return (
-    <QueryClientProvider client={queryClientRef.current}>
+    <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={pageProps.dehydratedState}>
         <WagmiConfig config={config}>
           <ApolloProvider client={client}>
