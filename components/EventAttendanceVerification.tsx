@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react";
 import Image from "next/image";
-import { useAccount, useEnsName } from "wagmi";
+import { useEnsAddress, useEnsName } from "wagmi";
 
 interface POAPEvent {
   id: string;
@@ -12,56 +12,58 @@ interface POAPEvent {
   image_url: string;
 }
 
-const API_KEY = "YOUR_API_KEY_HERE";
-const API_BASE_URL = "https://api.poap.tech";
+const API_BASE_URL = process.env.NEXT_PUBLIC_POAP_API_URL || "https://api.poap.tech";
+const API_KEY = process.env.NEXT_PUBLIC_POAP_API_KEY;
+
+if (!API_KEY) {
+  console.warn("POAP API key is not set. Please set NEXT_PUBLIC_POAP_API_KEY in your environment.");
+}
 
 const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onVerified }) => {
-  const { address } = useAccount();
-  const { data: ensName } = useEnsName({ address });
+  const [inputAddress, setInputAddress] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationResult, setVerificationResult] = useState<string | null>(null);
   const [poaps, setPOAPs] = useState<POAPEvent[]>([]);
   const [imageLoadErrors, setImageLoadErrors] = useState<Record<string, boolean>>({});
 
-  useEffect(() => {
-    const fetchPOAPs = async () => {
-      if (!address) return;
-      setIsVerifying(true);
-      setVerificationResult(null);
-      try {
-        const response = await fetch(`${API_BASE_URL}/actions/scan/${address}`, {
-          headers: {
-            "X-API-Key": API_KEY,
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`Failed to fetch POAPs: ${response.statusText}`);
-        }
-        const data = await response.json();
-        const ethGlobalPOAPs = data.filter(
-          (poap: POAPEvent) => poap.name.toLowerCase().includes("ethglobal") && poap.city.toLowerCase() === "brussels",
-        );
-        setPOAPs(ethGlobalPOAPs);
-      } catch (error) {
-        console.error("Error fetching POAPs:", error);
-        setVerificationResult("Failed to verify POAPs. Please try again.");
-      } finally {
-        setIsVerifying(false);
-      }
-    };
+  const { data: ensAddress } = useEnsAddress({
+    name: inputAddress,
+  });
 
-    fetchPOAPs();
-  }, [address]);
+  const fetchPOAPs = async (address: string) => {
+    setIsVerifying(true);
+    setVerificationResult(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/actions/scan/${address}`, {
+        headers: {
+          "X-API-Key": API_KEY || "",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch POAPs: ${response.statusText}`);
+      }
+      const data = await response.json();
+      const ethGlobalPOAPs = data.filter(
+        (poap: POAPEvent) => poap.name.toLowerCase().includes("ethglobal") && poap.city.toLowerCase() === "brussels",
+      );
+      setPOAPs(ethGlobalPOAPs);
+    } catch (error) {
+      console.error("Error fetching POAPs:", error);
+      setVerificationResult("Failed to verify POAPs. Please try again.");
+    } finally {
+      setIsVerifying(false);
+    }
+  };
 
   const handleVerify = () => {
     if (poaps.length > 0) {
       setVerificationResult(
-        `Verification successful! ${ensName || address} has attended an ETHGlobal event in Brussels.`,
+        `Verification successful! ${inputAddress} has attended an ETHGlobal event in Brussels.`,
       );
       onVerified();
     } else {
       setVerificationResult(
-        `Verification failed. No eligible POAPs found for ${ensName || address} at ETHGlobal events in Brussels.`,
+        `Verification failed. No eligible POAPs found for ${inputAddress} at ETHGlobal events in Brussels.`,
       );
     }
   };
@@ -73,18 +75,25 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
   return (
     <div className="p-4 bg-white shadow rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Event Attendance Verification</h2>
-      <p className="mb-4">Verify your attendance at an ETHGlobal event in Brussels:</p>
+      <p className="mb-4">Enter your Ethereum address or ENS name to verify your attendance at an ETHGlobal event in Brussels:</p>
+      <input
+        type="text"
+        value={inputAddress}
+        onChange={(e) => setInputAddress(e.target.value)}
+        placeholder="Enter Ethereum address or ENS name"
+        className="w-full p-2 mb-4 border rounded"
+      />
+      <button
+        onClick={() => fetchPOAPs(ensAddress || inputAddress)}
+        disabled={!inputAddress || isVerifying}
+        className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300 mb-4"
+      >
+        Fetch POAPs
+      </button>
       {isVerifying ? (
-        <p>Verifying POAPs for {ensName || address}...</p>
+        <p>Verifying POAPs for {ensAddress || inputAddress}...</p>
       ) : (
         <>
-          <button
-            onClick={handleVerify}
-            disabled={poaps.length === 0}
-            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300"
-          >
-            Verify Attendance
-          </button>
           {poaps.length > 0 && (
             <div className="mt-4">
               <h3 className="text-lg font-semibold">Eligible POAPs:</h3>
@@ -112,6 +121,12 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
                   </li>
                 ))}
               </ul>
+              <button
+                onClick={handleVerify}
+                className="bg-green-500 text-white p-2 rounded hover:bg-green-600 mt-4"
+              >
+                Verify Attendance
+              </button>
             </div>
           )}
         </>
