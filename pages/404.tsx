@@ -1,8 +1,8 @@
 import React from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { getQueryClient } from './_app';
 
-const Custom404: React.FC = () => {
+const Custom404 = () => {
   const queryClient = getQueryClient();
 
   return (

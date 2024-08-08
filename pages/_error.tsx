@@ -7,7 +7,7 @@ interface ErrorProps {
   statusCode?: number;
 }
 
-const Error: React.FC<ErrorProps> = ({ statusCode }) => {
+const Error = ({ statusCode }: ErrorProps) => {
   const queryClient = getQueryClient();
 
   return (
@@ -16,7 +16,7 @@ const Error: React.FC<ErrorProps> = ({ statusCode }) => {
         <h1>Error {statusCode}</h1>
         <p>
           {statusCode
-            ? `An error ${statusCode} occurred on server`
+            ? 'An error ' + statusCode + ' occurred on server'
             : 'An error occurred on client'}
         </p>
       </div>
