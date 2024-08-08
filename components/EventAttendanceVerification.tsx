@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
-import { useEnsAddress, useEnsName } from "wagmi";
+import { useEnsAddress } from "wagmi";
 
 interface POAPEvent {
   event: {
@@ -15,6 +15,7 @@ interface POAPEvent {
   owner: string;
   chain: string;
   created: string;
+  imageUrl: string;
 }
 
 const API_BASE_URL = "/api/mockPoapApi";
@@ -30,11 +31,17 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
     name: inputAddress,
   });
 
-  const fetchPOAPs = async (address: string) => {
+  useEffect(() => {
+    if (ensAddress || inputAddress) {
+      fetchPOAPs(ensAddress || inputAddress);
+    }
+  }, [ensAddress, inputAddress]);
+
+  const fetchPOAPs = useCallback(async (address: string) => {
     setIsVerifying(true);
     setVerificationResult(null);
     try {
-      const response = await fetch(`${API_BASE_URL}?address=${address}`);
+      const response = await fetch(`/api/mockPoapApi?address=${address}`);
       if (!response.ok) {
         throw new Error(`Failed to fetch POAPs: ${response.statusText}`);
       }
@@ -53,13 +60,17 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
       }
     } catch (error) {
       console.error("Error fetching POAPs:", error);
-      setVerificationResult(error instanceof Error ? error.message : "Failed to verify POAPs. Please try again.");
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        setVerificationResult("Network error. Please check your internet connection and try again.");
+      } else {
+        setVerificationResult(error instanceof Error ? error.message : "Failed to verify POAPs. Please try again.");
+      }
     } finally {
       setIsVerifying(false);
     }
-  };
+  }, []);
 
-  const handleVerify = () => {
+  const handleVerify = useCallback(() => {
     if (poaps.length > 0) {
       setVerificationResult(
         `Verification successful! ${inputAddress} has attended an ETHGlobal event in Brussels.`,
@@ -70,7 +81,7 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
         `Verification failed. No eligible POAPs found for ${inputAddress} at ETHGlobal events in Brussels.`,
       );
     }
-  };
+  }, [poaps, inputAddress, onVerified]);
 
   const handleImageError = (tokenId: string) => {
     setImageLoadErrors(prev => ({ ...prev, [tokenId]: true }));
@@ -113,20 +124,17 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
               <ul className="list-none pl-0">
                 {poaps.map(poap => (
                   <li key={poap.tokenId} className="flex items-center mb-2">
-                    {!imageLoadErrors[poap.tokenId] ? (
+                    <div className="w-12 h-12 mr-2 rounded overflow-hidden">
                       <Image
-                        src={`https://api.poap.tech/token/${poap.tokenId}/image`}
+                        src={imageLoadErrors[poap.tokenId] ? "/placeholder-poap.png" : poap.imageUrl}
                         alt={poap.event.name}
                         width={48}
                         height={48}
-                        className="mr-2 rounded"
+                        className="object-cover"
                         onError={() => handleImageError(poap.tokenId)}
+                        unoptimized
                       />
-                    ) : (
-                      <div className="w-12 h-12 mr-2 rounded bg-gray-200 flex items-center justify-center">
-                        <span className="text-xs text-gray-500">No image</span>
-                      </div>
-                    )}
+                    </div>
                     <div>
                       <p className="font-semibold">{poap.event.name}</p>
                       <p className="text-sm text-gray-600">{new Date(poap.event.start_date).toLocaleDateString()}</p>
