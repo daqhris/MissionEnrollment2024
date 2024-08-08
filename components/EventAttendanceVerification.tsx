@@ -87,13 +87,22 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
         placeholder="Enter Ethereum address or ENS name"
         className="w-full p-2 mb-4 border rounded"
       />
-      <button
-        onClick={() => fetchPOAPs(ensAddress || inputAddress)}
-        disabled={!inputAddress || isVerifying}
-        className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300 mb-4"
-      >
-        Fetch POAPs
-      </button>
+      <div className="flex space-x-4 mb-4">
+        <button
+          onClick={() => fetchPOAPs(ensAddress || inputAddress)}
+          disabled={!inputAddress || isVerifying}
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300 flex-1"
+        >
+          Fetch POAPs
+        </button>
+        <button
+          onClick={handleVerify}
+          disabled={isVerifying || poaps.length === 0}
+          className="bg-green-500 text-white p-2 rounded hover:bg-green-600 disabled:bg-gray-300 flex-1"
+        >
+          Verify Attendance
+        </button>
+      </div>
       {isVerifying ? (
         <p>Verifying POAPs for {ensAddress || inputAddress}...</p>
       ) : (
@@ -125,12 +134,6 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
                   </li>
                 ))}
               </ul>
-              <button
-                onClick={handleVerify}
-                className="bg-green-500 text-white p-2 rounded hover:bg-green-600 mt-4"
-              >
-                Verify Attendance
-              </button>
             </div>
           )}
         </>
