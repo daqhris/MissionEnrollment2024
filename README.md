@@ -8,9 +8,10 @@ This dApp was developed during SuperHack 2024, an online hackathon organized by 
 
 ## Features
 
-- **Onchain Attestations**: Creates immutable records of mission enrolment using the Ethereum Attestation Service.
+- **Onchain Attestations**: Creates immutable records of mission enrolment using the Ethereum Attestation Service (EAS).
 - **ENS Integration**: Supports Ethereum Name Service for user-friendly addressing.
 - **ETHGlobal POAPs Retrieval**: Verifies attendance at ETHGlobal events through Proof of Attendance Protocol tokens.
+- **NFT Migration**: Enables cross-chain transfers of POAPs using Chainlink CCIP (Cross-Chain Interoperability Protocol).
 - **Interactive Single-Page Application**: Offers a streamlined user experience with stage-based components.
 - **Recent Attestations**: Displays a list of recent attestations for public viewing.
 - **POAP Integration**: Prepared integration points for future POAP-related features.
@@ -21,10 +22,11 @@ This dApp was developed during SuperHack 2024, an online hackathon organized by 
 
 - **Frontend**: Next.js, React
 - **State Management**: React Query with singleton QueryClient instance
-- **Blockchain Integration**: Ethereum, EAS (Ethereum Attestation Service)
+- **Blockchain Integration**: Ethereum, EAS (Ethereum Attestation Service), Chainlink CCIP
 - **Wallet Connection**: Wagmi
 - **Identity**: ENS (Ethereum Name Service)
 - **Event Verification**: POAP (Proof of Attendance Protocol)
+- **Cross-Chain Communication**: Chainlink CCIP (Cross-Chain Interoperability Protocol)
 - **Styling**: Tailwind CSS
 - **Type Checking**: TypeScript
 - **Development Tools**: ESLint for code quality
@@ -76,21 +78,25 @@ This dApp was developed during SuperHack 2024, an online hackathon organized by 
 
 ## Usage
 
-MissionEnrolment2024 provides a streamlined single-page application flow for mission enrolment and verification:
+MissionEnrolment2024 provides a streamlined single-page application flow for mission enrolment, verification, and NFT migration:
 
 1. Connect your Ethereum wallet to the application using the "Connect Wallet" button.
 2. Navigate through the mission enrolment stages:
    a. Enter your ENS (Ethereum Name Service) name or Ethereum address for identity verification.
    b. The application will automatically retrieve and verify your ETHGlobal POAPs to confirm event attendance.
    c. Review the details of your mission participation, including verified events and achievements.
-3. Create an onchain attestation for your mission enrolment:
+3. Transfer your POAP using Chainlink CCIP:
+   a. Initiate the transfer of your ETHGlobal POAP from Gnosis chain to either Base or Optimism.
+   b. Confirm the transfer transaction using your connected wallet.
+   c. Wait for the cross-chain transfer to complete, ensuring data integrity and security.
+4. Create an onchain attestation for your mission enrolment:
    a. Click the "Create Attestation" button to initiate the process.
    b. Sign the attestation transaction using your connected wallet.
    c. Wait for the transaction to be confirmed on the Ethereum network.
-4. Once confirmed, view your attestation details, which are now immutably recorded on the blockchain.
-5. Explore the "Recent Attestations" section to see other verified mission enrolments and the growing community of participants.
+5. Once confirmed, view your attestation details, which are now immutably recorded on the blockchain.
+6. Explore the "Recent Attestations" section to see other verified mission enrolments and the growing community of participants.
 
-This streamlined process ensures a transparent and verifiable record of your mission enrolment, leveraging the security and immutability of blockchain technology. The single-page application design provides a seamless user experience throughout the entire enrolment and verification process.
+This streamlined process ensures a transparent and verifiable record of your mission enrolment, leveraging the security and immutability of blockchain technology. The Chainlink CCIP integration allows for secure cross-chain POAP transfers, enhancing the interoperability of the application. The single-page application design provides a seamless user experience throughout the entire enrolment, verification, and cross-chain transfer process.
 
 ## Disclaimer
 
@@ -101,5 +107,6 @@ This project is for educational and demonstration purposes only. While the attes
 - [Ethereum Attestation Service Documentation](https://docs.attest.sh/)
 - [ENS Documentation](https://docs.ens.domains/)
 - [POAP Documentation](https://documentation.poap.tech/)
+- [Chainlink CCIP Documentation](https://docs.chain.link/ccip)
 
 For more detailed information on each component, please refer to the respective documentation.
