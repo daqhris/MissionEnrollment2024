@@ -19,9 +19,9 @@ library AttestationUtils {
     ) internal returns (bytes32) {
         bytes memory data = abi.encode(tokenId, signature);
 
-        IEAS.AttestationRequest memory request = IEAS.AttestationRequest({
+        AttestationRequest memory request = AttestationRequest({
             schema: schema,
-            data: IEAS.AttestationData({
+            data: AttestationRequestData({
                 recipient: receiver,
                 expirationTime: 0, // No expiration
                 revocable: true,

@@ -62,7 +62,7 @@ library Client {
   /// @return bool Returns true if the address has a valid ENS name, false otherwise
   function verifyOnchainIdentity(address addr, address ensRegistry) internal view returns (bool) {
     ENS ens = ENS(ensRegistry);
-    bytes32 node = ens.namehash(ens.reverseNode(addr));
+    bytes32 node = reverseNode(addr);
     address resolver = ens.resolver(node);
     if (resolver == address(0)) {
       return false;
@@ -70,5 +70,31 @@ library Client {
     Resolver resolverContract = Resolver(resolver);
     string memory name = resolverContract.name(node);
     return bytes(name).length > 0;
+  }
+
+  function reverseNode(address addr) internal pure returns (bytes32) {
+    return keccak256(abi.encodePacked(bytes32(0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2), keccak256(abi.encodePacked(addr))));
+  }
+
+  function namehash(bytes memory name) internal pure returns (bytes32) {
+    bytes32 node = 0x0000000000000000000000000000000000000000000000000000000000000000;
+    uint i = 0;
+    while (i < name.length) {
+      uint labelLen = uint8(name[i]);
+      i++;
+      if (i + labelLen > name.length) break;
+      bytes32 labelHash = keccak256(abi.encodePacked(slice(name, i, labelLen)));
+      node = keccak256(abi.encodePacked(node, labelHash));
+      i += labelLen;
+    }
+    return node;
+  }
+
+  function slice(bytes memory data, uint start, uint len) internal pure returns (bytes memory) {
+    bytes memory b = new bytes(len);
+    for (uint i = 0; i < len; i++) {
+      b[i] = data[i + start];
+    }
+    return b;
   }
 }
