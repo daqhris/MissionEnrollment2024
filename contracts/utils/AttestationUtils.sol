@@ -33,4 +33,14 @@ library AttestationUtils {
 
         return eas.eas.attest(request);
     }
+
+    function createENSSchema(EAS memory eas) internal returns (bytes32) {
+        string memory schema = "address userAddress,string ensName,uint256 registrationDate";
+        return eas.schemaRegistry.register(schema, ISchemaResolver(address(0)), true);
+    }
+
+    function createPOAPSchema(EAS memory eas) internal returns (bytes32) {
+        string memory schema = "address userAddress,uint256 poapTokenId,string eventName,uint256 eventDate";
+        return eas.schemaRegistry.register(schema, ISchemaResolver(address(0)), true);
+    }
 }
