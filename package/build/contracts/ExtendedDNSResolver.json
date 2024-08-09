@@ -1,0 +1,6 @@
+[
+  "error InvalidAddressFormat(bytes)",
+  "error NotImplemented()",
+  "function resolve(bytes,bytes,bytes) pure returns (bytes)",
+  "function supportsInterface(bytes4) view returns (bool)"
+]

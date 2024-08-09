@@ -1,0 +1,14 @@
+[
+  "constructor(address,address)",
+  "event OwnershipTransferred(address indexed,address indexed)",
+  "function approvedWrapper(address) view returns (bool)",
+  "function ens() view returns (address)",
+  "function owner() view returns (address)",
+  "function registrar() view returns (address)",
+  "function renounceOwnership()",
+  "function setSubnodeRecord(bytes32,string,address,address,uint64,uint32,uint64)",
+  "function setWrapperApproval(address,bool)",
+  "function transferOwnership(address)",
+  "function wrapETH2LD(string,address,uint32,uint64,address)",
+  "function wrapFromUpgrade(bytes,address,uint32,uint64,address,bytes)"
+]

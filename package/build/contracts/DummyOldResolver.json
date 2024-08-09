@@ -1,0 +1,4 @@
+[
+  "function name(bytes32) returns (string)",
+  "function test() returns (bool)"
+]

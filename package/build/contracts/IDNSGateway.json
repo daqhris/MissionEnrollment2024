@@ -1,0 +1,3 @@
+[
+  "function resolve(bytes,uint16) returns (tuple(bytes,bytes)[])"
+]

@@ -1,0 +1,22 @@
+[
+  "constructor(address,address,address,address,address)",
+  "error InvalidPublicSuffix(bytes)",
+  "error NoOwnerRecordFound()",
+  "error OffsetOutOfBoundsError(uint256,uint256)",
+  "error PermissionDenied(address,address)",
+  "error PreconditionNotMet()",
+  "error StaleProof()",
+  "event Claim(bytes32 indexed,address indexed,bytes,uint32)",
+  "event NewPublicSuffixList(address)",
+  "function enableNode(bytes) returns (bytes32)",
+  "function ens() view returns (address)",
+  "function inceptions(bytes32) view returns (uint32)",
+  "function oracle() view returns (address)",
+  "function previousRegistrar() view returns (address)",
+  "function proveAndClaim(bytes,tuple(bytes,bytes)[])",
+  "function proveAndClaimWithResolver(bytes,tuple(bytes,bytes)[],address,address)",
+  "function resolver() view returns (address)",
+  "function setPublicSuffixList(address)",
+  "function suffixes() view returns (address)",
+  "function supportsInterface(bytes4) pure returns (bool)"
+]

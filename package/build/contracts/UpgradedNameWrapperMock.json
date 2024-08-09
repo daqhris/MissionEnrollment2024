@@ -1,0 +1,7 @@
+[
+  "constructor(address,address)",
+  "event NameUpgraded(bytes,address,uint32,uint64,address,bytes)",
+  "function ens() view returns (address)",
+  "function registrar() view returns (address)",
+  "function wrapFromUpgrade(bytes,address,uint32,uint64,address,bytes)"
+]

@@ -1,0 +1,3 @@
+[
+  "function testEscape(string) pure returns (string)"
+]
