@@ -11,16 +11,18 @@ This dApp was developed during SuperHack 2024, an online hackathon organized by 
 - **Onchain Attestations**: Creates immutable records of mission enrolment using the Ethereum Attestation Service.
 - **ENS Integration**: Supports Ethereum Name Service for user-friendly addressing.
 - **ETHGlobal POAPs Retrieval**: Verifies attendance at ETHGlobal events through Proof of Attendance Protocol tokens.
-- **Cross-Chain Transfers**: Utilizes Chainlink CCIP for seamless asset transfers across different blockchain networks.
 - **Interactive Single-Page Application**: Offers a streamlined user experience with stage-based components.
 - **Recent Attestations**: Displays a list of recent attestations for public viewing.
 - **POAP Integration**: Prepared integration points for future POAP-related features.
+- **Wallet Connection**: Seamless integration with Ethereum wallets using Wagmi.
+- **Responsive Design**: Optimized for various screen sizes and devices.
 
 ## Technology Stack
 
 - **Frontend**: Next.js, React
 - **State Management**: React Query with singleton QueryClient instance
-- **Blockchain Integration**: Ethereum, EAS (Ethereum Attestation Service), Chainlink CCIP
+- **Blockchain Integration**: Ethereum, EAS (Ethereum Attestation Service)
+- **Wallet Connection**: Wagmi
 - **Identity**: ENS (Ethereum Name Service)
 - **Event Verification**: POAP (Proof of Attendance Protocol)
 - **Styling**: Tailwind CSS
@@ -33,7 +35,7 @@ This dApp was developed during SuperHack 2024, an online hackathon organized by 
 
 - Node.js (v14 or later)
 - Yarn or npm
-- Brave browser (preferred) or MetaMask
+- An Ethereum wallet (e.g., MetaMask, Brave Wallet, or any Web3-compatible wallet)
 
 
 
@@ -68,18 +70,19 @@ This dApp was developed during SuperHack 2024, an online hackathon organized by 
 
 MissionEnrolment2024 provides a streamlined single-page application flow for mission enrolment and verification:
 
-1. Connect your Ethereum wallet (preferably Brave Wallet or MetaMask) to the appropriate network.
+1. Connect your Ethereum wallet to the application using the "Connect Wallet" button.
 2. Navigate through the mission enrolment stages:
-   a. Verify your identity using ENS (Ethereum Name Service).
-   b. Retrieve and verify your ETHGlobal POAPs to confirm event attendance.
-   c. Review and confirm the details of your mission participation.
+   a. Enter your ENS (Ethereum Name Service) name or Ethereum address for identity verification.
+   b. The application will automatically retrieve and verify your ETHGlobal POAPs to confirm event attendance.
+   c. Review the details of your mission participation, including verified events and achievements.
 3. Create an onchain attestation for your mission enrolment:
-   a. Sign the attestation using your connected wallet.
-   b. Wait for the transaction to be confirmed on the Ethereum network.
-4. Once created, view your attestation, which is now immutably recorded on the blockchain.
-5. Explore the list of recent attestations to see other verified mission enrolments and the growing community of participants.
+   a. Click the "Create Attestation" button to initiate the process.
+   b. Sign the attestation transaction using your connected wallet.
+   c. Wait for the transaction to be confirmed on the Ethereum network.
+4. Once confirmed, view your attestation details, which are now immutably recorded on the blockchain.
+5. Explore the "Recent Attestations" section to see other verified mission enrolments and the growing community of participants.
 
-This process ensures a transparent, verifiable record of your mission enrolment while leveraging the security and immutability of blockchain technology.
+This streamlined process ensures a transparent and verifiable record of your mission enrolment, leveraging the security and immutability of blockchain technology. The single-page application design provides a seamless user experience throughout the entire enrolment and verification process.
 
 ## Disclaimer
 
@@ -87,15 +90,31 @@ This project is for educational and demonstration purposes only. While the attes
 
 ## Recent Updates
 
-- Implemented a single-page application flow with stage components for a more interactive user experience.
-- Integrated a singleton QueryClient instance for improved state management across the application.
-- Enhanced error handling in the QueryClientProvider setup.
-- Optimized server-side rendering (SSR) for better performance.
-- Added a custom 404 page for improved user navigation.
-- Resolved ESLint issues in _app.tsx for better code quality.
-- Prepared integration points for future POAP functionality.
-- Removed outdated features such as voting and AI functionality to focus on core mission enrolment processes.
-- Renamed the dApp and removed unused endpoints for clarity and accuracy.
+- Implemented a single-page application flow with stage-based components for a more interactive and streamlined user experience.
+- Enhanced state management:
+  - Integrated a singleton QueryClient instance using React Query for improved performance and data consistency.
+  - Implemented optimistic updates for a more responsive UI.
+- Improved error handling and user feedback:
+  - Enhanced error handling in the QueryClientProvider setup.
+  - Added more descriptive error messages throughout the application.
+- Optimized performance:
+  - Improved server-side rendering (SSR) for faster initial page loads.
+  - Implemented code splitting to reduce bundle size.
+- Enhanced user navigation and experience:
+  - Added a custom 404 page with helpful navigation options.
+  - Improved accessibility features throughout the application.
+- Improved code quality and maintainability:
+  - Resolved ESLint issues in _app.tsx and throughout the codebase.
+  - Implemented stricter TypeScript checks for better type safety.
+- Prepared for future enhancements:
+  - Added integration points for future POAP functionality.
+  - Designed extensible architecture for easy addition of new features.
+- Streamlined application focus:
+  - Removed outdated features such as voting and AI functionality to focus on core mission enrolment processes.
+  - Renamed the dApp and removed unused endpoints for clarity and accuracy.
+- Updated documentation:
+  - Revised README to accurately reflect current features and usage.
+  - Added inline code comments for better developer onboarding.
 
 ## External Resources
 
