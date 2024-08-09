@@ -107,11 +107,7 @@ const Home: React.FC = () => {
               }}
             >
               <span className="mr-2">
-                {completedStages.includes(stage)
-                  ? "✅"
-                  : currentStage === stage
-                    ? "🔵"
-                    : "⚪"}
+                {completedStages.includes(stage) ? "✅" : currentStage === stage ? "🔵" : "⚪"}
               </span>
               {stage.charAt(0).toUpperCase() + stage.slice(1)}
             </li>

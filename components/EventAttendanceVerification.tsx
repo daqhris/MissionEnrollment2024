@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { useEnsAddress } from "wagmi";
 
@@ -18,7 +18,7 @@ interface POAPEvent {
   imageUrl: string;
 }
 
-const API_BASE_URL = "/api/mockPoapApi";
+// API_BASE_URL is no longer used, so we can remove this line entirely
 
 const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onVerified }) => {
   const [inputAddress, setInputAddress] = useState("");
@@ -35,7 +35,7 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
     if (ensAddress || inputAddress) {
       fetchPOAPs(ensAddress || inputAddress);
     }
-  }, [ensAddress, inputAddress]);
+  }, [ensAddress, inputAddress, fetchPOAPs]);
 
   const fetchPOAPs = useCallback(async (address: string) => {
     setIsVerifying(true);
@@ -47,12 +47,11 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
       }
       const data = await response.json();
       if (!Array.isArray(data) || data.length === 0) {
-        throw new Error('No POAPs found for this address');
+        throw new Error("No POAPs found for this address");
       }
       const ethGlobalPOAPs = data.filter(
         (poap: POAPEvent) =>
-          poap.event.name.toLowerCase().includes("ethglobal") &&
-          poap.event.city.toLowerCase() === "brussels"
+          poap.event.name.toLowerCase().includes("ethglobal") && poap.event.city.toLowerCase() === "brussels",
       );
       setPOAPs(ethGlobalPOAPs);
       if (ethGlobalPOAPs.length === 0) {
@@ -60,7 +59,7 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
       }
     } catch (error) {
       console.error("Error fetching POAPs:", error);
-      if (error instanceof TypeError && error.message.includes('fetch')) {
+      if (error instanceof TypeError && error.message.includes("fetch")) {
         setVerificationResult("Network error. Please check your internet connection and try again.");
       } else {
         setVerificationResult(error instanceof Error ? error.message : "Failed to verify POAPs. Please try again.");
@@ -72,9 +71,7 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
 
   const handleVerify = useCallback(() => {
     if (poaps.length > 0) {
-      setVerificationResult(
-        `Verification successful! ${inputAddress} has attended an ETHGlobal event in Brussels.`,
-      );
+      setVerificationResult(`Verification successful! ${inputAddress} has attended an ETHGlobal event in Brussels.`);
       onVerified();
     } else {
       setVerificationResult(
@@ -90,11 +87,13 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
   return (
     <div className="p-4 bg-white shadow rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Event Attendance Verification</h2>
-      <p className="mb-4">Enter your Ethereum address or ENS name to verify your attendance at an ETHGlobal event in Brussels:</p>
+      <p className="mb-4">
+        Enter your Ethereum address or ENS name to verify your attendance at an ETHGlobal event in Brussels:
+      </p>
       <input
         type="text"
         value={inputAddress}
-        onChange={(e) => setInputAddress(e.target.value)}
+        onChange={e => setInputAddress(e.target.value)}
         placeholder="Enter Ethereum address or ENS name"
         className="w-full p-2 mb-4 border rounded"
       />
