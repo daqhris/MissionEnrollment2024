@@ -12,5 +12,8 @@ module.exports = {
     "/node_modules/(?!(wagmi|@wagmi|@tanstack|viem|@viem))"
   ],
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
-  setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
+  setupFilesAfterEnv: [
+    require.resolve('@testing-library/jest-dom/extend-expect'),
+    '<rootDir>/jest.setup.js'
+  ],
 };
