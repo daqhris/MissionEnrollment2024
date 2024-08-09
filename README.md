@@ -37,8 +37,6 @@ This dApp was developed during SuperHack 2024, an online hackathon organized by 
 - Yarn or npm
 - An Ethereum wallet (e.g., MetaMask, Brave Wallet, or any Web3-compatible wallet)
 
-
-
 ### Installation
 
 1. Clone the repository:
@@ -51,6 +49,10 @@ This dApp was developed during SuperHack 2024, an online hackathon organized by 
    ```
    yarn install
    ```
+   or
+   ```
+   npm install
+   ```
 
 3. Set up environment variables:
    Create a `.env.local` file in the root directory and add the following:
@@ -59,12 +61,18 @@ This dApp was developed during SuperHack 2024, an online hackathon organized by 
    ETH_KEY=attester_key
    ```
 
-4. Run the development server:
+### Running the Application
+
+1. Start the development server:
    ```
    yarn dev
    ```
+   or
+   ```
+   npm run dev
+   ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+2. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
 ## Usage
 
@@ -87,34 +95,6 @@ This streamlined process ensures a transparent and verifiable record of your mis
 ## Disclaimer
 
 This project is for educational and demonstration purposes only. While the attestations are immutably recorded on the blockchain, users should verify the authenticity of mission enrolments through additional means when necessary.
-
-## Recent Updates
-
-- Implemented a single-page application flow with stage-based components for a more interactive and streamlined user experience.
-- Enhanced state management:
-  - Integrated a singleton QueryClient instance using React Query for improved performance and data consistency.
-  - Implemented optimistic updates for a more responsive UI.
-- Improved error handling and user feedback:
-  - Enhanced error handling in the QueryClientProvider setup.
-  - Added more descriptive error messages throughout the application.
-- Optimized performance:
-  - Improved server-side rendering (SSR) for faster initial page loads.
-  - Implemented code splitting to reduce bundle size.
-- Enhanced user navigation and experience:
-  - Added a custom 404 page with helpful navigation options.
-  - Improved accessibility features throughout the application.
-- Improved code quality and maintainability:
-  - Resolved ESLint issues in _app.tsx and throughout the codebase.
-  - Implemented stricter TypeScript checks for better type safety.
-- Prepared for future enhancements:
-  - Added integration points for future POAP functionality.
-  - Designed extensible architecture for easy addition of new features.
-- Streamlined application focus:
-  - Removed outdated features such as voting and AI functionality to focus on core mission enrolment processes.
-  - Renamed the dApp and removed unused endpoints for clarity and accuracy.
-- Updated documentation:
-  - Revised README to accurately reflect current features and usage.
-  - Added inline code comments for better developer onboarding.
 
 ## External Resources
 
