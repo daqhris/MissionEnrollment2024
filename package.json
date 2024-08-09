@@ -17,6 +17,8 @@
   "dependencies": {
     "@apollo/client": "^3.11.3",
     "@chainlink/contracts": "^1.2.0",
+    "@chainlink/contracts-ccip": "^1.4.0",
+    "@ensdomains/ens-contracts": "^1.2.0",
     "@ethereum-attestation-service/eas-sdk": "^2.5.0",
     "@heroicons/react": "^2.0.11",
     "@rainbow-me/rainbowkit": "2.1.2",
@@ -48,6 +50,7 @@
     "usehooks-ts": "^2.13.0",
     "viem": "2.13.6",
     "wagmi": "^2.12.4",
+    "web3": "^4.11.1",
     "zustand": "^4.1.2"
   },
   "devDependencies": {
@@ -73,6 +76,7 @@
     "eslint-config-next": "^14.0.4",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "hardhat": "^2.22.8",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.16",

@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "@ensdomains/ens-contracts/contracts/registry/ENS.sol";
+import "@ensdomains/ens-contracts/contracts/resolvers/Resolver.sol";
+
 // End consumer library.
 library Client {
   /// @dev RMN depends on this struct, if changing, please notify the RMN maintainers.
@@ -51,5 +54,21 @@ library Client {
 
   function _argsToBytes(EVMExtraArgsV2 memory extraArgs) internal pure returns (bytes memory bts) {
     return abi.encodeWithSelector(EVM_EXTRA_ARGS_V2_TAG, extraArgs);
+  }
+
+  /// @notice Verifies if an address has a valid ENS name associated with it
+  /// @param addr The address to verify
+  /// @param ensRegistry The address of the ENS registry contract
+  /// @return bool Returns true if the address has a valid ENS name, false otherwise
+  function verifyOnchainIdentity(address addr, address ensRegistry) internal view returns (bool) {
+    ENS ens = ENS(ensRegistry);
+    bytes32 node = ens.namehash(ens.reverseNode(addr));
+    address resolver = ens.resolver(node);
+    if (resolver == address(0)) {
+      return false;
+    }
+    Resolver resolverContract = Resolver(resolver);
+    string memory name = resolverContract.name(node);
+    return bytes(name).length > 0;
   }
 }
