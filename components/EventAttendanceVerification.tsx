@@ -31,12 +31,6 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
     name: inputAddress,
   });
 
-  useEffect(() => {
-    if (ensAddress || inputAddress) {
-      fetchPOAPs(ensAddress || inputAddress);
-    }
-  }, [ensAddress, inputAddress, fetchPOAPs]);
-
   const fetchPOAPs = useCallback(async (address: string) => {
     setIsVerifying(true);
     setVerificationResult(null);
@@ -68,6 +62,12 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
       setIsVerifying(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (ensAddress || inputAddress) {
+      fetchPOAPs(ensAddress || inputAddress);
+    }
+  }, [ensAddress, inputAddress, fetchPOAPs]);
 
   const handleVerify = useCallback(() => {
     if (poaps.length > 0) {
