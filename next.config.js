@@ -14,12 +14,11 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
   },
-  compiler: {
-    styledComponents: true,
-  },
   images: {
     domains: ['api.poap.tech', 'placehold.co'],
   },
+  swcMinify: true,
+  compiler: undefined,
 };
 
 module.exports = nextConfig;

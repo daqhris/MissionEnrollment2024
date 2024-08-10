@@ -1,6 +1,4 @@
 import React from "react";
-import getQueryClient from "../utils/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
 import { NextPageContext } from "next";
 
 interface ErrorProps {
@@ -8,15 +6,11 @@ interface ErrorProps {
 }
 
 const Error = ({ statusCode }: ErrorProps) => {
-  const queryClient = getQueryClient();
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <div>
-        <h1>Error {statusCode}</h1>
-        <p>{statusCode ? "An error " + statusCode + " occurred on server" : "An error occurred on client"}</p>
-      </div>
-    </QueryClientProvider>
+    <div>
+      <h1>Error {statusCode}</h1>
+      <p>{statusCode ? "An error " + statusCode + " occurred on server" : "An error occurred on client"}</p>
+    </div>
   );
 };
 

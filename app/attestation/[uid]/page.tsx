@@ -3,10 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { Attestation } from "../../../types/attestation";
 import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import Lottie from "lottie-react";
+// import Lottie from "lottie-react";
 import tw from "tailwind-styled-components";
 import { AttestationCard } from "~~/components/AttestationCard";
-import skyAnimation from "~~/public/sky.json";
 
 interface AttestationPageProps {
   params: { uid: string };
@@ -154,6 +153,7 @@ export default function AttestationPage({ params }: AttestationPageProps) {
   return (
     <Container>
       <AnimationWrapper>
+        {/* Lottie animation commented out to address build issues
         <Lottie
           animationData={skyAnimation}
           style={{
@@ -165,6 +165,7 @@ export default function AttestationPage({ params }: AttestationPageProps) {
             transform: "scale(3)",
           }}
         />
+        */}
       </AnimationWrapper>
       <Overlay />
       <ContentWrapper>
