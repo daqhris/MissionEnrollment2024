@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         refUID: ethers.ZeroHash,
         revocable: true,
         expirationTime: BigInt(0),
-        time: BigInt(Math.floor(Date.now() / 1000)),
+        time: BigInt(Date.now() / 1000),
         schema: missionEnrollmentSchemaUid,
       },
       signer,
