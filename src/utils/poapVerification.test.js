@@ -1,4 +1,4 @@
-import { verifyPOAPOwnership, verifyETHGlobalBrusselsPOAPOwnership } from "./poapVerification";
+import { verifyETHGlobalBrusselsPOAPOwnership, verifyPOAPOwnership } from "./poapVerification";
 import axios from "axios";
 
 jest.mock("axios");
