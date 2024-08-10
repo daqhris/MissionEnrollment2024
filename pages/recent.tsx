@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
-import { GET_ATTESTATIONS } from "../graphql/queries";
 import { AttestationCard } from "../components/AttestationCard";
+import { GET_ATTESTATIONS } from "../graphql/queries";
 import { Attestation } from "../types/attestation";
+import { useQuery } from "@apollo/client";
 
 const RecentPage: React.FC = () => {
   const [recentAttestations, setRecentAttestations] = useState<Attestation[]>([]);

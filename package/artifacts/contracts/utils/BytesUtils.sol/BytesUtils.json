@@ -1,0 +1,27 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "BytesUtils",
+  "sourceName": "contracts/utils/BytesUtils.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "offset",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "length",
+          "type": "uint256"
+        }
+      ],
+      "name": "OffsetOutOfBoundsError",
+      "type": "error"
+    }
+  ],
+  "bytecode": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220c9606dd991eafac13fe7426cd8553ee2283ac243fa0d27de1d8800261af1b08064736f6c63430008110033",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220c9606dd991eafac13fe7426cd8553ee2283ac243fa0d27de1d8800261af1b08064736f6c63430008110033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

@@ -1,12 +1,12 @@
 import React from "react";
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
+import getQueryClient from "../utils/queryClient";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { DehydratedState, HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { WagmiConfig, createConfig, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
-import getQueryClient from "../utils/queryClient";
 
 // Configure chains & providers
 const config = createConfig({

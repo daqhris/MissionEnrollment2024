@@ -1,0 +1,5 @@
+[
+  "function hexStringToBytes32(bytes,uint256,uint256) pure returns (bytes32, bool)",
+  "function hexToAddress(bytes,uint256,uint256) pure returns (address, bool)",
+  "function hexToBytes(bytes,uint256,uint256) pure returns (bytes, bool)"
+]

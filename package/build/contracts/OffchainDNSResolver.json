@@ -1,0 +1,12 @@
+[
+  "constructor(address,address,string)",
+  "error CouldNotResolve(bytes)",
+  "error InvalidOperation()",
+  "error OffchainLookup(address,string[],bytes,bytes4,bytes)",
+  "function ens() view returns (address)",
+  "function gatewayURL() view returns (string)",
+  "function oracle() view returns (address)",
+  "function resolve(bytes,bytes) view returns (bytes)",
+  "function resolveCallback(bytes,bytes) view returns (bytes)",
+  "function supportsInterface(bytes4) pure returns (bool)"
+]

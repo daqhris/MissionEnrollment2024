@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useEnsAddress, useEnsName } from "wagmi";
 
 const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> = ({ onVerified }) => {
@@ -50,7 +50,7 @@ const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> 
       <input
         type="text"
         value={inputAddress}
-        onChange={(e) => setInputAddress(e.target.value)}
+        onChange={e => setInputAddress(e.target.value)}
         className="w-full max-w-md p-2 border rounded mb-4"
         placeholder="vitalik.eth or 0x..."
         disabled={isVerifying}

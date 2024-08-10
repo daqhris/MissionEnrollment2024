@@ -12,13 +12,14 @@
     "check-types": "tsc --noEmit --incremental",
     "vercel": "vercel",
     "vercel:yolo": "vercel --build-env NEXT_PUBLIC_IGNORE_BUILD_ERROR=true",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "npx patch-package"
   },
   "dependencies": {
     "@apollo/client": "^3.11.3",
     "@chainlink/contracts": "^1.2.0",
     "@chainlink/contracts-ccip": "^1.4.0",
-    "@ensdomains/ens-contracts": "^1.2.0",
+    "@ensdomains/ens-contracts": "file:./package",
     "@ensdomains/ensjs": "^4.0.0",
     "@ethereum-attestation-service/eas-sdk": "^2.5.0",
     "@heroicons/react": "^2.0.11",
@@ -26,6 +27,7 @@
     "@rainbow-me/rainbowkit": "2.1.2",
     "@tanstack/react-query": "^5.51.21",
     "@tanstack/react-query-devtools": "^5.51.21",
+    "@testing-library/dom": "^10.4.0",
     "@uniswap/sdk-core": "^4.0.1",
     "@uniswap/v2-sdk": "^3.0.1",
     "axios": "^1.7.3",

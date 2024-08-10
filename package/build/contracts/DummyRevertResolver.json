@@ -1,0 +1,4 @@
+[
+  "function resolve(bytes,bytes) pure returns (bytes)",
+  "function supportsInterface(bytes4) pure returns (bool)"
+]
