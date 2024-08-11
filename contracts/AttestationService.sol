@@ -11,7 +11,7 @@ contract AttestationService is Ownable {
     IEAS private immutable eas;
     ISchemaRegistry private immutable schemaRegistry;
 
-    bytes32 public missionEnrolmentSchema;
+    bytes32 public missionEnrollmentSchema;
 
     event SchemaCreated(bytes32 indexed schemaId);
     event AttestationCreated(bytes32 indexed attestationId, address indexed recipient);
@@ -21,15 +21,15 @@ contract AttestationService is Ownable {
         schemaRegistry = ISchemaRegistry(_schemaRegistry);
     }
 
-    function createMissionEnrolmentSchema() external onlyOwner {
+    function createMissionEnrollmentSchema() external onlyOwner {
         string memory schema = "address userAddress,uint256 tokenId,uint256 timestamp";
         bytes32 schemaId = schemaRegistry.register(schema, ISchemaResolver(address(0)), true);
-        missionEnrolmentSchema = schemaId;
+        missionEnrollmentSchema = schemaId;
         emit SchemaCreated(schemaId);
     }
 
-    function createMissionEnrolmentAttestation(address recipient, uint256 tokenId) external returns (bytes32) {
-        require(missionEnrolmentSchema != bytes32(0), "Schema not created");
+    function createMissionEnrollmentAttestation(address recipient, uint256 tokenId) external returns (bytes32) {
+        require(missionEnrollmentSchema != bytes32(0), "Schema not created");
 
         bytes memory data = abi.encode(recipient, tokenId, block.timestamp);
 

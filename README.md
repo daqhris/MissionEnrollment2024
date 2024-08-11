@@ -1,17 +1,17 @@
-# MissionEnrolment2024: Onchain Attestation and Verification
+# MissionEnrollment2024: Onchain Attestation and Verification
 
-MissionEnrolment2024 is a decentralized application (dApp) that leverages blockchain technology to create immutable attestations for mission enrolment.
+MissionEnrollment2024 is a decentralized application (dApp) that leverages blockchain technology to create immutable attestations for mission enrollment.
 Built with Next.js, React, and the Ethereum Attestation Service (EAS), this project aims to provide a transparent and decentralized platform for verifying mission participation and achievements.
 
 ## SuperHack 2024
 
 This dApp was developed during [SuperHack 2024](https://ethglobal.com/events/superhack2024), an online async hackathon organized by [ETHGlobal](https://ethglobal.com/).
 The event took place from August 2nd to August 16th, 2024, bringing together developers, designers, and blockchain enthusiasts to collaborate on innovative projects.
-MissionEnrolment2024 showcases the potential of blockchain technology in creating verifiable and transparent systems for mission-based activities on Ethereum.
+MissionEnrollment2024 showcases the potential of blockchain technology in creating verifiable and transparent systems for mission-based activities on Ethereum.
 
 ## Features
 
-- **Onchain Attestations**: Creates immutable records of mission enrolment using the Ethereum Attestation Service (EAS).
+- **Onchain Attestations**: Creates immutable records of mission enrollment using the Ethereum Attestation Service (EAS).
 - **ENS Integration**: Supports Ethereum Name Service for user-friendly addressing.
 - **ETHGlobal POAPs Retrieval**: Verifies attendance at ETHGlobal events through Proof of Attendance Protocol tokens.
 - **Interactive Single-Page Application**: Offers a streamlined user experience with stage-based components.
@@ -79,21 +79,21 @@ MissionEnrolment2024 showcases the potential of blockchain technology in creatin
 
 ## Usage
 
-MissionEnrolment2024 provides a streamlined single-page application flow for mission enrolment, verification, and NFT migration:  
+MissionEnrollment2024 provides a streamlined single-page application flow for mission enrollment, verification, and NFT migration:
 
 1. Connect your Ethereum wallet to the application using the "Connect Wallet" button.
-2. Navigate through the mission enrolment stages:
+2. Navigate through the mission enrollment stages:
    a. Enter your ENS (Ethereum Name Service) name or Ethereum address for identity verification.
    b. The application will automatically retrieve and verify your ETHGlobal POAPs to confirm event attendance.
    c. Review the details of your mission participation, including verified events and achievements.
-3. Create an onchain attestation for your mission enrolment:
+3. Create an onchain attestation for your mission enrollment:
    a. Click the "Create Attestation" button to initiate the process.
    b. Sign the attestation transaction using your connected wallet.
    c. Wait for the transaction to be confirmed on the Ethereum network.
 4. Once confirmed, view your attestation details, which are now immutably recorded on the blockchain.
-5. Explore the "Recent Attestations" section to see other verified mission enrolments and the growing community of participants.
+5. Explore the "Recent Attestations" section to see other verified mission enrollments and the growing community of participants.
 
-This streamlined process ensures a transparent and verifiable record of your mission enrolment, leveraging the security and immutability of blockchain technology. The single-page application design provides a seamless user experience throughout the entire enrolment and verification process.
+This streamlined process ensures a transparent and verifiable record of your mission enrollment, leveraging the security and immutability of blockchain technology. The single-page application design provides a seamless user experience throughout the entire enrollment and verification process.
 
 ## Disclaimer
 
