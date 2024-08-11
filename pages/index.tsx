@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
+import EventAttendanceProof from "../components/EventAttendanceVerification";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
