@@ -2,369 +2,368 @@
 // prettier-ignore
 // tslint:disable
 // eslint-disable
-
-import type { Address } from "viem";
 import type { GetContractReturnType } from "@nomicfoundation/hardhat-viem/types";
 import "@nomicfoundation/hardhat-viem/types";
+import type { Address } from "viem";
 
 export interface IERC721Metadata$Type {
-  "_format": "hh-sol-artifact-1",
-  "contractName": "IERC721Metadata",
-  "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
-  "abi": [
+  _format: "hh-sol-artifact-1";
+  contractName: "IERC721Metadata";
+  sourceName: "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
+  abi: [
     {
-      "anonymous": false,
-      "inputs": [
+      anonymous: false;
+      inputs: [
         {
-          "indexed": true,
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
+          indexed: true;
+          internalType: "address";
+          name: "owner";
+          type: "address";
         },
         {
-          "indexed": true,
-          "internalType": "address",
-          "name": "approved",
-          "type": "address"
+          indexed: true;
+          internalType: "address";
+          name: "approved";
+          type: "address";
         },
         {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "Approval",
-      "type": "event"
+          indexed: true;
+          internalType: "uint256";
+          name: "tokenId";
+          type: "uint256";
+        },
+      ];
+      name: "Approval";
+      type: "event";
     },
     {
-      "anonymous": false,
-      "inputs": [
+      anonymous: false;
+      inputs: [
         {
-          "indexed": true,
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
+          indexed: true;
+          internalType: "address";
+          name: "owner";
+          type: "address";
         },
         {
-          "indexed": true,
-          "internalType": "address",
-          "name": "operator",
-          "type": "address"
+          indexed: true;
+          internalType: "address";
+          name: "operator";
+          type: "address";
         },
         {
-          "indexed": false,
-          "internalType": "bool",
-          "name": "approved",
-          "type": "bool"
-        }
-      ],
-      "name": "ApprovalForAll",
-      "type": "event"
+          indexed: false;
+          internalType: "bool";
+          name: "approved";
+          type: "bool";
+        },
+      ];
+      name: "ApprovalForAll";
+      type: "event";
     },
     {
-      "anonymous": false,
-      "inputs": [
+      anonymous: false;
+      inputs: [
         {
-          "indexed": true,
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
+          indexed: true;
+          internalType: "address";
+          name: "from";
+          type: "address";
         },
         {
-          "indexed": true,
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
+          indexed: true;
+          internalType: "address";
+          name: "to";
+          type: "address";
         },
         {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "Transfer",
-      "type": "event"
+          indexed: true;
+          internalType: "uint256";
+          name: "tokenId";
+          type: "uint256";
+        },
+      ];
+      name: "Transfer";
+      type: "event";
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
+          internalType: "address";
+          name: "to";
+          type: "address";
         },
         {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "approve",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+          internalType: "uint256";
+          name: "tokenId";
+          type: "uint256";
+        },
+      ];
+      name: "approve";
+      outputs: [];
+      stateMutability: "nonpayable";
+      type: "function";
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        }
-      ],
-      "name": "balanceOf",
-      "outputs": [
+          internalType: "address";
+          name: "owner";
+          type: "address";
+        },
+      ];
+      name: "balanceOf";
+      outputs: [
         {
-          "internalType": "uint256",
-          "name": "balance",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+          internalType: "uint256";
+          name: "balance";
+          type: "uint256";
+        },
+      ];
+      stateMutability: "view";
+      type: "function";
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getApproved",
-      "outputs": [
+          internalType: "uint256";
+          name: "tokenId";
+          type: "uint256";
+        },
+      ];
+      name: "getApproved";
+      outputs: [
         {
-          "internalType": "address",
-          "name": "operator",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+          internalType: "address";
+          name: "operator";
+          type: "address";
+        },
+      ];
+      stateMutability: "view";
+      type: "function";
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
+          internalType: "address";
+          name: "owner";
+          type: "address";
         },
         {
-          "internalType": "address",
-          "name": "operator",
-          "type": "address"
-        }
-      ],
-      "name": "isApprovedForAll",
-      "outputs": [
+          internalType: "address";
+          name: "operator";
+          type: "address";
+        },
+      ];
+      name: "isApprovedForAll";
+      outputs: [
         {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+          internalType: "bool";
+          name: "";
+          type: "bool";
+        },
+      ];
+      stateMutability: "view";
+      type: "function";
     },
     {
-      "inputs": [],
-      "name": "name",
-      "outputs": [
+      inputs: [];
+      name: "name";
+      outputs: [
         {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+          internalType: "string";
+          name: "";
+          type: "string";
+        },
+      ];
+      stateMutability: "view";
+      type: "function";
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "ownerOf",
-      "outputs": [
+          internalType: "uint256";
+          name: "tokenId";
+          type: "uint256";
+        },
+      ];
+      name: "ownerOf";
+      outputs: [
         {
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+          internalType: "address";
+          name: "owner";
+          type: "address";
+        },
+      ];
+      stateMutability: "view";
+      type: "function";
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
+          internalType: "address";
+          name: "from";
+          type: "address";
         },
         {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
+          internalType: "address";
+          name: "to";
+          type: "address";
         },
         {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "safeTransferFrom",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+          internalType: "uint256";
+          name: "tokenId";
+          type: "uint256";
+        },
+      ];
+      name: "safeTransferFrom";
+      outputs: [];
+      stateMutability: "nonpayable";
+      type: "function";
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
+          internalType: "address";
+          name: "from";
+          type: "address";
         },
         {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
+          internalType: "address";
+          name: "to";
+          type: "address";
         },
         {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
+          internalType: "uint256";
+          name: "tokenId";
+          type: "uint256";
         },
         {
-          "internalType": "bytes",
-          "name": "data",
-          "type": "bytes"
-        }
-      ],
-      "name": "safeTransferFrom",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+          internalType: "bytes";
+          name: "data";
+          type: "bytes";
+        },
+      ];
+      name: "safeTransferFrom";
+      outputs: [];
+      stateMutability: "nonpayable";
+      type: "function";
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "address",
-          "name": "operator",
-          "type": "address"
+          internalType: "address";
+          name: "operator";
+          type: "address";
         },
         {
-          "internalType": "bool",
-          "name": "approved",
-          "type": "bool"
-        }
-      ],
-      "name": "setApprovalForAll",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+          internalType: "bool";
+          name: "approved";
+          type: "bool";
+        },
+      ];
+      name: "setApprovalForAll";
+      outputs: [];
+      stateMutability: "nonpayable";
+      type: "function";
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "bytes4",
-          "name": "interfaceId",
-          "type": "bytes4"
-        }
-      ],
-      "name": "supportsInterface",
-      "outputs": [
+          internalType: "bytes4";
+          name: "interfaceId";
+          type: "bytes4";
+        },
+      ];
+      name: "supportsInterface";
+      outputs: [
         {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+          internalType: "bool";
+          name: "";
+          type: "bool";
+        },
+      ];
+      stateMutability: "view";
+      type: "function";
     },
     {
-      "inputs": [],
-      "name": "symbol",
-      "outputs": [
+      inputs: [];
+      name: "symbol";
+      outputs: [
         {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+          internalType: "string";
+          name: "";
+          type: "string";
+        },
+      ];
+      stateMutability: "view";
+      type: "function";
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "tokenURI",
-      "outputs": [
+          internalType: "uint256";
+          name: "tokenId";
+          type: "uint256";
+        },
+      ];
+      name: "tokenURI";
+      outputs: [
         {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+          internalType: "string";
+          name: "";
+          type: "string";
+        },
+      ];
+      stateMutability: "view";
+      type: "function";
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
+          internalType: "address";
+          name: "from";
+          type: "address";
         },
         {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
+          internalType: "address";
+          name: "to";
+          type: "address";
         },
         {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferFrom",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ],
-  "bytecode": "0x",
-  "deployedBytecode": "0x",
-  "linkReferences": {},
-  "deployedLinkReferences": {}
+          internalType: "uint256";
+          name: "tokenId";
+          type: "uint256";
+        },
+      ];
+      name: "transferFrom";
+      outputs: [];
+      stateMutability: "nonpayable";
+      type: "function";
+    },
+  ];
+  bytecode: "0x";
+  deployedBytecode: "0x";
+  linkReferences: {};
+  deployedLinkReferences: {};
 }
 
 declare module "@nomicfoundation/hardhat-viem/types" {
   export function deployContract(
     contractName: "IERC721Metadata",
     constructorArgs?: [],
-    config?: DeployContractConfig
+    config?: DeployContractConfig,
   ): Promise<GetContractReturnType<IERC721Metadata$Type["abi"]>>;
   export function deployContract(
     contractName: "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol:IERC721Metadata",
     constructorArgs?: [],
-    config?: DeployContractConfig
+    config?: DeployContractConfig,
   ): Promise<GetContractReturnType<IERC721Metadata$Type["abi"]>>;
 
   export function sendDeploymentTransaction(
     contractName: "IERC721Metadata",
     constructorArgs?: [],
-    config?: SendDeploymentTransactionConfig
+    config?: SendDeploymentTransactionConfig,
   ): Promise<{
     contract: GetContractReturnType<IERC721Metadata$Type["abi"]>;
     deploymentTransaction: GetTransactionReturnType;
@@ -372,7 +371,7 @@ declare module "@nomicfoundation/hardhat-viem/types" {
   export function sendDeploymentTransaction(
     contractName: "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol:IERC721Metadata",
     constructorArgs?: [],
-    config?: SendDeploymentTransactionConfig
+    config?: SendDeploymentTransactionConfig,
   ): Promise<{
     contract: GetContractReturnType<IERC721Metadata$Type["abi"]>;
     deploymentTransaction: GetTransactionReturnType;
@@ -381,11 +380,11 @@ declare module "@nomicfoundation/hardhat-viem/types" {
   export function getContractAt(
     contractName: "IERC721Metadata",
     address: Address,
-    config?: GetContractAtConfig
+    config?: GetContractAtConfig,
   ): Promise<GetContractReturnType<IERC721Metadata$Type["abi"]>>;
   export function getContractAt(
     contractName: "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol:IERC721Metadata",
     address: Address,
-    config?: GetContractAtConfig
+    config?: GetContractAtConfig,
   ): Promise<GetContractReturnType<IERC721Metadata$Type["abi"]>>;
 }

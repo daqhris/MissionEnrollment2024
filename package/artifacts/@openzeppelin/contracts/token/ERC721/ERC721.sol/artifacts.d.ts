@@ -2,11 +2,9 @@
 // prettier-ignore
 // tslint:disable
 // eslint-disable
-
-import "hardhat/types/artifacts";
-import type { GetContractReturnType } from "@nomicfoundation/hardhat-viem/types";
-
 import { ERC721$Type } from "./ERC721";
+import type { GetContractReturnType } from "@nomicfoundation/hardhat-viem/types";
+import "hardhat/types/artifacts";
 
 declare module "hardhat/types/artifacts" {
   interface ArtifactsMap {

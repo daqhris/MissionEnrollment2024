@@ -1,9 +1,9 @@
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient } from "@tanstack/react-query";
 
 let queryClientInstance: QueryClient | null = null;
 
 const getQueryClient = () => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     // Server-side: Always create a new QueryClient
     return new QueryClient({
       defaultOptions: {

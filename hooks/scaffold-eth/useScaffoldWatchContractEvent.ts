@@ -4,6 +4,7 @@ import { Log } from "viem";
 import { useWatchContractEvent } from "wagmi";
 import { addIndexedArgsToEvent, useDeployedContractInfo } from "~~/hooks/scaffold-eth";
 import { ContractAbi, ContractName, UseScaffoldEventConfig } from "~~/utils/scaffold-eth/contract";
+
 // TODO: Import POAP API client and necessary types
 // import { POAPClient } from '@poap/poap-eth-sdk';
 

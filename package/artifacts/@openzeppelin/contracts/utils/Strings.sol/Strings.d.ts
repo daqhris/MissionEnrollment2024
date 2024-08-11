@@ -2,38 +2,37 @@
 // prettier-ignore
 // tslint:disable
 // eslint-disable
-
-import type { Address } from "viem";
 import type { GetContractReturnType } from "@nomicfoundation/hardhat-viem/types";
 import "@nomicfoundation/hardhat-viem/types";
+import type { Address } from "viem";
 
 export interface Strings$Type {
-  "_format": "hh-sol-artifact-1",
-  "contractName": "Strings",
-  "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
-  "abi": [],
-  "bytecode": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220bc5b6bbd772e426f61def52456fc8e2da86163e18ed994f6e0d9fddbdf536af164736f6c63430008110033",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220bc5b6bbd772e426f61def52456fc8e2da86163e18ed994f6e0d9fddbdf536af164736f6c63430008110033",
-  "linkReferences": {},
-  "deployedLinkReferences": {}
+  _format: "hh-sol-artifact-1";
+  contractName: "Strings";
+  sourceName: "@openzeppelin/contracts/utils/Strings.sol";
+  abi: [];
+  bytecode: "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220bc5b6bbd772e426f61def52456fc8e2da86163e18ed994f6e0d9fddbdf536af164736f6c63430008110033";
+  deployedBytecode: "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220bc5b6bbd772e426f61def52456fc8e2da86163e18ed994f6e0d9fddbdf536af164736f6c63430008110033";
+  linkReferences: {};
+  deployedLinkReferences: {};
 }
 
 declare module "@nomicfoundation/hardhat-viem/types" {
   export function deployContract(
     contractName: "Strings",
     constructorArgs?: [],
-    config?: DeployContractConfig
+    config?: DeployContractConfig,
   ): Promise<GetContractReturnType<Strings$Type["abi"]>>;
   export function deployContract(
     contractName: "@openzeppelin/contracts/utils/Strings.sol:Strings",
     constructorArgs?: [],
-    config?: DeployContractConfig
+    config?: DeployContractConfig,
   ): Promise<GetContractReturnType<Strings$Type["abi"]>>;
 
   export function sendDeploymentTransaction(
     contractName: "Strings",
     constructorArgs?: [],
-    config?: SendDeploymentTransactionConfig
+    config?: SendDeploymentTransactionConfig,
   ): Promise<{
     contract: GetContractReturnType<Strings$Type["abi"]>;
     deploymentTransaction: GetTransactionReturnType;
@@ -41,7 +40,7 @@ declare module "@nomicfoundation/hardhat-viem/types" {
   export function sendDeploymentTransaction(
     contractName: "@openzeppelin/contracts/utils/Strings.sol:Strings",
     constructorArgs?: [],
-    config?: SendDeploymentTransactionConfig
+    config?: SendDeploymentTransactionConfig,
   ): Promise<{
     contract: GetContractReturnType<Strings$Type["abi"]>;
     deploymentTransaction: GetTransactionReturnType;
@@ -50,11 +49,11 @@ declare module "@nomicfoundation/hardhat-viem/types" {
   export function getContractAt(
     contractName: "Strings",
     address: Address,
-    config?: GetContractAtConfig
+    config?: GetContractAtConfig,
   ): Promise<GetContractReturnType<Strings$Type["abi"]>>;
   export function getContractAt(
     contractName: "@openzeppelin/contracts/utils/Strings.sol:Strings",
     address: Address,
-    config?: GetContractAtConfig
+    config?: GetContractAtConfig,
   ): Promise<GetContractReturnType<Strings$Type["abi"]>>;
 }

@@ -15,10 +15,15 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['api.poap.tech', 'placehold.co'],
+    domains: ["api.poap.tech", "placehold.co"],
   },
   swcMinify: true,
-  compiler: undefined,
+  compiler: {
+    styledComponents: true,
+  },
+  experimental: {
+    forceSwcTransforms: true,
+  },
 };
 
 module.exports = nextConfig;
