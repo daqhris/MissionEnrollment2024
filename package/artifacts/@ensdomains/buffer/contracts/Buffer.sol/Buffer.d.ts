@@ -2,38 +2,37 @@
 // prettier-ignore
 // tslint:disable
 // eslint-disable
-
-import type { Address } from "viem";
 import type { GetContractReturnType } from "@nomicfoundation/hardhat-viem/types";
 import "@nomicfoundation/hardhat-viem/types";
+import type { Address } from "viem";
 
 export interface Buffer$Type {
-  "_format": "hh-sol-artifact-1",
-  "contractName": "Buffer",
-  "sourceName": "@ensdomains/buffer/contracts/Buffer.sol",
-  "abi": [],
-  "bytecode": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122000adea6b32f5f0fa0301d3ad50a957da8b3925c422cc3e678d344eaf87efdffc64736f6c63430008110033",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122000adea6b32f5f0fa0301d3ad50a957da8b3925c422cc3e678d344eaf87efdffc64736f6c63430008110033",
-  "linkReferences": {},
-  "deployedLinkReferences": {}
+  _format: "hh-sol-artifact-1";
+  contractName: "Buffer";
+  sourceName: "@ensdomains/buffer/contracts/Buffer.sol";
+  abi: [];
+  bytecode: "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122000adea6b32f5f0fa0301d3ad50a957da8b3925c422cc3e678d344eaf87efdffc64736f6c63430008110033";
+  deployedBytecode: "0x73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122000adea6b32f5f0fa0301d3ad50a957da8b3925c422cc3e678d344eaf87efdffc64736f6c63430008110033";
+  linkReferences: {};
+  deployedLinkReferences: {};
 }
 
 declare module "@nomicfoundation/hardhat-viem/types" {
   export function deployContract(
     contractName: "Buffer",
     constructorArgs?: [],
-    config?: DeployContractConfig
+    config?: DeployContractConfig,
   ): Promise<GetContractReturnType<Buffer$Type["abi"]>>;
   export function deployContract(
     contractName: "@ensdomains/buffer/contracts/Buffer.sol:Buffer",
     constructorArgs?: [],
-    config?: DeployContractConfig
+    config?: DeployContractConfig,
   ): Promise<GetContractReturnType<Buffer$Type["abi"]>>;
 
   export function sendDeploymentTransaction(
     contractName: "Buffer",
     constructorArgs?: [],
-    config?: SendDeploymentTransactionConfig
+    config?: SendDeploymentTransactionConfig,
   ): Promise<{
     contract: GetContractReturnType<Buffer$Type["abi"]>;
     deploymentTransaction: GetTransactionReturnType;
@@ -41,7 +40,7 @@ declare module "@nomicfoundation/hardhat-viem/types" {
   export function sendDeploymentTransaction(
     contractName: "@ensdomains/buffer/contracts/Buffer.sol:Buffer",
     constructorArgs?: [],
-    config?: SendDeploymentTransactionConfig
+    config?: SendDeploymentTransactionConfig,
   ): Promise<{
     contract: GetContractReturnType<Buffer$Type["abi"]>;
     deploymentTransaction: GetTransactionReturnType;
@@ -50,11 +49,11 @@ declare module "@nomicfoundation/hardhat-viem/types" {
   export function getContractAt(
     contractName: "Buffer",
     address: Address,
-    config?: GetContractAtConfig
+    config?: GetContractAtConfig,
   ): Promise<GetContractReturnType<Buffer$Type["abi"]>>;
   export function getContractAt(
     contractName: "@ensdomains/buffer/contracts/Buffer.sol:Buffer",
     address: Address,
-    config?: GetContractAtConfig
+    config?: GetContractAtConfig,
   ): Promise<GetContractReturnType<Buffer$Type["abi"]>>;
 }

@@ -11,6 +11,7 @@ import {
   UseScaffoldEventHistoryConfig,
   UseScaffoldEventHistoryData,
 } from "~~/utils/scaffold-eth/contract";
+
 // import { POAPClient, POAPEvent } from '@poap/poap-eth';
 
 const getEvents = async (
@@ -84,7 +85,10 @@ export const useScaffoldEventHistory = <
   enabled = true,
   poapIntegration = false,
   address,
-}: UseScaffoldEventHistoryConfig<TContractName, TEventName, TBlockData, TTransactionData, TReceiptData> & { poapIntegration?: boolean, address?: string }) => {
+}: UseScaffoldEventHistoryConfig<TContractName, TEventName, TBlockData, TTransactionData, TReceiptData> & {
+  poapIntegration?: boolean;
+  address?: string;
+}) => {
   const { targetNetwork } = useTargetNetwork();
   const publicClient = usePublicClient({
     chainId: targetNetwork.id,
@@ -100,14 +104,14 @@ export const useScaffoldEventHistory = <
           // TODO: Replace with actual POAP API call when API key is available
           const response = await fetch(`https://api.poap.tech/actions/scan/${address}`);
           if (!response.ok) {
-            throw new Error('Failed to fetch POAP data');
+            throw new Error("Failed to fetch POAP data");
           }
           const poapData = await response.json();
           // TODO: Process and store POAP data
-          console.log('POAP data:', poapData);
+          console.log("POAP data:", poapData);
           setPoapData(poapData);
         } catch (error) {
-          console.error('Error fetching POAP data:', error);
+          console.error("Error fetching POAP data:", error);
         }
       };
       fetchPOAPData();

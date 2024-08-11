@@ -2,38 +2,37 @@
 // prettier-ignore
 // tslint:disable
 // eslint-disable
-
-import type { Address } from "viem";
 import type { GetContractReturnType } from "@nomicfoundation/hardhat-viem/types";
 import "@nomicfoundation/hardhat-viem/types";
+import type { Address } from "viem";
 
 export interface Math$Type {
-  "_format": "hh-sol-artifact-1",
-  "contractName": "Math",
-  "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
-  "abi": [],
-  "bytecode": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122067be3f9ec6c7405607caf3ee8ab2f6d3100ee8ab46977f1a817c7cdec65800b164736f6c63430008110033",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122067be3f9ec6c7405607caf3ee8ab2f6d3100ee8ab46977f1a817c7cdec65800b164736f6c63430008110033",
-  "linkReferences": {},
-  "deployedLinkReferences": {}
+  _format: "hh-sol-artifact-1";
+  contractName: "Math";
+  sourceName: "@openzeppelin/contracts/utils/math/Math.sol";
+  abi: [];
+  bytecode: "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122067be3f9ec6c7405607caf3ee8ab2f6d3100ee8ab46977f1a817c7cdec65800b164736f6c63430008110033";
+  deployedBytecode: "0x73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122067be3f9ec6c7405607caf3ee8ab2f6d3100ee8ab46977f1a817c7cdec65800b164736f6c63430008110033";
+  linkReferences: {};
+  deployedLinkReferences: {};
 }
 
 declare module "@nomicfoundation/hardhat-viem/types" {
   export function deployContract(
     contractName: "Math",
     constructorArgs?: [],
-    config?: DeployContractConfig
+    config?: DeployContractConfig,
   ): Promise<GetContractReturnType<Math$Type["abi"]>>;
   export function deployContract(
     contractName: "@openzeppelin/contracts/utils/math/Math.sol:Math",
     constructorArgs?: [],
-    config?: DeployContractConfig
+    config?: DeployContractConfig,
   ): Promise<GetContractReturnType<Math$Type["abi"]>>;
 
   export function sendDeploymentTransaction(
     contractName: "Math",
     constructorArgs?: [],
-    config?: SendDeploymentTransactionConfig
+    config?: SendDeploymentTransactionConfig,
   ): Promise<{
     contract: GetContractReturnType<Math$Type["abi"]>;
     deploymentTransaction: GetTransactionReturnType;
@@ -41,7 +40,7 @@ declare module "@nomicfoundation/hardhat-viem/types" {
   export function sendDeploymentTransaction(
     contractName: "@openzeppelin/contracts/utils/math/Math.sol:Math",
     constructorArgs?: [],
-    config?: SendDeploymentTransactionConfig
+    config?: SendDeploymentTransactionConfig,
   ): Promise<{
     contract: GetContractReturnType<Math$Type["abi"]>;
     deploymentTransaction: GetTransactionReturnType;
@@ -50,11 +49,11 @@ declare module "@nomicfoundation/hardhat-viem/types" {
   export function getContractAt(
     contractName: "Math",
     address: Address,
-    config?: GetContractAtConfig
+    config?: GetContractAtConfig,
   ): Promise<GetContractReturnType<Math$Type["abi"]>>;
   export function getContractAt(
     contractName: "@openzeppelin/contracts/utils/math/Math.sol:Math",
     address: Address,
-    config?: GetContractAtConfig
+    config?: GetContractAtConfig,
   ): Promise<GetContractReturnType<Math$Type["abi"]>>;
 }

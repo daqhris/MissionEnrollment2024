@@ -2,7 +2,6 @@
 // prettier-ignore
 // tslint:disable
 // eslint-disable
-
 import "hardhat/types/artifacts";
 
 declare module "hardhat/types/artifacts" {

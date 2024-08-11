@@ -1,10 +1,10 @@
 import React from "react";
 import type { AppProps } from "next/app";
+import QueryClientProviderWrapper from "../components/QueryClientProviderWrapper";
 import "../styles/globals.css";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { WagmiConfig, createConfig, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
-import QueryClientProviderWrapper from "../components/QueryClientProviderWrapper";
 
 // Configure chains & providers
 const config = createConfig({

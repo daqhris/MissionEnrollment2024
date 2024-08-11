@@ -2,11 +2,9 @@
 // prettier-ignore
 // tslint:disable
 // eslint-disable
-
-import "hardhat/types/artifacts";
-import type { GetContractReturnType } from "@nomicfoundation/hardhat-viem/types";
-
 import { IERC721Metadata$Type } from "./IERC721Metadata";
+import type { GetContractReturnType } from "@nomicfoundation/hardhat-viem/types";
+import "hardhat/types/artifacts";
 
 declare module "hardhat/types/artifacts" {
   interface ArtifactsMap {
@@ -16,6 +14,8 @@ declare module "hardhat/types/artifacts" {
 
   interface ContractTypesMap {
     ["IERC721Metadata"]: GetContractReturnType<IERC721Metadata$Type["abi"]>;
-    ["@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol:IERC721Metadata"]: GetContractReturnType<IERC721Metadata$Type["abi"]>;
+    ["@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol:IERC721Metadata"]: GetContractReturnType<
+      IERC721Metadata$Type["abi"]
+    >;
   }
 }

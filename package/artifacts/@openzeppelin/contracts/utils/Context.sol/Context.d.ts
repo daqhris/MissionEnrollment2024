@@ -2,38 +2,37 @@
 // prettier-ignore
 // tslint:disable
 // eslint-disable
-
-import type { Address } from "viem";
 import type { GetContractReturnType } from "@nomicfoundation/hardhat-viem/types";
 import "@nomicfoundation/hardhat-viem/types";
+import type { Address } from "viem";
 
 export interface Context$Type {
-  "_format": "hh-sol-artifact-1",
-  "contractName": "Context",
-  "sourceName": "@openzeppelin/contracts/utils/Context.sol",
-  "abi": [],
-  "bytecode": "0x",
-  "deployedBytecode": "0x",
-  "linkReferences": {},
-  "deployedLinkReferences": {}
+  _format: "hh-sol-artifact-1";
+  contractName: "Context";
+  sourceName: "@openzeppelin/contracts/utils/Context.sol";
+  abi: [];
+  bytecode: "0x";
+  deployedBytecode: "0x";
+  linkReferences: {};
+  deployedLinkReferences: {};
 }
 
 declare module "@nomicfoundation/hardhat-viem/types" {
   export function deployContract(
     contractName: "Context",
     constructorArgs?: [],
-    config?: DeployContractConfig
+    config?: DeployContractConfig,
   ): Promise<GetContractReturnType<Context$Type["abi"]>>;
   export function deployContract(
     contractName: "@openzeppelin/contracts/utils/Context.sol:Context",
     constructorArgs?: [],
-    config?: DeployContractConfig
+    config?: DeployContractConfig,
   ): Promise<GetContractReturnType<Context$Type["abi"]>>;
 
   export function sendDeploymentTransaction(
     contractName: "Context",
     constructorArgs?: [],
-    config?: SendDeploymentTransactionConfig
+    config?: SendDeploymentTransactionConfig,
   ): Promise<{
     contract: GetContractReturnType<Context$Type["abi"]>;
     deploymentTransaction: GetTransactionReturnType;
@@ -41,7 +40,7 @@ declare module "@nomicfoundation/hardhat-viem/types" {
   export function sendDeploymentTransaction(
     contractName: "@openzeppelin/contracts/utils/Context.sol:Context",
     constructorArgs?: [],
-    config?: SendDeploymentTransactionConfig
+    config?: SendDeploymentTransactionConfig,
   ): Promise<{
     contract: GetContractReturnType<Context$Type["abi"]>;
     deploymentTransaction: GetTransactionReturnType;
@@ -50,11 +49,11 @@ declare module "@nomicfoundation/hardhat-viem/types" {
   export function getContractAt(
     contractName: "Context",
     address: Address,
-    config?: GetContractAtConfig
+    config?: GetContractAtConfig,
   ): Promise<GetContractReturnType<Context$Type["abi"]>>;
   export function getContractAt(
     contractName: "@openzeppelin/contracts/utils/Context.sol:Context",
     address: Address,
-    config?: GetContractAtConfig
+    config?: GetContractAtConfig,
   ): Promise<GetContractReturnType<Context$Type["abi"]>>;
 }

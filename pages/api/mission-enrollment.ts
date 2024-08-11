@@ -12,39 +12,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const EASContractAddress = "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"; // Sepolia v0.26
     const missionEnrollmentSchemaUid = "0x40e5abe23a3378a9a43b7e874c5cb8dfd4d6b0823501d317acee41e08d3af4dd";
-    const provider = new ethers.providers.AlchemyProvider("sepolia", process.env.NEXT_PUBLIC_ALCHEMY_API_KEY);
+
+    const provider = new ethers.JsonRpcProvider(
+      `https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`,
+    );
     const signer = new ethers.Wallet(process.env.ETH_KEY as string, provider);
     const eas = new EAS(EASContractAddress);
-    eas.connect(signer as any);
+    await eas.connect(signer);
 
     const schemaEncoder = new SchemaEncoder("string missionProposal");
 
-    const data = schemaEncoder.encodeData([
-      {
-        type: "string",
-        value: missionProposal,
-        name: "missionProposal",
-      },
-    ]);
+    const encodedData = schemaEncoder.encodeData([{ name: "missionProposal", value: missionProposal, type: "string" }]);
 
     const offchain = await eas.getOffchain();
 
     const offchainAttestation = await offchain.signOffchainAttestation(
       {
-        recipient: ethers.constants.AddressZero,
-        data,
-        refUID: ethers.constants.HashZero,
+        recipient: ethers.ZeroAddress,
+        data: encodedData,
+        refUID: ethers.ZeroHash,
         revocable: true,
         expirationTime: BigInt(0),
         time: BigInt(Math.floor(Date.now() / 1000)),
         schema: missionEnrollmentSchemaUid,
       },
-      signer as any,
+      signer,
     );
 
-    const encodedOffchainAttestation = offchainAttestation;
-
-    return res.status(200).json({ result: encodedOffchainAttestation });
+    return res.status(200).json({ result: offchainAttestation });
   } catch (error) {
     console.error("Error:", error);
     return res.status(500).json({ error: "Error creating mission enrollment attestation" });
