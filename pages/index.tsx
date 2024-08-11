@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import EventAttendanceProof from "../components/EventAttendanceVerification";
+import { useLocalStorage } from "usehooks-ts";
+import EventAttendanceProof from "../components/EventAttendanceProof";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
 
@@ -9,25 +10,30 @@ type Stage = (typeof stages)[number];
 const stageDescriptions = {
   identity: "Verify your identity using ENS or Ethereum address",
   attendance: "Confirm your attendance proof for ETHGlobal Brussels 2024",
-  attestation: "Create an onchain attestation of your mission enrolment",
-  complete: "Mission enrolment completed successfully",
+  attestation: "Create an onchain attestation of your mission enrollment",
+  complete: "Mission enrollment completed successfully",
 };
 
 const Home: React.FC = () => {
-  const [currentStage, setCurrentStage] = useState<Stage>("identity");
-  const [completedStages, setCompletedStages] = useState<Stage[]>([]);
+  const [currentStage, setCurrentStage] = useLocalStorage<Stage>("currentStage", "identity");
+  const [completedStages, setCompletedStages] = useLocalStorage<Stage[]>("completedStages", []);
 
   useEffect(() => {
     if (completedStages.length === 0 && currentStage !== "identity") {
       setCurrentStage("identity");
     }
-  }, [completedStages, currentStage]);
+  }, [completedStages, currentStage, setCurrentStage]);
 
   const handleStageCompletion = (stage: Stage) => {
-    setCompletedStages(prev => [...prev, stage]);
+    const newCompletedStages = [...completedStages, stage];
+    setCompletedStages(newCompletedStages);
+    localStorage.setItem('completedStages', JSON.stringify(newCompletedStages));
+
     const currentIndex = stages.indexOf(stage);
     if (currentIndex < stages.length - 1) {
-      setCurrentStage(stages[currentIndex + 1]);
+      const nextStage = stages[currentIndex + 1];
+      setCurrentStage(nextStage);
+      localStorage.setItem('currentStage', nextStage);
     }
   };
 
@@ -62,11 +68,11 @@ const Home: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Mission Enrolment 2024</h1>
+      <h1 className="text-3xl font-bold mb-8">Mission Enrollment 2024</h1>
       <div className="mb-8 p-4 bg-blue-100 rounded-lg">
         <h2 className="text-xl font-semibold mb-2">Current Stage: {currentStage.charAt(0).toUpperCase() + currentStage.slice(1)}</h2>
         <p className="text-lg">{stageDescriptions[currentStage]}</p>
-        <p className="mt-2 text-sm text-blue-700">Complete this stage to proceed to the next step of your mission enrolment.</p>
+        <p className="mt-2 text-sm text-blue-700">Complete this stage to proceed to the next step of your mission enrollment.</p>
       </div>
       {renderCurrentStage()}
       <div className="mt-8">
