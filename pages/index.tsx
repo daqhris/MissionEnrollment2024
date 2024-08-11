@@ -34,6 +34,7 @@ const Home: React.FC = () => {
   }, [completedStages, currentStage, setCurrentStage]);
 
   const handleStageCompletion = (stage: Stage) => {
+    setCompletedStages((prev) => [...prev, stage]);
     const newCompletedStages = [...completedStages, stage];
     setCompletedStages(newCompletedStages);
     localStorage.setItem('completedStages', JSON.stringify(newCompletedStages));
@@ -57,20 +58,18 @@ const Home: React.FC = () => {
         return <IdentityVerification onVerified={() => handleStageCompletion("identity")} />;
       case "attendance":
         return (
-          <EventAttendanceVerification
-            onVerified={() => {
-              // We'll handle setting POAPs in the component itself
-              handleStageCompletion("attendance");
-            }}
-          />
+          <div className="p-4 bg-white shadow rounded-lg">
+            <h2 className="text-2xl font-bold mb-4">Event Attendance Proof</h2>
+            <p>Event attendance proof functionality is currently unavailable.</p>
+          </div>
         );
       case "attestation":
         return <OnchainAttestation onAttestationComplete={() => handleStageCompletion("attestation")} poaps={poaps} />;
       case "complete":
         return (
           <div className="p-4 bg-white shadow rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">Mission Enrolment Complete!</h2>
-            <p>Congratulations! You have successfully completed all stages of the mission enrolment.</p>
+            <h2 className="text-2xl font-bold mb-4">Mission Enrollment Complete!</h2>
+            <p>Congratulations! You have successfully completed all stages of the mission enrollment.</p>
           </div>
         );
       default:
@@ -86,8 +85,9 @@ const Home: React.FC = () => {
           Current Stage: {currentStage.charAt(0).toUpperCase() + currentStage.slice(1)}
         </h2>
         <p className="text-lg">{stageDescriptions[currentStage]}</p>
-        <p className="mt-2 text-sm text-blue-700">Complete this stage to proceed to the next step of your mission enrollment.</p>
-
+        <p className="mt-2 text-sm text-blue-700">
+          Complete this stage to proceed to the next step of your mission enrollment.
+        </p>
       </div>
       {renderCurrentStage()}
       <div className="mt-8">
@@ -96,7 +96,7 @@ const Home: React.FC = () => {
           <div
             className="bg-blue-600 h-4 rounded-full transition-all duration-500 ease-in-out"
             style={{ width: `${(completedStages.length / stages.length) * 100}%` }}
-          ></div>
+          />
         </div>
         <ul className="space-y-4">
           {stages.map((stage, index) => (
