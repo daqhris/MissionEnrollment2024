@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import EventAttendanceVerification from "../components/EventAttendanceVerification";
+import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
 
@@ -8,7 +8,7 @@ type Stage = (typeof stages)[number];
 
 const stageDescriptions = {
   identity: "Verify your identity using ENS or Ethereum address",
-  attendance: "Confirm your attendance at ETHGlobal events",
+  attendance: "Confirm your attendance proof for ETHGlobal Brussels 2024",
   attestation: "Create an onchain attestation of your mission enrolment",
   complete: "Mission enrolment completed successfully",
 };
@@ -45,7 +45,7 @@ const Home: React.FC = () => {
           />
         );
       case "attendance":
-        return <EventAttendanceVerification onVerified={() => handleStageCompletion("attendance")} />;
+        return <EventAttendanceProof onVerified={() => handleStageCompletion("attendance")} />;
       case "attestation":
         return <OnchainAttestation onAttestationComplete={() => handleStageCompletion("attestation")} />;
       case "complete":

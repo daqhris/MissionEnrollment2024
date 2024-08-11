@@ -20,10 +20,10 @@ interface POAPEvent {
 
 // API_BASE_URL is no longer used, so we can remove this line entirely
 
-const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onVerified }) => {
+const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified }) => {
   const [inputAddress, setInputAddress] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
-  const [verificationResult, setVerificationResult] = useState<string | null>(null);
+  const [proofResult, setProofResult] = useState<string | null>(null);
   const [poaps, setPOAPs] = useState<POAPEvent[]>([]);
   const [imageLoadErrors, setImageLoadErrors] = useState<Record<string, boolean>>({});
 
@@ -33,7 +33,7 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
 
   const fetchPOAPs = useCallback(async (address: string) => {
     setIsVerifying(true);
-    setVerificationResult(null);
+    setProofResult(null);
     try {
       const response = await fetch(`/api/mockPoapApi?address=${address}`);
       if (!response.ok) {
@@ -49,14 +49,14 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
       );
       setPOAPs(ethGlobalPOAPs);
       if (ethGlobalPOAPs.length === 0) {
-        setVerificationResult("No eligible POAPs found for ETHGlobal events in Brussels.");
+        setProofResult("No eligible POAPs found for ETHGlobal events in Brussels.");
       }
     } catch (error) {
       console.error("Error fetching POAPs:", error);
       if (error instanceof TypeError && error.message.includes("fetch")) {
-        setVerificationResult("Network error. Please check your internet connection and try again.");
+        setProofResult("Network error. Please check your internet connection and try again.");
       } else {
-        setVerificationResult(error instanceof Error ? error.message : "Failed to verify POAPs. Please try again.");
+        setProofResult(error instanceof Error ? error.message : "Failed to fetch POAPs. Please try again.");
       }
     } finally {
       setIsVerifying(false);
@@ -71,14 +71,14 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
 
   const handleVerify = useCallback(() => {
     if (poaps.length > 0) {
-      setVerificationResult(`Verification successful! ${inputAddress} has attended an ETHGlobal event in Brussels.`);
+      setProofResult(`Proof successful! ${inputAddress} has attended an ETHGlobal event in Brussels.`);
       onVerified();
     } else {
-      setVerificationResult(
-        `Verification failed. No eligible POAPs found for ${inputAddress} at ETHGlobal events in Brussels.`,
+      setProofResult(
+        `Proof failed. No eligible POAPs found for ${inputAddress} at ETHGlobal events in Brussels.`,
       );
     }
-  }, [poaps, inputAddress, onVerified]);
+  }, [poaps, inputAddress, onVerified, setProofResult]);
 
   const handleImageError = (tokenId: string) => {
     setImageLoadErrors(prev => ({ ...prev, [tokenId]: true }));
@@ -86,9 +86,9 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
 
   return (
     <div className="p-4 bg-white shadow rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Event Attendance Verification</h2>
+      <h2 className="text-2xl font-bold mb-4">Event Attendance Proof</h2>
       <p className="mb-4">
-        Enter your Ethereum address or ENS name to verify your attendance at an ETHGlobal event in Brussels:
+        Enter your Ethereum address or ENS name to provide proof of your attendance at an ETHGlobal event in Brussels:
       </p>
       <input
         type="text"
@@ -110,11 +110,11 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
           disabled={isVerifying || poaps.length === 0}
           className="bg-green-500 text-white p-2 rounded hover:bg-green-600 disabled:bg-gray-300 flex-1"
         >
-          Verify Attendance
+          Confirm Attendance
         </button>
       </div>
       {isVerifying ? (
-        <p>Verifying POAPs for {ensAddress || inputAddress}...</p>
+        <p>Fetching POAPs for {ensAddress || inputAddress}...</p>
       ) : (
         <>
           {poaps.length > 0 && (
@@ -145,13 +145,13 @@ const EventAttendanceVerification: React.FC<{ onVerified: () => void }> = ({ onV
           )}
         </>
       )}
-      {verificationResult && (
-        <p className={`mt-4 ${verificationResult.includes("successful") ? "text-green-500" : "text-red-500"}`}>
-          {verificationResult}
+      {proofResult && (
+        <p className={`mt-4 ${proofResult.includes("successful") ? "text-green-500" : "text-red-500"}`}>
+          {proofResult}
         </p>
       )}
     </div>
   );
 };
 
-export default EventAttendanceVerification;
+export default EventAttendanceProof;
