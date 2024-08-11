@@ -34,7 +34,7 @@ const Home: React.FC = () => {
   const handleStageCompletion = (stage: Stage) => {
     setCompletedStages(prev => {
       const newCompletedStages = [...prev, stage];
-      localStorage.setItem('completedStages', JSON.stringify(newCompletedStages));
+      localStorage.setItem("completedStages", JSON.stringify(newCompletedStages));
       return newCompletedStages;
     });
 
@@ -42,7 +42,7 @@ const Home: React.FC = () => {
     if (currentIndex < stages.length - 1) {
       const nextStage = stages[currentIndex + 1];
       setCurrentStage(nextStage);
-      localStorage.setItem('currentStage', nextStage);
+      localStorage.setItem("currentStage", nextStage);
     }
   };
 
