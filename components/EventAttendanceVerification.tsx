@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { useEnsAddress } from "wagmi";
+import axios from "axios";
 
 interface POAPEvent {
   event: {
@@ -34,29 +35,41 @@ const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified
   const fetchPOAPs = useCallback(async (address: string) => {
     setIsVerifying(true);
     setProofResult(null);
+    setPOAPs([]);
+
+    // Validate Ethereum address format
+    const isValidAddress = /^(0x[a-fA-F0-9]{40}|.+\.eth)$/.test(address);
+    if (!isValidAddress) {
+      setProofResult("Invalid input. Please enter a valid Ethereum address or ENS name.");
+      setIsVerifying(false);
+      return;
+    }
+
     try {
-      const response = await fetch(`/api/mockPoapApi?address=${address}`);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch POAPs: ${response.statusText}`);
-      }
-      const data = await response.json();
-      if (!Array.isArray(data) || data.length === 0) {
-        throw new Error("No POAPs found for this address");
-      }
-      const ethGlobalPOAPs = data.filter(
-        (poap: POAPEvent) =>
-          poap.event.name.toLowerCase().includes("ethglobal") && poap.event.city.toLowerCase() === "brussels",
-      );
-      setPOAPs(ethGlobalPOAPs);
-      if (ethGlobalPOAPs.length === 0) {
-        setProofResult("No eligible POAPs found for ETHGlobal events in Brussels.");
+      const response = await axios.get(`/api/fetchPoaps?address=${encodeURIComponent(address)}`);
+
+      const { poaps, message } = response.data;
+
+      if (Array.isArray(poaps) && poaps.length > 0) {
+        setPOAPs(poaps);
+        setProofResult(message);
+      } else {
+        setProofResult(message || "No eligible POAPs found for ETHGlobal Brussels 2024.");
       }
     } catch (error) {
-      console.error("Error fetching POAPs:", error);
-      if (error instanceof TypeError && error.message.includes("fetch")) {
-        setProofResult("Network error. Please check your internet connection and try again.");
+      console.error("Error fetching POAP data:", error);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 400) {
+          setProofResult(error.response.data.error || "Invalid input. Please check your address and try again.");
+        } else if (error.response?.status === 404) {
+          setProofResult("No POAPs found for this address. Make sure you've attended ETHGlobal Brussels 2024.");
+        } else if (error.response?.status === 500) {
+          setProofResult("Server error. Please try again later or contact support if the issue persists.");
+        } else {
+          setProofResult("Network error. Please check your internet connection and try again.");
+        }
       } else {
-        setProofResult(error instanceof Error ? error.message : "Failed to fetch POAPs. Please try again.");
+        setProofResult("An unexpected error occurred. Please try again or contact support.");
       }
     } finally {
       setIsVerifying(false);
