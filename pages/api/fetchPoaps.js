@@ -38,7 +38,15 @@ export default async function handler(req, res) {
     const allPoaps = poapResponse.data;
     console.log('Fetched POAPs:', JSON.stringify(allPoaps, null, 2));
 
-    const requiredPoaps = allPoaps.filter(poap => eventIds.includes(poap.event.id.toString()));
+    const requiredPoaps = allPoaps
+      .filter(poap => eventIds.includes(poap.event.id.toString()))
+      .map(poap => ({
+        event: {
+          name: poap.event.name,
+          start_date: poap.event.start_date
+        },
+        tokenId: poap.tokenId
+      }));
     const missingEventIds = eventIds.filter(id => !requiredPoaps.some(poap => poap.event.id.toString() === id));
 
     if (requiredPoaps.length > 0) {
