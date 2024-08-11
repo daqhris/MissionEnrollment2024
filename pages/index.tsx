@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
-import EventAttendanceProof from "../components/EventAttendanceVerification";
+import EventAttendanceProof from "../components/EventAttendanceProof";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
+
+interface POAPEvent {
+  event: {
+    name: string;
+    start_date: string;
+  };
+  tokenId: string;
+}
 
 const stageDescriptions = {
   identity: "Verify your identity using ENS or Ethereum address",
@@ -16,6 +24,7 @@ const stageDescriptions = {
 const Home: React.FC = () => {
   const [currentStage, setCurrentStage] = useState<Stage>("identity");
   const [completedStages, setCompletedStages] = useState<Stage[]>([]);
+  const [poaps, setPOAPs] = useState<POAPEvent[]>([]);
 
   useEffect(() => {
     if (completedStages.length === 0 && currentStage !== "identity") {
@@ -39,15 +48,23 @@ const Home: React.FC = () => {
   const renderCurrentStage = () => {
     switch (currentStage) {
       case "identity":
+        return <IdentityVerification onVerified={() => handleStageCompletion("identity")} />;
+      case "attendance":
         return (
-          <IdentityVerification
-            onVerified={() => handleStageCompletion("identity")}
+          <EventAttendanceProof
+            onVerified={(verifiedPoaps: POAPEvent[]) => {
+              setPOAPs(verifiedPoaps);
+              handleStageCompletion("attendance");
+            }}
           />
         );
-      case "attendance":
-        return <EventAttendanceProof onVerified={() => handleStageCompletion("attendance")} />;
       case "attestation":
-        return <OnchainAttestation onAttestationComplete={() => handleStageCompletion("attestation")} />;
+        return (
+          <OnchainAttestation
+            onAttestationComplete={() => handleStageCompletion("attestation")}
+            poaps={poaps}
+          />
+        );
       case "complete":
         return (
           <div className="p-4 bg-white shadow rounded-lg">
@@ -64,9 +81,13 @@ const Home: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Mission Enrolment 2024</h1>
       <div className="mb-8 p-4 bg-blue-100 rounded-lg">
-        <h2 className="text-xl font-semibold mb-2">Current Stage: {currentStage.charAt(0).toUpperCase() + currentStage.slice(1)}</h2>
+        <h2 className="text-xl font-semibold mb-2">
+          Current Stage: {currentStage.charAt(0).toUpperCase() + currentStage.slice(1)}
+        </h2>
         <p className="text-lg">{stageDescriptions[currentStage]}</p>
-        <p className="mt-2 text-sm text-blue-700">Complete this stage to proceed to the next step of your mission enrolment.</p>
+        <p className="mt-2 text-sm text-blue-700">
+          Complete this stage to proceed to the next step of your mission enrolment.
+        </p>
       </div>
       {renderCurrentStage()}
       <div className="mt-8">
