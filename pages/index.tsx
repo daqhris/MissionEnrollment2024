@@ -17,8 +17,8 @@ interface POAPEvent {
 const stageDescriptions = {
   identity: "Verify your identity using ENS or Ethereum address",
   attendance: "Confirm your attendance proof for ETHGlobal Brussels 2024",
-  attestation: "Create an onchain attestation of your mission enrolment",
-  complete: "Mission enrolment completed successfully",
+  attestation: "Create an onchain attestation of your mission enrollment",
+  complete: "Mission enrollment completed successfully",
 };
 
 const Home: React.FC = () => {
@@ -63,8 +63,8 @@ const Home: React.FC = () => {
       case "complete":
         return (
           <div className="p-4 bg-white shadow rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">Mission Enrolment Complete!</h2>
-            <p>Congratulations! You have successfully completed all stages of the mission enrolment.</p>
+            <h2 className="text-2xl font-bold mb-4">Mission Enrollment Complete!</h2>
+            <p>Congratulations! You have successfully completed all stages of the mission enrollment.</p>
           </div>
         );
       default:
@@ -74,14 +74,14 @@ const Home: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Mission Enrolment 2024</h1>
+      <h1 className="text-3xl font-bold mb-8">Mission Enrollment 2024</h1>
       <div className="mb-8 p-4 bg-blue-100 rounded-lg">
         <h2 className="text-xl font-semibold mb-2">
           Current Stage: {currentStage.charAt(0).toUpperCase() + currentStage.slice(1)}
         </h2>
         <p className="text-lg">{stageDescriptions[currentStage]}</p>
         <p className="mt-2 text-sm text-blue-700">
-          Complete this stage to proceed to the next step of your mission enrolment.
+          Complete this stage to proceed to the next step of your mission enrollment.
         </p>
       </div>
       {renderCurrentStage()}
