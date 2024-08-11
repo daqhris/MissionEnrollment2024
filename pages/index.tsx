@@ -59,12 +59,7 @@ const Home: React.FC = () => {
           />
         );
       case "attestation":
-        return (
-          <OnchainAttestation
-            onAttestationComplete={() => handleStageCompletion("attestation")}
-            poaps={poaps}
-          />
-        );
+        return <OnchainAttestation onAttestationComplete={() => handleStageCompletion("attestation")} poaps={poaps} />;
       case "complete":
         return (
           <div className="p-4 bg-white shadow rounded-lg">
