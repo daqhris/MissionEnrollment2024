@@ -16,47 +16,42 @@ interface POAPEvent {
   event_id: string;
 }
 
-const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified }) => {
-  const [inputAddress, setInputAddress] = useState("");
+const EventAttendanceProof: React.FC<{ onVerified: () => void; setPoaps: React.Dispatch<React.SetStateAction<POAPEvent[]>>; userAddress: string }> = ({ onVerified, setPoaps, userAddress }) => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [proofResult, setProofResult] = useState<string | null>(null);
   const [localPoaps, setLocalPoaps] = useState<POAPEvent[]>([]);
   const [missingPoaps, setMissingPoaps] = useState<string[]>([]);
   const [imageLoadErrors, setImageLoadErrors] = useState<Record<string, boolean>>({});
 
-  const { data: ensAddress } = useEnsAddress({
-    name: inputAddress,
-  });
+  // ENS resolution is no longer needed as we're using the provided userAddress
 
-  const fetchPOAPs = useCallback(async (address: string) => {
+  const fetchPOAPs = useCallback(async () => {
     setIsVerifying(true);
     setProofResult(null);
     setLocalPoaps([]);
     setMissingPoaps([]);
 
-    const isValidAddress = /^(0x[a-fA-F0-9]{40}|.+\.eth)$/.test(address);
-    if (!isValidAddress) {
-      setProofResult("Invalid input. Please enter a valid Ethereum address or ENS name.");
-      setIsVerifying(false);
-      return;
-    }
-
     try {
-      const response = await axios.get(`/api/fetchPoaps?address=${encodeURIComponent(address)}`);
-      const { poaps, missingEventIds, message } = response.data;
+      console.log(`Fetching POAPs for address: ${userAddress}`);
+      const response = await axios.get(`/api/fetchPoaps?address=${encodeURIComponent(userAddress)}`);
+      console.log('API response:', response.data);
 
-      if (Array.isArray(poaps) && poaps.length > 0) {
-        setLocalPoaps(poaps);
-        setMissingPoaps(missingEventIds);
+      const { poaps = [], missingEventIds = [], message = '' } = response.data;
+
+      // Ensure poaps is always an array
+      const validPoaps = Array.isArray(poaps) ? poaps : [];
+      setLocalPoaps(validPoaps);
+      setPoaps(validPoaps);
+      setMissingPoaps(Array.isArray(missingEventIds) ? missingEventIds : eventIds);
+
+      if (validPoaps.length > 0) {
         if (missingEventIds.length === 0) {
-          setProofResult(`Proof successful! ${address} has the required POAPs for ETHGlobal Brussels 2024.`);
+          setProofResult(`Proof successful! ${userAddress} has the required POAPs for ETHGlobal Brussels 2024.`);
           onVerified();
         } else {
-          setProofResult(`${address} does not have all the required POAPs for ETHGlobal Brussels 2024.`);
+          setProofResult(`${userAddress} has some POAPs but is missing ${missingEventIds.length} required POAPs for ETHGlobal Brussels 2024.`);
         }
       } else {
-        setLocalPoaps([]);
-        setMissingPoaps(eventIds);
         setProofResult(message || "No required POAPs were found for this address.");
       }
     } catch (error) {
@@ -79,13 +74,13 @@ const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified
     } finally {
       setIsVerifying(false);
     }
-  }, [onVerified]);
+  }, [onVerified, userAddress, setPoaps, eventIds]);
 
   useEffect(() => {
-    if (ensAddress || inputAddress) {
-      fetchPOAPs(ensAddress || inputAddress);
+    if (userAddress) {
+      fetchPOAPs();
     }
-  }, [ensAddress, inputAddress, fetchPOAPs]);
+  }, [userAddress, fetchPOAPs]);
 
   const handleImageError = (tokenId: string) => {
     setImageLoadErrors(prev => ({ ...prev, [tokenId]: true }));
@@ -95,26 +90,19 @@ const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified
     <div className="p-4 bg-white shadow rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Event Attendance Proof</h2>
       <p className="mb-4">
-        Enter your Ethereum address or ENS name to verify your attendance at ETHGlobal Brussels 2024:
+        Verifying your attendance at ETHGlobal Brussels 2024:
       </p>
-      <input
-        type="text"
-        value={inputAddress}
-        onChange={(e) => setInputAddress(e.target.value)}
-        placeholder="Enter Ethereum address or ENS name"
-        className="w-full p-2 mb-4 border rounded"
-      />
       <button
-        onClick={() => fetchPOAPs(ensAddress || inputAddress)}
-        disabled={!inputAddress || isVerifying}
+        onClick={() => fetchPOAPs()}
+        disabled={isVerifying}
         className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300 mb-4"
       >
         {isVerifying ? "Verifying..." : "Verify Attendance"}
       </button>
       {isVerifying && (
-        <p className="text-blue-500 mb-4">Verifying attendance for {ensAddress || inputAddress}...</p>
+        <p className="text-blue-500 mb-4">Verifying attendance for {userAddress}...</p>
       )}
-      {localPoaps.length > 0 && (
+      {localPoaps && localPoaps.length > 0 && (
         <div className="mt-4 bg-green-100 p-4 rounded">
           <h3 className="text-lg font-semibold text-green-800 mb-2">POAPs Found</h3>
           <p className="text-green-700 mb-4">
@@ -139,7 +127,7 @@ const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified
           </div>
         </div>
       )}
-      {missingPoaps.length > 0 && (
+      {missingPoaps && missingPoaps.length > 0 && (
         <div className="mt-4 bg-yellow-100 p-4 rounded">
           <h3 className="text-lg font-semibold text-yellow-800 mb-2">Missing POAPs</h3>
           <p className="text-yellow-700 mb-2">
