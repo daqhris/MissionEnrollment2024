@@ -74,9 +74,7 @@ const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified
       setProofResult(`Proof successful! ${inputAddress} has attended an ETHGlobal event in Brussels.`);
       onVerified();
     } else {
-      setProofResult(
-        `Proof failed. No eligible POAPs found for ${inputAddress} at ETHGlobal events in Brussels.`,
-      );
+      setProofResult(`Proof failed. No eligible POAPs found for ${inputAddress} at ETHGlobal events in Brussels.`);
     }
   }, [poaps, inputAddress, onVerified, setProofResult]);
 

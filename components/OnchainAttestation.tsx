@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import type { POAPEvent } from "./EventAttendanceVerification"; // Corrected import
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { ethers } from "ethers";
+import { BrowserProvider } from "ethers";
 import { useAccount } from "wagmi";
 
 // This component uses the Ethereum Attestation Service (EAS) protocol
@@ -17,7 +16,13 @@ const ATTESTER_NAME = "daqhris.eth";
 
 interface OnchainAttestationProps {
   onAttestationComplete: () => void;
-  poaps: POAPEvent[];
+  poaps: Array<{
+    event: {
+      name: string;
+      start_date: string;
+    };
+    tokenId: string;
+  }>;
 }
 
 const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationComplete, poaps }) => {
@@ -36,18 +41,13 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
     setAttestationStatus("Initiating attestation...");
 
     try {
-      // Initialize EAS SDK
       const eas = new EAS(EAS_CONTRACT_ADDRESS);
-
-      // Connect to the provider (assuming MetaMask is connected)
-      // @ts-ignore
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
       eas.connect(signer);
 
-      // Encode the attestation data
       const schemaEncoder = new SchemaEncoder(
-        "address recipient,uint256 tokenId,string eventName,uint256 timestamp,string rollup,string attester",
+        "address recipient,uint256 tokenId,string eventName,uint256 timestamp,string rollup,string attester"
       );
       const poapData = poaps[0]; // Assuming we're using the first POAP for simplicity
       const encodedData = schemaEncoder.encodeData([
@@ -59,7 +59,6 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
         { name: "attester", value: ATTESTER_NAME, type: "string" },
       ]);
 
-      // Create the attestation
       const tx = await eas.attest({
         schema: SCHEMA_UID,
         data: {
@@ -72,7 +71,9 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
 
       const newAttestationUID = await tx.wait();
 
-      setAttestationStatus(`Attestation created successfully on ${selectedRollup}. UID: ${newAttestationUID}`);
+      setAttestationStatus(
+        `Attestation created successfully on ${selectedRollup}. UID: ${newAttestationUID}`
+      );
       onAttestationComplete();
     } catch (error) {
       console.error("Attestation error:", error);
@@ -86,7 +87,8 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
     <div className="p-4 bg-white shadow rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Onchain Attestation</h2>
       <p className="mb-4">
-        Receive an onchain attestation for completing the mission using the Ethereum Attestation Service (EAS) protocol:
+        Receive an onchain attestation for completing the mission using the
+        Ethereum Attestation Service (EAS) protocol:
       </p>
       <div className="mb-4">
         <label htmlFor="rollup" className="block mb-2 font-semibold">
@@ -95,38 +97,41 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
         <select
           id="rollup"
           value={selectedRollup}
-          onChange={e => setSelectedRollup(e.target.value as "base" | "optimism")}
+          onChange={(e) => setSelectedRollup(e.target.value as "base" | "optimism")}
           className="w-full p-2 border rounded"
         >
           <option value="base">Base (Ethereum L2 Rollup)</option>
           <option value="optimism">Optimism (Ethereum L2 Rollup)</option>
         </select>
         <p className="mt-2 text-sm text-gray-600">
-          Your attestation will be created on the selected rollup, leveraging its scalability and lower transaction costs.
+          Your attestation will be created on the selected rollup, leveraging
+          its scalability and lower transaction costs.
         </p>
       </div>
       {poaps.length > 0 && (
         <div className="mb-4">
           <h3 className="text-lg font-semibold">POAP Data for Attestation:</h3>
           <ul className="list-disc pl-5">
-            {poaps.map(poap => (
+            {poaps.map((poap) => (
               <li key={poap.tokenId}>
                 {poap.event.name} - {new Date(poap.event.start_date).toLocaleDateString()}
               </li>
             ))}
           </ul>
           <p className="mt-2 text-sm text-gray-600">
-            This POAP data will be included in your onchain attestation as proof of your event attendance.
+            This POAP data will be included in your onchain attestation as proof
+            of your event attendance.
           </p>
         </div>
       )}
       <div className="mb-4">
         <h3 className="text-lg font-semibold">Attestation Details:</h3>
         <p className="mb-2">
-          <span className="font-semibold">Attester's onchain name:</span> {ATTESTER_NAME}
+          <span className="font-semibold">Attester&apos;s onchain name:</span> {ATTESTER_NAME}
         </p>
         <p className="text-sm text-gray-600">
-          The attestation will be created by {ATTESTER_NAME} using the Ethereum Attestation Service protocol on the selected rollup.
+          The attestation will be created by {ATTESTER_NAME} using the Ethereum
+          Attestation Service protocol on the selected rollup.
         </p>
       </div>
       <button
