@@ -51,7 +51,7 @@ const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> 
         <input
           type="text"
           value={inputAddress}
-          onChange={(e) => setInputAddress(e.target.value)}
+          onChange={e => setInputAddress(e.target.value)}
           className="w-full max-w-md p-2 border rounded mb-4"
           placeholder="vitalik.eth or 0x..."
           disabled={isVerifying}
