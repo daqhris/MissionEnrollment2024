@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import EventAttendanceVerification from "../components/EventAttendanceVerification";
+import EventAttendanceProof from "../components/EventAttendanceProof.tsx";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
 
@@ -51,7 +51,7 @@ const Home: React.FC = () => {
         return <IdentityVerification onVerified={() => handleStageCompletion("identity")} />;
       case "attendance":
         return (
-          <EventAttendanceVerification
+          <EventAttendanceProof
             onVerified={() => {
               // We'll handle setting POAPs in the component itself
               handleStageCompletion("attendance");
