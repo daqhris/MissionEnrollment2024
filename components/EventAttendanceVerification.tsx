@@ -4,28 +4,23 @@ import { useEnsAddress } from "wagmi";
 import axios from "axios";
 
 interface POAPEvent {
-  event: {
-    id: number;
-    name: string;
-    description: string;
-    start_date: string;
-    end_date: string;
-    city: string;
-  };
-  tokenId: string;
-  owner: string;
   chain: string;
-  created: string;
-  imageUrl: string;
+  contract_address: string;
+  token_id: string;
+  name: string;
+  description: string;
+  image_url: string;
+  created_at: string;
+  event_url: string;
+  event_id: string;
 }
-
-// API_BASE_URL is no longer used, so we can remove this line entirely
 
 const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified }) => {
   const [inputAddress, setInputAddress] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [proofResult, setProofResult] = useState<string | null>(null);
   const [poaps, setPOAPs] = useState<POAPEvent[]>([]);
+  const [missingPoaps, setMissingPoaps] = useState<string[]>([]);
   const [imageLoadErrors, setImageLoadErrors] = useState<Record<string, boolean>>({});
 
   const { data: ensAddress } = useEnsAddress({
@@ -36,8 +31,8 @@ const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified
     setIsVerifying(true);
     setProofResult(null);
     setPOAPs([]);
+    setMissingPoaps([]);
 
-    // Validate Ethereum address format
     const isValidAddress = /^(0x[a-fA-F0-9]{40}|.+\.eth)$/.test(address);
     if (!isValidAddress) {
       setProofResult("Invalid input. Please enter a valid Ethereum address or ENS name.");
@@ -47,17 +42,26 @@ const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified
 
     try {
       const response = await axios.get(`/api/fetchPoaps?address=${encodeURIComponent(address)}`);
-
-      const { poaps, message } = response.data;
+      const { poaps, missingEventIds, message } = response.data;
 
       if (Array.isArray(poaps) && poaps.length > 0) {
         setPOAPs(poaps);
-        setProofResult(message);
+        setMissingPoaps(missingEventIds);
+        if (missingEventIds.length === 0) {
+          setProofResult(`Proof successful! ${address} has all required POAPs for ETHGlobal Brussels 2024.`);
+          onVerified();
+        } else {
+          setProofResult(`${address} is missing ${missingEventIds.length} required POAPs for ETHGlobal Brussels 2024.`);
+        }
       } else {
+        setPOAPs([]);
+        setMissingPoaps([]);
         setProofResult(message || "No eligible POAPs found for ETHGlobal Brussels 2024.");
       }
     } catch (error) {
       console.error("Error fetching POAP data:", error);
+      setPOAPs([]);
+      setMissingPoaps([]);
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 400) {
           setProofResult(error.response.data.error || "Invalid input. Please check your address and try again.");
@@ -74,22 +78,13 @@ const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified
     } finally {
       setIsVerifying(false);
     }
-  }, []);
+  }, [onVerified]);
 
   useEffect(() => {
     if (ensAddress || inputAddress) {
       fetchPOAPs(ensAddress || inputAddress);
     }
   }, [ensAddress, inputAddress, fetchPOAPs]);
-
-  const handleVerify = useCallback(() => {
-    if (poaps.length > 0) {
-      setProofResult(`Proof successful! ${inputAddress} has attended an ETHGlobal event in Brussels.`);
-      onVerified();
-    } else {
-      setProofResult(`Proof failed. No eligible POAPs found for ${inputAddress} at ETHGlobal events in Brussels.`);
-    }
-  }, [poaps, inputAddress, onVerified, setProofResult]);
 
   const handleImageError = (tokenId: string) => {
     setImageLoadErrors(prev => ({ ...prev, [tokenId]: true }));
@@ -99,7 +94,7 @@ const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified
     <div className="p-4 bg-white shadow rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Event Attendance Proof</h2>
       <p className="mb-4">
-        Enter your Ethereum address or ENS name to provide proof of your attendance at an ETHGlobal event in Brussels:
+        Enter your Ethereum address or ENS name to provide proof of your attendance at ETHGlobal Brussels 2024:
       </p>
       <input
         type="text"
@@ -108,58 +103,58 @@ const EventAttendanceProof: React.FC<{ onVerified: () => void }> = ({ onVerified
         placeholder="Enter Ethereum address or ENS name"
         className="w-full p-2 mb-4 border rounded"
       />
-      <div className="flex space-x-4 mb-4">
-        <button
-          onClick={() => fetchPOAPs(ensAddress || inputAddress)}
-          disabled={!inputAddress || isVerifying}
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300 flex-1"
-        >
-          Fetch POAPs
-        </button>
-        <button
-          onClick={handleVerify}
-          disabled={isVerifying || poaps.length === 0}
-          className="bg-green-500 text-white p-2 rounded hover:bg-green-600 disabled:bg-gray-300 flex-1"
-        >
-          Confirm Attendance
-        </button>
-      </div>
-      {isVerifying ? (
-        <p>Fetching POAPs for {ensAddress || inputAddress}...</p>
-      ) : (
-        <>
-          {poaps.length > 0 && (
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold">Eligible POAPs:</h3>
-              <ul className="list-none pl-0">
-                {poaps.map(poap => (
-                  <li key={poap.tokenId} className="flex items-center mb-2">
-                    <div className="w-12 h-12 mr-2 rounded overflow-hidden">
-                      <Image
-                        src={imageLoadErrors[poap.tokenId] ? "/placeholder-poap.png" : poap.imageUrl}
-                        alt={poap.event.name}
-                        width={48}
-                        height={48}
-                        className="object-cover"
-                        onError={() => handleImageError(poap.tokenId)}
-                        unoptimized
-                      />
-                    </div>
-                    <div>
-                      <p className="font-semibold">{poap.event.name}</p>
-                      <p className="text-sm text-gray-600">{new Date(poap.event.start_date).toLocaleDateString()}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </>
+      <button
+        onClick={() => fetchPOAPs(ensAddress || inputAddress)}
+        disabled={!inputAddress || isVerifying}
+        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300 mb-4"
+      >
+        {isVerifying ? "Verifying..." : "Verify Attendance"}
+      </button>
+      {isVerifying && (
+        <p className="text-blue-500 mb-4">Verifying attendance for {ensAddress || inputAddress}...</p>
+      )}
+      {poaps.length > 0 && (
+        <div className="mt-4 bg-green-100 p-4 rounded">
+          <h3 className="text-lg font-semibold text-green-800 mb-2">POAPs Found</h3>
+          <p className="text-green-700 mb-4">
+            {missingPoaps.length === 0
+              ? "You have all required POAPs for ETHGlobal Brussels 2024."
+              : `You have ${poaps.length} out of ${poaps.length + missingPoaps.length} required POAPs.`}
+          </p>
+          <div className="flex flex-wrap">
+            {poaps.map((poap) => (
+              <div key={poap.token_id} className="mr-4 mb-4">
+                <Image
+                  src={imageLoadErrors[poap.token_id] ? "/placeholder-poap.png" : poap.image_url}
+                  alt={poap.name}
+                  width={64}
+                  height={64}
+                  className="rounded-full"
+                  onError={() => handleImageError(poap.token_id)}
+                />
+                <p className="text-sm text-center mt-1">{poap.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {missingPoaps.length > 0 && (
+        <div className="mt-4 bg-yellow-100 p-4 rounded">
+          <h3 className="text-lg font-semibold text-yellow-800 mb-2">Missing POAPs</h3>
+          <p className="text-yellow-700 mb-2">You are missing the following POAPs:</p>
+          <ul className="list-disc list-inside">
+            {missingPoaps.map((eventId) => (
+              <li key={eventId}>Event ID: {eventId}</li>
+            ))}
+          </ul>
+        </div>
       )}
       {proofResult && (
-        <p className={`mt-4 ${proofResult.includes("successful") ? "text-green-500" : "text-red-500"}`}>
-          {proofResult}
-        </p>
+        <div className={`mt-4 p-4 rounded ${proofResult.includes("successful") ? "bg-green-100" : "bg-red-100"}`}>
+          <p className={proofResult.includes("successful") ? "text-green-700" : "text-red-700"}>
+            {proofResult}
+          </p>
+        </div>
       )}
     </div>
   );
