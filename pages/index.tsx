@@ -24,7 +24,7 @@ const stageDescriptions = {
 const Home: React.FC = () => {
   const [currentStage, setCurrentStage] = useState<Stage>("identity");
   const [completedStages, setCompletedStages] = useState<Stage[]>([]);
-  const [poaps] = useState<POAPEvent[]>([]);
+  const [poaps, setPoaps] = useState<POAPEvent[]>([]);
 
   useEffect(() => {
     if (completedStages.length === 0 && currentStage !== "identity") {
@@ -58,10 +58,10 @@ const Home: React.FC = () => {
         return <IdentityVerification onVerified={() => handleStageCompletion("identity")} />;
       case "attendance":
         return (
-          <div className="p-4 bg-white shadow rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">Event Attendance Proof</h2>
-            <p>Event attendance proof functionality is currently unavailable.</p>
-          </div>
+          <EventAttendanceProof
+            onVerified={() => handleStageCompletion("attendance")}
+            setPoaps={setPoaps}
+          />
         );
       case "attestation":
         return <OnchainAttestation onAttestationComplete={() => handleStageCompletion("attestation")} poaps={poaps} />;
