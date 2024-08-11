@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useLocalStorage } from "usehooks-ts";
-import EventAttendanceProof from "../components/EventAttendanceProof";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
 
@@ -34,10 +32,11 @@ const Home: React.FC = () => {
   }, [completedStages, currentStage, setCurrentStage]);
 
   const handleStageCompletion = (stage: Stage) => {
-    setCompletedStages((prev) => [...prev, stage]);
-    const newCompletedStages = [...completedStages, stage];
-    setCompletedStages(newCompletedStages);
-    localStorage.setItem('completedStages', JSON.stringify(newCompletedStages));
+    setCompletedStages(prev => {
+      const newCompletedStages = [...prev, stage];
+      localStorage.setItem('completedStages', JSON.stringify(newCompletedStages));
+      return newCompletedStages;
+    });
 
     const currentIndex = stages.indexOf(stage);
     if (currentIndex < stages.length - 1) {
