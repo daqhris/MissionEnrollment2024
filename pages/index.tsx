@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useLocalStorage } from "usehooks-ts";
 import EventAttendanceVerification from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
@@ -14,20 +15,25 @@ const stageDescriptions = {
 };
 
 const Home: React.FC = () => {
-  const [currentStage, setCurrentStage] = useState<Stage>("identity");
-  const [completedStages, setCompletedStages] = useState<Stage[]>([]);
+  const [currentStage, setCurrentStage] = useLocalStorage<Stage>("currentStage", "identity");
+  const [completedStages, setCompletedStages] = useLocalStorage<Stage[]>("completedStages", []);
 
   useEffect(() => {
     if (completedStages.length === 0 && currentStage !== "identity") {
       setCurrentStage("identity");
     }
-  }, [completedStages, currentStage]);
+  }, [completedStages, currentStage, setCurrentStage]);
 
   const handleStageCompletion = (stage: Stage) => {
-    setCompletedStages(prev => [...prev, stage]);
+    const newCompletedStages = [...completedStages, stage];
+    setCompletedStages(newCompletedStages);
+    localStorage.setItem('completedStages', JSON.stringify(newCompletedStages));
+
     const currentIndex = stages.indexOf(stage);
     if (currentIndex < stages.length - 1) {
-      setCurrentStage(stages[currentIndex + 1]);
+      const nextStage = stages[currentIndex + 1];
+      setCurrentStage(nextStage);
+      localStorage.setItem('currentStage', nextStage);
     }
   };
 
