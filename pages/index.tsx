@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import EventAttendanceProof from "../components/EventAttendanceProof";
+import EventAttendanceVerification from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
 
@@ -24,7 +24,7 @@ const stageDescriptions = {
 const Home: React.FC = () => {
   const [currentStage, setCurrentStage] = useState<Stage>("identity");
   const [completedStages, setCompletedStages] = useState<Stage[]>([]);
-  const [poaps, setPOAPs] = useState<POAPEvent[]>([]);
+  const [poaps] = useState<POAPEvent[]>([]);
 
   useEffect(() => {
     if (completedStages.length === 0 && currentStage !== "identity") {
@@ -51,9 +51,9 @@ const Home: React.FC = () => {
         return <IdentityVerification onVerified={() => handleStageCompletion("identity")} />;
       case "attendance":
         return (
-          <EventAttendanceProof
-            onVerified={(verifiedPoaps: POAPEvent[]) => {
-              setPOAPs(verifiedPoaps);
+          <EventAttendanceVerification
+            onVerified={() => {
+              // We'll handle setting POAPs in the component itself
               handleStageCompletion("attendance");
             }}
           />

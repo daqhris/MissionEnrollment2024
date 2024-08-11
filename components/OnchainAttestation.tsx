@@ -25,18 +25,11 @@ interface OnchainAttestationProps {
   }>;
 }
 
-const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
-  onAttestationComplete,
-  poaps,
-}) => {
+const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationComplete, poaps }) => {
   const { address } = useAccount();
   const [isAttesting, setIsAttesting] = useState(false);
-  const [attestationStatus, setAttestationStatus] = useState<string | null>(
-    null
-  );
-  const [selectedRollup, setSelectedRollup] = useState<"base" | "optimism">(
-    "base"
-  );
+  const [attestationStatus, setAttestationStatus] = useState<string | null>(null);
+  const [selectedRollup, setSelectedRollup] = useState<"base" | "optimism">("base");
 
   const handleAttestation = async () => {
     if (!address) {
@@ -48,15 +41,11 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
     setAttestationStatus("Initiating attestation...");
 
     try {
-      // Initialize EAS SDK
       const eas = new EAS(EAS_CONTRACT_ADDRESS);
-
-      // Connect to the provider (assuming MetaMask is connected)
       const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       eas.connect(signer);
 
-      // Encode the attestation data
       const schemaEncoder = new SchemaEncoder(
         "address recipient,uint256 tokenId,string eventName,uint256 timestamp,string rollup,string attester"
       );
@@ -65,16 +54,11 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
         { name: "recipient", value: address, type: "address" },
         { name: "tokenId", value: poapData.tokenId, type: "uint256" },
         { name: "eventName", value: poapData.event.name, type: "string" },
-        {
-          name: "timestamp",
-          value: Math.floor(Date.now() / 1000),
-          type: "uint256",
-        },
+        { name: "timestamp", value: Math.floor(Date.now() / 1000), type: "uint256" },
         { name: "rollup", value: selectedRollup, type: "string" },
         { name: "attester", value: ATTESTER_NAME, type: "string" },
       ]);
 
-      // Create the attestation
       const tx = await eas.attest({
         schema: SCHEMA_UID,
         data: {
@@ -113,9 +97,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
         <select
           id="rollup"
           value={selectedRollup}
-          onChange={(e) =>
-            setSelectedRollup(e.target.value as "base" | "optimism")
-          }
+          onChange={(e) => setSelectedRollup(e.target.value as "base" | "optimism")}
           className="w-full p-2 border rounded"
         >
           <option value="base">Base (Ethereum L2 Rollup)</option>
@@ -132,8 +114,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
           <ul className="list-disc pl-5">
             {poaps.map((poap) => (
               <li key={poap.tokenId}>
-                {poap.event.name} -{" "}
-                {new Date(poap.event.start_date).toLocaleDateString()}
+                {poap.event.name} - {new Date(poap.event.start_date).toLocaleDateString()}
               </li>
             ))}
           </ul>
@@ -146,8 +127,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
       <div className="mb-4">
         <h3 className="text-lg font-semibold">Attestation Details:</h3>
         <p className="mb-2">
-          <span className="font-semibold">Attester&apos;s onchain name:</span>{" "}
-          {ATTESTER_NAME}
+          <span className="font-semibold">Attester&apos;s onchain name:</span> {ATTESTER_NAME}
         </p>
         <p className="text-sm text-gray-600">
           The attestation will be created by {ATTESTER_NAME} using the Ethereum
@@ -159,9 +139,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
         disabled={isAttesting || !address || !selectedRollup}
         className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300 w-full"
       >
-        {isAttesting
-          ? "Creating Attestation..."
-          : `Request Attestation on ${selectedRollup}`}
+        {isAttesting ? "Creating Attestation..." : `Request Attestation on ${selectedRollup}`}
       </button>
       {attestationStatus && (
         <div className="mt-4 p-3 bg-green-100 border border-green-400 rounded">
