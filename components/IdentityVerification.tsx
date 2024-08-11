@@ -51,27 +51,15 @@ const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> 
         <input
           type="text"
           value={inputAddress}
-          onChange={(e) => setInputAddress(e.target.value)}
+          onChange={e => setInputAddress(e.target.value)}
           className="w-full max-w-md p-2 border rounded mb-4"
           placeholder="vitalik.eth or 0x..."
           disabled={isVerifying}
         />
         {isLoading && (
           <span className="absolute right-3 top-2 text-blue-500">
-            <svg
-              className="animate-spin h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
+            <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path
                 className="opacity-75"
                 fill="currentColor"
