@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import EventAttendanceProof from "../components/EventAttendanceProof.tsx";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
 
@@ -33,7 +32,7 @@ const Home: React.FC = () => {
   }, [completedStages, currentStage]);
 
   const handleStageCompletion = (stage: Stage) => {
-    setCompletedStages(prev => [...prev, stage]);
+    setCompletedStages((prev) => [...prev, stage]);
     const currentIndex = stages.indexOf(stage);
     if (currentIndex < stages.length - 1) {
       setCurrentStage(stages[currentIndex + 1]);
@@ -51,12 +50,10 @@ const Home: React.FC = () => {
         return <IdentityVerification onVerified={() => handleStageCompletion("identity")} />;
       case "attendance":
         return (
-          <EventAttendanceProof
-            onVerified={() => {
-              // We'll handle setting POAPs in the component itself
-              handleStageCompletion("attendance");
-            }}
-          />
+          <div className="p-4 bg-white shadow rounded-lg">
+            <h2 className="text-2xl font-bold mb-4">Event Attendance Proof</h2>
+            <p>Event attendance proof functionality is currently unavailable.</p>
+          </div>
         );
       case "attestation":
         return <OnchainAttestation onAttestationComplete={() => handleStageCompletion("attestation")} poaps={poaps} />;
@@ -91,7 +88,7 @@ const Home: React.FC = () => {
           <div
             className="bg-blue-600 h-4 rounded-full transition-all duration-500 ease-in-out"
             style={{ width: `${(completedStages.length / stages.length) * 100}%` }}
-          ></div>
+          />
         </div>
         <ul className="space-y-4">
           {stages.map((stage, index) => (
