@@ -25,6 +25,7 @@ const Home: React.FC = () => {
   const [currentStage, setCurrentStage] = useState<Stage>("identity");
   const [completedStages, setCompletedStages] = useState<Stage[]>([]);
   const [poaps, setPoaps] = useState<POAPEvent[]>([]);
+  const [userAddress, setUserAddress] = useState<string>("");
 
   useEffect(() => {
     if (completedStages.length === 0 && currentStage !== "identity") {
@@ -55,12 +56,16 @@ const Home: React.FC = () => {
   const renderCurrentStage = () => {
     switch (currentStage) {
       case "identity":
-        return <IdentityVerification onVerified={() => handleStageCompletion("identity")} />;
+        return <IdentityVerification onVerified={(address) => {
+          setUserAddress(address);
+          handleStageCompletion("identity");
+        }} />;
       case "attendance":
         return (
           <EventAttendanceProof
             onVerified={() => handleStageCompletion("attendance")}
             setPoaps={setPoaps}
+            userAddress={userAddress}
           />
         );
       case "attestation":

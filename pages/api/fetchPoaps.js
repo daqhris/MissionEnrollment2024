@@ -1,9 +1,7 @@
 import axios from 'axios';
-import { readFileSync } from 'fs';
-import path from 'path';
 
-const eventIdsPath = path.join(process.cwd(), 'event_ids.json');
-const { eventIds } = JSON.parse(readFileSync(eventIdsPath, 'utf8'));
+const GNOSIS_EVENT_ID = '176328';
+const TEST_ADDRESS = '0xb5ee030c71e76C3E03B2A8d425dBb9B395037C82';
 
 export default async function handler(req, res) {
   console.log('Incoming request:', {
@@ -14,11 +12,11 @@ export default async function handler(req, res) {
     body: req.body
   });
 
-  const { address } = req.query;
+  let { address } = req.query;
 
   if (!address) {
-    console.error('Address is missing in the request');
-    return res.status(400).json({ error: 'Address is required' });
+    console.warn('Address is missing in the request, using test address');
+    address = TEST_ADDRESS;
   }
 
   try {
@@ -26,6 +24,10 @@ export default async function handler(req, res) {
     const poapResponse = await axios.get(`https://api.poap.tech/actions/scan/${address}`, {
       headers: {
         'X-API-Key': process.env.POAP_API_KEY
+      },
+      params: {
+        chain: 'xdai', // Gnosis chain
+        event_id: GNOSIS_EVENT_ID
       }
     });
 
@@ -38,22 +40,27 @@ export default async function handler(req, res) {
     const allPoaps = poapResponse.data;
     console.log('Fetched POAPs:', JSON.stringify(allPoaps, null, 2));
 
-    const requiredPoaps = allPoaps.filter(poap => eventIds.includes(poap.event.id.toString()));
-    const missingEventIds = eventIds.filter(id => !requiredPoaps.some(poap => poap.event.id.toString() === id));
+    const requiredPoaps = allPoaps
+      .filter(poap => poap.event.id.toString() === GNOSIS_EVENT_ID)
+      .map(poap => ({
+        event: {
+          name: poap.event.name,
+          start_date: poap.event.start_date
+        },
+        tokenId: poap.tokenId
+      }));
 
     if (requiredPoaps.length > 0) {
-      console.log(`Required POAPs found for address ${address}:`, JSON.stringify(requiredPoaps, null, 2));
+      console.log(`Required POAP found for address ${address}:`, JSON.stringify(requiredPoaps, null, 2));
       res.status(200).json({
         poaps: requiredPoaps,
-        missingEventIds: missingEventIds,
-        message: `Found ${requiredPoaps.length} out of ${eventIds.length} required POAPs.`
+        message: `Found POAP for ETHGlobal Brussels 2024 event (ID: ${GNOSIS_EVENT_ID}).`
       });
     } else {
-      console.log(`No required POAPs found for address ${address}`);
+      console.log(`No required POAP found for address ${address}`);
       res.status(200).json({
         poaps: [],
-        missingEventIds: eventIds,
-        message: "No required POAPs found for this address."
+        message: "No POAP found for ETHGlobal Brussels 2024 event for this address."
       });
     }
   } catch (error) {
@@ -80,7 +87,7 @@ export default async function handler(req, res) {
 
     if (error.response) {
       if (error.response.status === 404) {
-        errorMessage = 'No POAPs found for this address.';
+        errorMessage = 'No POAPs found for this address on the Gnosis chain.';
         statusCode = 404;
       } else if (error.response.status === 401) {
         errorMessage = 'Unauthorized access to POAP data. Please check API credentials.';
