@@ -1,15 +1,17 @@
-import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
+import { GetStaticProps } from "next";
 
-export const generateStaticParams = async () => {
+export async function getStaticPaths() {
   // In a real-world scenario, you would fetch the list of UIDs from an API or database
   // For this example, we'll generate a few static paths
   const uids = ["1", "2", "3"];
 
-  return uids.map(uid => ({
-    uid: uid,
+  const paths = uids.map(uid => ({
+    params: { uid },
   }));
-};
+
+  return { paths, fallback: false };
+}
 
 const AttestationPage = ({ uid }: { uid: string }) => {
   const router = useRouter();
