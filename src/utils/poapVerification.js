@@ -20,10 +20,32 @@ async function verifyPOAPOwnership(address, eventId) {
       },
     });
 
-    return response.data.length > 0;
-  } catch (error) {
-    console.error("Error verifying POAP ownership:", error);
+    console.log(`POAP ownership response for event ${eventId}:`, JSON.stringify(response.data, null, 2));
+
+    if (Array.isArray(response.data)) {
+      if (response.data.length > 0) {
+        console.log(`POAP found for event ${eventId}:`, JSON.stringify(response.data[0], null, 2));
+        return true;
+      }
+    } else if (typeof response.data === 'object' && response.data !== null) {
+      console.log(`POAP found for event ${eventId}:`, JSON.stringify(response.data, null, 2));
+      return true;
+    }
+
+    console.log(`No POAP found for event ${eventId}`);
     return false;
+  } catch (error) {
+    console.error(`Error verifying POAP ownership for address ${address} and event ${eventId}:`, error.message);
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", JSON.stringify(error.response.data, null, 2));
+
+      if (error.response.status === 404) {
+        console.log(`No POAPs found for address ${address} and event ${eventId}`);
+        return false;
+      }
+    }
+    throw error;
   }
 }
 
@@ -33,11 +55,31 @@ async function verifyPOAPOwnership(address, eventId) {
  * @returns {Promise<boolean>} - True if the user owns any of the ETHGlobal Brussels 2024 POAPs, false otherwise
  */
 async function verifyETHGlobalBrusselsPOAPOwnership(address) {
+  console.log(`Verifying POAP ownership for address: ${address}`);
+  let verificationErrors = 0;
+
   for (const eventId of ETHGLOBAL_BRUSSELS_2024_EVENT_IDS) {
-    const ownsPoap = await verifyPOAPOwnership(address, eventId);
-    if (ownsPoap) {
-      return true;
+    try {
+      console.log(`Checking POAP ownership for event ${eventId}...`);
+      const ownsPoap = await verifyPOAPOwnership(address, eventId);
+
+      if (ownsPoap) {
+        console.log(`✅ User owns POAP for event ${eventId}`);
+        return true;
+      } else {
+        console.log(`❌ User does not own POAP for event ${eventId}`);
+      }
+    } catch (error) {
+      console.error(`Error verifying POAP for event ${eventId}:`, error.message);
+      verificationErrors++;
+      // Continue checking other event IDs even if one fails
     }
+  }
+
+  if (verificationErrors === ETHGLOBAL_BRUSSELS_2024_EVENT_IDS.length) {
+    console.error("Failed to verify POAPs for all events due to errors");
+  } else {
+    console.log("User does not own any ETHGlobal Brussels 2024 POAPs");
   }
   return false;
 }
