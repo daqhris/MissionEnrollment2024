@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
+import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
-import EventAttendanceProof from "../components/EventAttendanceVerification";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
 
 interface POAPEvent {
-  event: {
-    name: string;
-    start_date: string;
-  };
-  tokenId: string;
+  chain: string;
+  contract_address: string;
+  token_id: string;
+  name: string;
+  description: string;
+  image_url: string;
+  created_at: string;
+  event_url: string;
+  event_id: string;
 }
 
 const stageDescriptions = {
@@ -56,10 +60,14 @@ const Home: React.FC = () => {
   const renderCurrentStage = () => {
     switch (currentStage) {
       case "identity":
-        return <IdentityVerification onVerified={(address) => {
-          setUserAddress(address);
-          handleStageCompletion("identity");
-        }} />;
+        return (
+          <IdentityVerification
+            onVerified={address => {
+              setUserAddress(address);
+              handleStageCompletion("identity");
+            }}
+          />
+        );
       case "attendance":
         return (
           <EventAttendanceProof
