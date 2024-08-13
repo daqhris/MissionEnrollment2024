@@ -5,7 +5,6 @@ import Link from "next/link";
 import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
-import POAPShowcase from "../components/POAPShowcase";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
@@ -162,7 +161,6 @@ const Home: FC = () => {
               ))}
             </ul>
           </div>
-          {poaps.length > 0 && <POAPShowcase poaps={poaps} />}
         </div>
       </main>
     </div>
