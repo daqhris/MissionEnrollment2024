@@ -12,13 +12,7 @@ library Client {
     uint256 amount; // Amount of tokens.
   }
 
-  struct Any2EVMMessage {
-    bytes32 messageId; // MessageId corresponding to ccipSend on source.
-    uint64 sourceChainSelector; // Source chain selector.
-    bytes sender; // abi.decode(sender) if coming from an EVM chain.
-    bytes data; // payload sent in original message.
-    EVMTokenAmount[] destTokenAmounts; // Tokens and their amounts in their destination chain representation.
-  }
+  // Cross-chain functionality removed
 
   // If extraArgs is empty bytes, the default is 200k gas limit.
   struct EVM2AnyMessage {
@@ -29,8 +23,7 @@ library Client {
     bytes extraArgs; // Populate this with _argsToBytes(EVMExtraArgsV2)
   }
 
-  // bytes4(keccak256("CCIP EVMExtraArgsV1"));
-  bytes4 public constant EVM_EXTRA_ARGS_V1_TAG = 0x97a657c9;
+  // Removed EVM_EXTRA_ARGS_V1_TAG constant
 
   struct EVMExtraArgsV1 {
     uint256 gasLimit;
@@ -40,8 +33,7 @@ library Client {
     return abi.encodeWithSelector(EVM_EXTRA_ARGS_V1_TAG, extraArgs);
   }
 
-  // bytes4(keccak256("CCIP EVMExtraArgsV2"));
-  bytes4 public constant EVM_EXTRA_ARGS_V2_TAG = 0x181dcf10;
+  // Removed EVM_EXTRA_ARGS_V2_TAG constant
 
   /// @param gasLimit: gas limit for the callback on the destination chain.
   /// @param allowOutOfOrderExecution: if true, it indicates that the message can be executed in any order relative to other messages from the same sender.
