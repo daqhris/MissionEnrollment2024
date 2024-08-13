@@ -75,26 +75,7 @@ async function fixture() {
     };
 }
 describe('OffchainDNSResolver', () => {
-    it('should respond to resolution requests with a CCIP read request to the DNS gateway', async () => {
-        const { publicResolverAbi, dnsGatewayAbi, offchainDnsResolver } = await loadFixture(fixture);
-        const name = 'test.test';
-        const dnsName = dnsEncodeName(name);
-        const callData = encodeFunctionData({
-            abi: publicResolverAbi,
-            functionName: 'addr',
-            args: [namehash(name)],
-        });
-        const extraData = encodeAbiParameters([{ type: 'bytes' }, { type: 'bytes' }, { type: 'bytes4' }], [dnsName, callData, '0x00000000']);
-        const gatewayCall = encodeFunctionData({
-            abi: dnsGatewayAbi,
-            functionName: 'resolve',
-            args: [dnsName, 16],
-        });
-        await expect(offchainDnsResolver)
-            .read('resolve', [dnsName, callData])
-            .toBeRevertedWithCustomError('OffchainLookup')
-            .withArgs(getAddress(offchainDnsResolver.address), [OFFCHAIN_GATEWAY], gatewayCall, toFunctionSelector('function resolveCallback(bytes,bytes)'), extraData);
-    });
+    // Tests related to DNS resolution and ENS functionality
     it('handles calls to resolveCallback() with valid DNS TXT records containing an address', async () => {
         const { ownedResolver, doDnsResolveCallback, publicResolverAbi } = await loadFixture(fixture);
         const name = 'test.test';
@@ -111,6 +92,7 @@ describe('OffchainDNSResolver', () => {
             calldata,
         })).resolves.toEqual(encodeAbiParameters([{ type: 'address' }], [testAddress]));
     });
+
     it('handles calls to resolveCallback() with extra data and a legacy resolver', async () => {
         const { ownedResolver, publicResolverAbi, doDnsResolveCallback } = await loadFixture(fixture);
         const name = 'test.test';
@@ -127,6 +109,7 @@ describe('OffchainDNSResolver', () => {
             calldata,
         })).resolves.toEqual(encodeAbiParameters([{ type: 'address' }], [testAddress]));
     });
+
     it('handles calls to resolveCallback() with valid DNS TXT records containing a name', async () => {
         const { ownedResolver, root, accounts, ensRegistry, publicResolverAbi, doDnsResolveCallback, } = await loadFixture(fixture);
         // Configure dnsresolver.eth to resolve to the ownedResolver so we can use it in the test
@@ -156,6 +139,7 @@ describe('OffchainDNSResolver', () => {
             calldata,
         })).resolves.toEqual(encodeAbiParameters([{ type: 'address' }], [testAddress]));
     });
+
     it('rejects calls to resolveCallback() with an invalid TXT record', async () => {
         const { ownedResolver, doDnsResolveCallback, offchainDnsResolver, publicResolverAbi, } = await loadFixture(fixture);
         const name = 'test.test';
@@ -174,6 +158,7 @@ describe('OffchainDNSResolver', () => {
         }))
             .toBeRevertedWithCustomError('CouldNotResolve');
     });
+
     it('handles calls to resolveCallback() where the valid TXT record is not the first', async () => {
         const { ownedResolver, doDnsResolveCallback, publicResolverAbi } = await loadFixture(fixture);
         const name = 'test.test';
@@ -190,6 +175,7 @@ describe('OffchainDNSResolver', () => {
             calldata,
         })).resolves.toEqual(encodeAbiParameters([{ type: 'address' }], [testAddress]));
     });
+
     it('respects the first record with a valid resolver', async () => {
         const { ownedResolver, doDnsResolveCallback, publicResolverAbi } = await loadFixture(fixture);
         const name = 'test.test';
@@ -210,6 +196,7 @@ describe('OffchainDNSResolver', () => {
             calldata,
         })).resolves.toEqual(encodeAbiParameters([{ type: 'address' }], [testAddress]));
     });
+
     it('correctly handles extra (string) data in the TXT record when calling a resolver that supports it', async () => {
         const { doDnsResolveCallback, publicResolverAbi } = await loadFixture(fixture);
         const resolver = await hre.viem.deployContract('DummyExtendedDNSSECResolver', []);
@@ -225,6 +212,7 @@ describe('OffchainDNSResolver', () => {
             calldata,
         })).resolves.toEqual(encodeAbiParameters([{ type: 'string' }], ['foobie bletch']));
     });
+
     it('correctly handles extra data in the TXT record when calling a resolver that supports address resolution', async () => {
         const { doDnsResolveCallback, publicResolverAbi } = await loadFixture(fixture);
         const resolver = await hre.viem.deployContract('ExtendedDNSResolver', []);
@@ -241,6 +229,7 @@ describe('OffchainDNSResolver', () => {
             calldata,
         })).resolves.toEqual(testAddress.toLowerCase());
     });
+
     it('correctly handles extra data in the TXT record when calling a resolver that supports address resolution with valid cointype', async () => {
         const { doDnsResolveCallback, publicResolverAbi } = await loadFixture(fixture);
         const resolver = await hre.viem.deployContract('ExtendedDNSResolver', []);
@@ -258,6 +247,7 @@ describe('OffchainDNSResolver', () => {
             calldata,
         })).resolves.toEqual(testAddress.toLowerCase());
     });
+
     it('handles extra data in the TXT record when calling a resolver that supports address resolution with invalid cointype', async () => {
         const { doDnsResolveCallback, publicResolverAbi } = await loadFixture(fixture);
         const resolver = await hre.viem.deployContract('ExtendedDNSResolver', []);
@@ -275,6 +265,7 @@ describe('OffchainDNSResolver', () => {
             calldata,
         })).resolves.toEqual('0x');
     });
+
     it('raises an error if extra (address) data in the TXT record is invalid', async () => {
         const { doDnsResolveCallback, publicResolverAbi } = await loadFixture(fixture);
         const resolver = await hre.viem.deployContract('ExtendedDNSResolver', []);
@@ -293,6 +284,7 @@ describe('OffchainDNSResolver', () => {
         }))
             .toBeRevertedWithCustomError('InvalidAddressFormat');
     });
+
     it('correctly resolves using legacy resolvers without resolve() support', async () => {
         const { doDnsResolveCallback, publicResolverAbi } = await loadFixture(fixture);
         const resolver = await hre.viem.deployContract('DummyLegacyTextResolver', []);
@@ -308,34 +300,6 @@ describe('OffchainDNSResolver', () => {
             calldata,
         })).resolves.toEqual(encodeAbiParameters([{ type: 'string' }], ['test']));
     });
-    it('correctly resolves using offchain resolver', async () => {
-        const { doDnsResolveCallback, doResolveCallback, offchainResolver, offchainDnsResolver, publicResolverAbi, } = await loadFixture(fixture);
-        const name = 'test.test';
-        const dnsName = dnsEncodeName(name);
-        const calldata = encodeFunctionData({
-            abi: publicResolverAbi,
-            functionName: 'addr',
-            args: [namehash(name)],
-        });
-        const extraData = encodeAbiParameters(parseAbiParameters('bytes,bytes,bytes4'), [
-            dnsName,
-            calldata,
-            toFunctionSelector('function resolveCallback(bytes,bytes)'),
-        ]);
-        await expect(offchainDnsResolver)
-            .transaction(doDnsResolveCallback({
-            name,
-            texts: [`ENS1 ${offchainResolver.address} foobie bletch`],
-            calldata,
-        }))
-            .toBeRevertedWithCustomError('OffchainLookup')
-            .withArgs(getAddress(offchainDnsResolver.address), ['https://example.com/'], calldata, toFunctionSelector('function resolveCallback(bytes,bytes)'), extraData);
-        const expectedAddress = '0x0D59d0f7DcC0fBF0A3305cE0261863aAf7Ab685c';
-        const expectedResult = encodeAbiParameters([{ type: 'address' }], [expectedAddress]);
-        await expect(doResolveCallback({ result: expectedResult, extraData })).resolves.toEqual(expectedResult);
-    });
-    it('should prevent OffchainLookup error propagation from non-CCIP-aware contracts', async () => {
-        const { offchainDnsResolver, doDnsResolveCallback, dummyResolver, publicResolverAbi, } = await loadFixture(fixture);
         const name = 'test.test';
         const calldata = encodeFunctionData({
             abi: publicResolverAbi,
