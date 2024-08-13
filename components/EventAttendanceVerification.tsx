@@ -59,7 +59,7 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
           onVerified();
         } else {
           setProofResult(
-            `${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`
+            `${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`,
           );
         }
       } else {
@@ -121,7 +121,11 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
             {localPoaps.map(poap => (
               <div key={poap.token_id} className="mr-4 mb-4">
                 <Image
-                  src={imageLoadErrors[poap.token_id] ? "/placeholder-poap.png" : poap.event?.image_url || "/placeholder-poap.png"}
+                  src={
+                    imageLoadErrors[poap.token_id]
+                      ? "/placeholder-poap.png"
+                      : poap.event?.image_url || "/placeholder-poap.png"
+                  }
                   alt={poap.event?.name || "POAP"}
                   width={64}
                   height={64}
@@ -130,9 +134,7 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
                 />
                 <p className="text-sm text-center mt-1">{poap.event?.name || "Unknown Event"}</p>
                 <p className="text-xs text-center text-gray-700">
-                  {poap.event?.start_date
-                    ? new Date(poap.event.start_date).toLocaleDateString()
-                    : "Date unknown"}
+                  {poap.event?.start_date ? new Date(poap.event.start_date).toLocaleDateString() : "Date unknown"}
                 </p>
               </div>
             ))}
