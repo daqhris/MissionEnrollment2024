@@ -52,8 +52,8 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
       const poapData = poaps[0]; // Assuming we're using the first POAP for simplicity
       const encodedData = schemaEncoder.encodeData([
         { name: "recipient", value: address, type: "address" },
-        { name: "tokenId", value: poapData.tokenId, type: "uint256" },
-        { name: "eventName", value: poapData.event.name, type: "string" },
+        { name: "tokenId", value: poapData?.tokenId ?? "0", type: "uint256" },
+        { name: "eventName", value: poapData?.event?.name ?? "Unknown Event", type: "string" },
         { name: "timestamp", value: Math.floor(Date.now() / 1000), type: "uint256" },
         { name: "rollup", value: selectedRollup, type: "string" },
         { name: "attester", value: ATTESTER_NAME, type: "string" },

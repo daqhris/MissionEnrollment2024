@@ -51,11 +51,13 @@ const EventAttendanceProof: React.FC<{
       const missingEventIds = eventIds.filter(id => !foundEventIds.includes(id));
       setMissingPoaps(missingEventIds);
 
-      if (validPoaps.length === eventIds.length) {
-        setProofResult(`Proof successful! ${userAddress} has all required POAPs for ETHGlobal Brussels 2024.`);
-        onVerified();
-      } else if (validPoaps.length > 0) {
-        setProofResult(`${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`);
+      if (validPoaps.length > 0) {
+        if (validPoaps.length === eventIds.length) {
+          setProofResult(`Proof successful! ${userAddress} has all required POAPs for ETHGlobal Brussels 2024.`);
+          onVerified();
+        } else {
+          setProofResult(`${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`);
+        }
       } else {
         setProofResult(message || "No required POAPs were found for this address.");
       }
@@ -115,16 +117,18 @@ const EventAttendanceProof: React.FC<{
             {localPoaps.map(poap => (
               <div key={poap.tokenId} className="mr-4 mb-4">
                 <Image
-                  src={imageLoadErrors[poap.tokenId] ? "/placeholder-poap.png" : poap.event.image_url}
-                  alt={poap.event.name}
+                  src={imageLoadErrors[poap.tokenId] ? "/placeholder-poap.png" : poap.event?.image_url || "/placeholder-poap.png"}
+                  alt={poap.event?.name || "POAP"}
                   width={64}
                   height={64}
                   className="rounded-full"
                   onError={() => handleImageError(poap.tokenId)}
                 />
-                <p className="text-sm text-center mt-1">{poap.event.name}</p>
+                <p className="text-sm text-center mt-1">{poap.event?.name || "Unknown Event"}</p>
                 <p className="text-xs text-center text-gray-600">
-                  {new Date(poap.event.start_date).toLocaleDateString()}
+                  {poap.event?.start_date
+                    ? new Date(poap.event.start_date).toLocaleDateString()
+                    : "Date unknown"}
                 </p>
               </div>
             ))}
