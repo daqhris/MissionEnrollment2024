@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const POAP_API_KEY = process.env.POAP;
+const POAP_API_KEY = process.env.POAP_API_KEY;
 const POAP_API_BASE_URL = "https://api.poap.tech";
 
 // ETHGlobal Brussels 2024 POAP event IDs
