@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import type { FC } from "react";
+import Link from "next/link";
 import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
@@ -23,7 +25,7 @@ const stageDescriptions = {
   complete: "Mission enrollment completed successfully",
 };
 
-const Home: React.FC = () => {
+const Home: FC = () => {
   const [currentStage, setCurrentStage] = useState<Stage>("identity");
   const [completedStages, setCompletedStages] = useState<Stage[]>([]);
   const [poaps, setPoaps] = useState<Array<POAPEvent>>([]);
@@ -36,7 +38,7 @@ const Home: React.FC = () => {
   }, [completedStages, currentStage, setCurrentStage]);
 
   const handleStageCompletion = (stage: Stage) => {
-    setCompletedStages(prev => {
+    setCompletedStages((prev: Stage[]) => {
       const newCompletedStages = [...prev, stage];
       localStorage.setItem("completedStages", JSON.stringify(newCompletedStages));
       return newCompletedStages;
@@ -140,6 +142,14 @@ const Home: React.FC = () => {
             </li>
           ))}
         </ul>
+      </div>
+      <div className="mt-8 flex justify-center space-x-4">
+        <Link href="/recent" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+          Recent Activities
+        </Link>
+        <Link href="/blockExplorer" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+          Block Explorer
+        </Link>
       </div>
     </div>
   );
