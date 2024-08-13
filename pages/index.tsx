@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import type { FC } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
+import POAPShowcase from "../components/POAPShowcase";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
@@ -80,7 +82,7 @@ const Home: FC = () => {
         return <OnchainAttestation onAttestationComplete={() => handleStageCompletion("attestation")} poaps={poaps} />;
       case "complete":
         return (
-          <div className="p-4 bg-white shadow rounded-lg">
+          <div className="p-6 bg-gray-800 shadow-lg rounded-lg text-white">
             <h2 className="text-2xl font-bold mb-4">Mission Enrollment Complete!</h2>
             <p>Congratulations! You have successfully completed all stages of the mission enrollment.</p>
           </div>
@@ -91,66 +93,78 @@ const Home: FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Mission Enrollment 2024</h1>
-      <div className="mb-8 p-4 bg-blue-100 rounded-lg">
-        <h2 className="text-xl font-semibold mb-2">
-          Current Stage: {currentStage.charAt(0).toUpperCase() + currentStage.slice(1)}
-        </h2>
-        <p className="text-lg">{stageDescriptions[currentStage]}</p>
-        <p className="mt-2 text-sm text-blue-700">
-          Complete this stage to proceed to the next step of your mission enrollment.
-        </p>
-      </div>
-      {renderCurrentStage()}
-      <div className="mt-8">
-        <h3 className="text-xl font-semibold mb-4">Mission Progress:</h3>
-        <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
-          <div
-            className="bg-blue-600 h-4 rounded-full transition-all duration-500 ease-in-out"
-            style={{ width: `${(completedStages.length / stages.length) * 100}%` }}
-          />
+    <div className="min-h-screen bg-gray-900 text-white">
+      <header className="bg-gray-800 shadow-md">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center">
+            <Image src="/logo.png" alt="Logo" width={40} height={40} className="mr-2" />
+            <h1 className="text-2xl font-bold">Mission Enrollment 2024</h1>
+          </div>
+          <nav>
+            <Link href="/recent" className="mr-4 hover:text-blue-400 transition-colors">
+              Recent Activities
+            </Link>
+            <Link href="/blockExplorer" className="hover:text-blue-400 transition-colors">
+              Block Explorer
+            </Link>
+          </nav>
         </div>
-        <ul className="space-y-4">
-          {stages.map((stage, index) => (
-            <li
-              key={stage}
-              className={`flex items-center p-4 rounded-lg shadow-sm transition-all duration-300 ${
-                isStageAccessible(stage)
-                  ? "bg-white border-l-4 border-green-500 cursor-pointer hover:bg-green-50"
-                  : "bg-gray-100 text-gray-400 cursor-not-allowed"
-              }`}
-              onClick={() => {
-                if (isStageAccessible(stage)) {
-                  setCurrentStage(stage);
-                }
-              }}
-            >
-              <span className="mr-4 text-2xl">
-                {completedStages.includes(stage) ? "✅" : currentStage === stage ? "🔵" : `${index + 1}`}
-              </span>
-              <div>
-                <span className="font-semibold text-lg">{stage.charAt(0).toUpperCase() + stage.slice(1)}</span>
-                <p className="text-sm mt-1">{stageDescriptions[stage]}</p>
-                {currentStage === stage && (
-                  <p className="text-xs mt-2 text-blue-600">You are here - complete this stage to proceed.</p>
-                )}
-                {!isStageAccessible(stage) && (
-                  <p className="text-xs mt-2 text-gray-500">Complete previous stages to unlock.</p>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="mt-8 flex justify-center space-x-4">
-        <Link href="/recent" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
-          Recent Activities
-        </Link>
-        <Link href="/blockExplorer" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
-          Block Explorer
-        </Link>
-      </div>
+      </header>
+      <main className="container mx-auto px-4 py-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="mb-8 p-6 bg-gray-800 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-2">
+              Current Stage: {currentStage.charAt(0).toUpperCase() + currentStage.slice(1)}
+            </h2>
+            <p className="text-lg text-gray-300">{stageDescriptions[currentStage]}</p>
+            <p className="mt-2 text-sm text-blue-400">
+              Complete this stage to proceed to the next step of your mission enrollment.
+            </p>
+          </div>
+          {renderCurrentStage()}
+          <div className="mt-8">
+            <h3 className="text-xl font-semibold mb-4">Mission Progress:</h3>
+            <div className="w-full bg-gray-700 rounded-full h-4 mb-4">
+              <div
+                className="bg-blue-600 h-4 rounded-full transition-all duration-500 ease-in-out"
+                style={{ width: `${(completedStages.length / stages.length) * 100}%` }}
+              />
+            </div>
+            <ul className="space-y-4">
+              {stages.map((stage, index) => (
+                <li
+                  key={stage}
+                  className={`flex items-center p-4 rounded-lg shadow-md transition-all duration-300 ${
+                    isStageAccessible(stage)
+                      ? "bg-gray-800 border-l-4 border-blue-500 cursor-pointer hover:bg-gray-700"
+                      : "bg-gray-800 text-gray-500 cursor-not-allowed"
+                  }`}
+                  onClick={() => {
+                    if (isStageAccessible(stage)) {
+                      setCurrentStage(stage);
+                    }
+                  }}
+                >
+                  <span className="mr-4 text-2xl">
+                    {completedStages.includes(stage) ? "✅" : currentStage === stage ? "🔵" : `${index + 1}`}
+                  </span>
+                  <div>
+                    <span className="font-semibold text-lg">{stage.charAt(0).toUpperCase() + stage.slice(1)}</span>
+                    <p className="text-sm mt-1 text-gray-400">{stageDescriptions[stage]}</p>
+                    {currentStage === stage && (
+                      <p className="text-xs mt-2 text-blue-400">You are here - complete this stage to proceed.</p>
+                    )}
+                    {!isStageAccessible(stage) && (
+                      <p className="text-xs mt-2 text-gray-500">Complete previous stages to unlock.</p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {poaps.length > 0 && <POAPShowcase poaps={poaps} />}
+        </div>
+      </main>
     </div>
   );
 };
