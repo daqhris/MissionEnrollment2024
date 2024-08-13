@@ -135,7 +135,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
         disabled={isAttesting || !address || !selectedRollup || poaps.length === 0}
         className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300 w-full"
       >
-        {isAttesting ? "Creating Attestation..." : `Request Attestation on ${selectedRollup}`}
+        {isAttesting ? "Creating Attestation..." : `Create EAS Attestation on ${selectedRollup}`}
       </button>
       {attestationStatus && (
         <div className="mt-4 p-3 bg-green-100 border border-green-400 rounded">

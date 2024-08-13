@@ -6,15 +6,13 @@ import axios from "axios";
 const { eventIds } = eventIdsData;
 
 interface POAPEvent {
-  chain: string;
-  contract_address: string;
-  token_id: string;
-  name: string;
-  description: string;
-  image_url: string;
-  created_at: string;
-  event_url: string;
-  event_id: string;
+  event: {
+    id: string;
+    name: string;
+    image_url: string;
+    start_date: string;
+  };
+  tokenId: string;
 }
 
 const EventAttendanceProof: React.FC<{
@@ -53,9 +51,11 @@ const EventAttendanceProof: React.FC<{
       const missingEventIds = eventIds.filter(id => !foundEventIds.includes(id));
       setMissingPoaps(missingEventIds);
 
-      if (validPoaps.length > 0) {
-        setProofResult(`Proof successful! ${userAddress} has the required POAPs for ETHGlobal Brussels 2024.`);
+      if (validPoaps.length === eventIds.length) {
+        setProofResult(`Proof successful! ${userAddress} has all required POAPs for ETHGlobal Brussels 2024.`);
         onVerified();
+      } else if (validPoaps.length > 0) {
+        setProofResult(`${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`);
       } else {
         setProofResult(message || "No required POAPs were found for this address.");
       }
@@ -79,7 +79,7 @@ const EventAttendanceProof: React.FC<{
     } finally {
       setIsVerifying(false);
     }
-  }, [onVerified, userAddress, setPoaps]);
+  }, [onVerified, userAddress, setPoaps, eventIds]);
 
   useEffect(() => {
     if (userAddress) {

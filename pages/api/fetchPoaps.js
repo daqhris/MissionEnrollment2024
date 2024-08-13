@@ -21,7 +21,9 @@ export default async function handler(req, res) {
 
   try {
     console.log(`Fetching POAPs for address: ${address}`);
-    const poapResponse = await axios.get(`https://api.poap.tech/actions/scan/${address}`, {
+    const poapUrl = `https://api.poap.tech/actions/scan/${address}`;
+    console.log(`Full POAP API URL: ${poapUrl}`);
+    const poapResponse = await axios.get(poapUrl, {
       headers: {
         "X-API-Key": process.env.POAP_API_KEY,
       },
