@@ -4,46 +4,56 @@
 
 :root,
 [data-theme] {
-  background: #1a202c; /* Dark background */
-  color: #e2e8f0; /* Light text for better contrast */
+  background: #1E293B; /* Dark navy background */
+  color: #E2E8F0; /* Light gray text for better contrast */
 }
 
 body {
   min-height: 100vh;
-  font-family: 'Arial', sans-serif; /* Improved readability */
+  font-family: 'Inter', sans-serif; /* Modern, clean font */
 }
 
 h1, h2, h3, h4 {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   line-height: 1.2;
-  color: #ffffff; /* Bright white for headers */
+  color: #FFFFFF; /* Bright white for headers */
+  font-weight: 600; /* Semi-bold headers */
 }
 
 p {
   margin: 1rem 0;
-  line-height: 1.6; /* Improved readability */
+  line-height: 1.6;
+  color: #CBD5E0; /* Slightly muted text color */
 }
 
 .btn {
-  @apply shadow-md px-4 py-2 rounded-md transition-colors duration-200;
+  @apply shadow-md px-6 py-3 rounded-lg font-medium transition-all duration-200;
 }
 
 .btn:hover {
-  @apply brightness-110;
+  @apply brightness-110 transform scale-105;
 }
 
 .btn.btn-primary {
-  @apply bg-blue-600 text-white hover:bg-blue-700;
+  @apply bg-blue-500 text-white hover:bg-blue-600;
 }
 
 .btn.btn-ghost {
-  @apply shadow-none bg-transparent text-current hover:bg-gray-700;
+  @apply shadow-none bg-transparent text-blue-400 hover:bg-blue-900 hover:text-blue-300;
 }
 
 input, select {
-  @apply bg-gray-700 text-white border-gray-600 rounded-md p-2;
+  @apply bg-gray-800 text-white border border-gray-700 rounded-lg p-3;
 }
 
 input:focus, select:focus {
-  @apply outline-none ring-2 ring-blue-500;
+  @apply outline-none ring-2 ring-blue-500 border-transparent;
+}
+
+.card {
+  @apply bg-gray-800 rounded-xl shadow-lg p-6;
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
