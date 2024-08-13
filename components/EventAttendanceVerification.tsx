@@ -15,11 +15,13 @@ interface POAPEvent {
   token_id: string;
 }
 
-const EventAttendanceProof: React.FC<{
+interface EventAttendanceProofProps {
   onVerified: () => void;
-  setPoaps: React.Dispatch<React.SetStateAction<POAPEvent[]>>;
+  setPoaps: (poaps: POAPEvent[]) => void;
   userAddress: string;
-}> = ({ onVerified, setPoaps, userAddress }) => {
+}
+
+const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified, setPoaps, userAddress }) => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [proofResult, setProofResult] = useState<string | null>(null);
   const [localPoaps, setLocalPoaps] = useState<POAPEvent[]>([]);

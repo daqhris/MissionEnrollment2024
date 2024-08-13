@@ -13,7 +13,7 @@ interface POAPEvent {
     image_url: string;
     start_date: string;
   };
-  tokenId: string;
+  token_id: string;
 }
 
 const stageDescriptions = {
@@ -70,7 +70,7 @@ const Home: React.FC = () => {
         return (
           <EventAttendanceProof
             onVerified={() => handleStageCompletion("attendance")}
-            setPoaps={setPoaps}
+            setPoaps={(poaps: POAPEvent[]) => setPoaps(poaps)}
             userAddress={userAddress}
           />
         );

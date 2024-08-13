@@ -18,10 +18,12 @@ interface OnchainAttestationProps {
   onAttestationComplete: () => void;
   poaps: Array<{
     event: {
+      id: string;
       name: string;
+      image_url: string;
       start_date: string;
     };
-    tokenId: string;
+    token_id: string;
   }>;
 }
 
@@ -47,12 +49,12 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
       eas.connect(signer);
 
       const schemaEncoder = new SchemaEncoder(
-        "address recipient,uint256 tokenId,string eventName,uint256 timestamp,string rollup,string attester",
+        "address recipient,uint256 token_id,string eventName,uint256 timestamp,string rollup,string attester",
       );
       const poapData = poaps[0]; // Assuming we're using the first POAP for simplicity
       const encodedData = schemaEncoder.encodeData([
         { name: "recipient", value: address, type: "address" },
-        { name: "tokenId", value: poapData?.tokenId ?? "0", type: "uint256" },
+        { name: "token_id", value: poapData?.token_id ?? "0", type: "uint256" },
         { name: "eventName", value: poapData?.event?.name ?? "Unknown Event", type: "string" },
         { name: "timestamp", value: Math.floor(Date.now() / 1000), type: "uint256" },
         { name: "rollup", value: selectedRollup, type: "string" },
@@ -110,7 +112,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
           <h3 className="text-lg font-semibold">POAP Data for Attestation:</h3>
           <ul className="list-disc pl-5">
             {poaps.map(poap => (
-              <li key={poap.tokenId}>
+              <li key={poap.token_id}>
                 {poap.event.name} - {new Date(poap.event.start_date).toLocaleDateString()}
               </li>
             ))}
