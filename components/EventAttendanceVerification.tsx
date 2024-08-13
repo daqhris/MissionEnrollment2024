@@ -100,15 +100,15 @@ const EventAttendanceProof: React.FC<{
       <button
         onClick={() => fetchPOAPs()}
         disabled={isVerifying}
-        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300 mb-4"
+        className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:bg-gray-300 mb-4"
       >
         {isVerifying ? "Verifying..." : "Verify Attendance"}
       </button>
-      {isVerifying && <p className="text-blue-500 mb-4">Verifying attendance for {userAddress}...</p>}
+      {isVerifying && <p className="text-blue-700 mb-4">Verifying attendance for {userAddress}...</p>}
       {localPoaps && localPoaps.length > 0 && (
         <div className="mt-4 bg-green-100 p-4 rounded">
-          <h3 className="text-lg font-semibold text-green-800 mb-2">POAPs Found</h3>
-          <p className="text-green-700 mb-4">
+          <h3 className="text-lg font-semibold text-green-900 mb-2">POAPs Found</h3>
+          <p className="text-green-800 mb-4">
             {localPoaps.length === eventIds.length
               ? "You have all required POAPs for ETHGlobal Brussels 2024."
               : `You have ${localPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`}
@@ -125,7 +125,7 @@ const EventAttendanceProof: React.FC<{
                   onError={() => handleImageError(poap.tokenId)}
                 />
                 <p className="text-sm text-center mt-1">{poap.event?.name || "Unknown Event"}</p>
-                <p className="text-xs text-center text-gray-600">
+                <p className="text-xs text-center text-gray-700">
                   {poap.event?.start_date
                     ? new Date(poap.event.start_date).toLocaleDateString()
                     : "Date unknown"}
@@ -137,15 +137,15 @@ const EventAttendanceProof: React.FC<{
       )}
       {missingPoaps && missingPoaps.length > 0 && (
         <div className="mt-4 bg-yellow-100 p-4 rounded">
-          <h3 className="text-lg font-semibold text-yellow-800 mb-2">Missing POAPs</h3>
-          <p className="text-yellow-700 mb-2">
+          <h3 className="text-lg font-semibold text-yellow-900 mb-2">Missing POAPs</h3>
+          <p className="text-yellow-800 mb-2">
             The following POAPs were not found for your address: {missingPoaps.join(", ")}
           </p>
         </div>
       )}
       {proofResult && (
         <div className={`mt-4 p-4 rounded ${proofResult.includes("successful") ? "bg-green-100" : "bg-red-100"}`}>
-          <p className={proofResult.includes("successful") ? "text-green-700" : "text-red-700"}>{proofResult}</p>
+          <p className={proofResult.includes("successful") ? "text-green-800" : "text-red-700"}>{proofResult}</p>
         </div>
       )}
     </div>
