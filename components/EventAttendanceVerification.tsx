@@ -56,7 +56,9 @@ const EventAttendanceProof: React.FC<{
           setProofResult(`Proof successful! ${userAddress} has all required POAPs for ETHGlobal Brussels 2024.`);
           onVerified();
         } else {
-          setProofResult(`${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`);
+          setProofResult(
+            `${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`
+          );
         }
       } else {
         setProofResult(message || "No required POAPs were found for this address.");
@@ -81,7 +83,7 @@ const EventAttendanceProof: React.FC<{
     } finally {
       setIsVerifying(false);
     }
-  }, [onVerified, userAddress, setPoaps, eventIds]);
+  }, [onVerified, userAddress, setPoaps]);
 
   useEffect(() => {
     if (userAddress) {

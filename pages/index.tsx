@@ -7,15 +7,13 @@ const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
 
 interface POAPEvent {
-  chain: string;
-  contract_address: string;
-  token_id: string;
-  name: string;
-  description: string;
-  image_url: string;
-  created_at: string;
-  event_url: string;
-  event_id: string;
+  event: {
+    id: string;
+    name: string;
+    image_url: string;
+    start_date: string;
+  };
+  tokenId: string;
 }
 
 const stageDescriptions = {
@@ -62,7 +60,7 @@ const Home: React.FC = () => {
       case "identity":
         return (
           <IdentityVerification
-            onVerified={address => {
+            onVerified={(address: string) => {
               setUserAddress(address);
               handleStageCompletion("identity");
             }}

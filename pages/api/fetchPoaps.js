@@ -47,11 +47,11 @@ export default async function handler(req, res) {
       .map(poap => ({
         event: {
           id: poap.event.id,
-          name: poap.event.name || 'Unknown Event',
-          start_date: poap.event.start_date || '',
-          image_url: poap.event.image_url || '',
+          name: poap.event.name || "Unknown Event",
+          start_date: poap.event.start_date || "",
+          image_url: poap.event.image_url || "",
         },
-        tokenId: poap.tokenId || '',
+        tokenId: poap.tokenId || "",
       }));
 
     if (requiredPoaps.length > 0) {

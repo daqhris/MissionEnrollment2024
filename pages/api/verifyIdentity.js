@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   try {
     let address;
 
-    if (typeof input === 'string' && input.endsWith(".eth")) {
+    if (typeof input === "string" && input.endsWith(".eth")) {
       // Resolve ENS name
       const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL);
       address = await provider.resolveName(input);
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
         console.log("ENS resolution failed for:", input);
         return res.status(400).json({ error: "Invalid ENS name or resolution failed" });
       }
-    } else if (typeof input === 'string' && ethers.isAddress(input)) {
+    } else if (typeof input === "string" && ethers.isAddress(input)) {
       address = ethers.getAddress(input); // Checksum the address
     } else {
       console.log("Invalid input format:", input);
