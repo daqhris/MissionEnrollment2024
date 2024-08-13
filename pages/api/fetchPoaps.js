@@ -43,13 +43,15 @@ export default async function handler(req, res) {
     console.log("Fetched POAPs:", JSON.stringify(allPoaps, null, 2));
 
     const requiredPoaps = allPoaps
-      .filter(poap => poap.event.id.toString() === GNOSIS_EVENT_ID)
+      .filter(poap => poap.event && poap.event.id && poap.event.id.toString() === GNOSIS_EVENT_ID)
       .map(poap => ({
         event: {
-          name: poap.event.name,
-          start_date: poap.event.start_date,
+          id: poap.event.id,
+          name: poap.event.name || 'Unknown Event',
+          start_date: poap.event.start_date || '',
+          image_url: poap.event.image_url || '',
         },
-        tokenId: poap.tokenId,
+        tokenId: poap.tokenId || '',
       }));
 
     if (requiredPoaps.length > 0) {
