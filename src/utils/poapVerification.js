@@ -45,7 +45,8 @@ async function verifyPOAPOwnership(address, eventId) {
         return false;
       }
     }
-    throw error;
+    console.error("Returning false due to API error");
+    return false;
   }
 }
 
