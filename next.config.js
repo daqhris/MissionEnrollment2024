@@ -15,7 +15,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["api.poap.tech", "placehold.co"],
+    domains: ["api.poap.tech", "placehold.co", "assets.poap.xyz"],
   },
   swcMinify: true,
   compiler: {
