@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Link from 'next/link';
+import React, { useEffect, useState, FC } from "react";
+import Link from "next/link";
 import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
-import { NextPage } from 'next';
+import { AppProps } from "next/app";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
@@ -144,15 +144,11 @@ const Home: React.FC = () => {
         </ul>
       </div>
       <div className="mt-8 flex justify-center space-x-4">
-        <Link href="/recent">
-          <a className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
-            Recent Activities
-          </a>
+        <Link href="/recent" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+          Recent Activities
         </Link>
-        <Link href="/blockExplorer">
-          <a className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
-            Block Explorer
-          </a>
+        <Link href="/blockExplorer" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+          Block Explorer
         </Link>
       </div>
     </div>
