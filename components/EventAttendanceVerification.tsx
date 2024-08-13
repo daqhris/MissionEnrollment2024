@@ -51,11 +51,13 @@ const EventAttendanceProof: React.FC<{
       const missingEventIds = eventIds.filter(id => !foundEventIds.includes(id));
       setMissingPoaps(missingEventIds);
 
-      if (validPoaps.length === eventIds.length) {
-        setProofResult(`Proof successful! ${userAddress} has all required POAPs for ETHGlobal Brussels 2024.`);
-        onVerified();
-      } else if (validPoaps.length > 0) {
-        setProofResult(`${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`);
+      if (validPoaps.length > 0) {
+        if (validPoaps.length === eventIds.length) {
+          setProofResult(`Proof successful! ${userAddress} has all required POAPs for ETHGlobal Brussels 2024.`);
+          onVerified();
+        } else {
+          setProofResult(`${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`);
+        }
       } else {
         setProofResult(message || "No required POAPs were found for this address.");
       }
