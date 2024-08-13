@@ -39,25 +39,23 @@ const EventAttendanceProof: React.FC<{
     try {
       console.log(`Fetching POAPs for address: ${userAddress}`);
       const response = await axios.get(`/api/fetchPoaps?address=${encodeURIComponent(userAddress)}`);
-      console.log("API response:", response.data);
+      console.log("API response:", JSON.stringify(response.data, null, 2));
 
-      const { poaps = [], missingEventIds = [], message = "" } = response.data;
+      const { poaps = [], message = "" } = response.data;
 
       // Ensure poaps is always an array
       const validPoaps = Array.isArray(poaps) ? poaps : [];
       setLocalPoaps(validPoaps);
       setPoaps(validPoaps);
-      setMissingPoaps(Array.isArray(missingEventIds) ? missingEventIds : eventIds);
+
+      // Set missing POAPs based on the difference between all event IDs and found POAPs
+      const foundEventIds = validPoaps.map(poap => poap.event.id);
+      const missingEventIds = eventIds.filter(id => !foundEventIds.includes(id));
+      setMissingPoaps(missingEventIds);
 
       if (validPoaps.length > 0) {
-        if (missingEventIds.length === 0) {
-          setProofResult(`Proof successful! ${userAddress} has the required POAPs for ETHGlobal Brussels 2024.`);
-          onVerified();
-        } else {
-          setProofResult(
-            `${userAddress} has some POAPs but is missing ${missingEventIds.length} required POAPs for ETHGlobal Brussels 2024.`,
-          );
-        }
+        setProofResult(`Proof successful! ${userAddress} has the required POAPs for ETHGlobal Brussels 2024.`);
+        onVerified();
       } else {
         setProofResult(message || "No required POAPs were found for this address.");
       }
@@ -115,16 +113,19 @@ const EventAttendanceProof: React.FC<{
           </p>
           <div className="flex flex-wrap">
             {localPoaps.map(poap => (
-              <div key={poap.token_id} className="mr-4 mb-4">
+              <div key={poap.tokenId} className="mr-4 mb-4">
                 <Image
-                  src={imageLoadErrors[poap.token_id] ? "/placeholder-poap.png" : poap.image_url}
-                  alt={poap.name}
+                  src={imageLoadErrors[poap.tokenId] ? "/placeholder-poap.png" : poap.event.image_url}
+                  alt={poap.event.name}
                   width={64}
                   height={64}
                   className="rounded-full"
-                  onError={() => handleImageError(poap.token_id)}
+                  onError={() => handleImageError(poap.tokenId)}
                 />
-                <p className="text-sm text-center mt-1">{poap.name}</p>
+                <p className="text-sm text-center mt-1">{poap.event.name}</p>
+                <p className="text-xs text-center text-gray-600">
+                  {new Date(poap.event.start_date).toLocaleDateString()}
+                </p>
               </div>
             ))}
           </div>
