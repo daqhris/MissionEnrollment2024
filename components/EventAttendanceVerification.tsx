@@ -12,14 +12,16 @@ interface POAPEvent {
     image_url: string;
     start_date: string;
   };
-  tokenId: string;
+  token_id: string;
 }
 
-const EventAttendanceProof: React.FC<{
+interface EventAttendanceProofProps {
   onVerified: () => void;
-  setPoaps: React.Dispatch<React.SetStateAction<POAPEvent[]>>;
+  setPoaps: (poaps: POAPEvent[]) => void;
   userAddress: string;
-}> = ({ onVerified, setPoaps, userAddress }) => {
+}
+
+const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified, setPoaps, userAddress }) => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [proofResult, setProofResult] = useState<string | null>(null);
   const [localPoaps, setLocalPoaps] = useState<POAPEvent[]>([]);
@@ -56,7 +58,9 @@ const EventAttendanceProof: React.FC<{
           setProofResult(`Proof successful! ${userAddress} has all required POAPs for ETHGlobal Brussels 2024.`);
           onVerified();
         } else {
-          setProofResult(`${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`);
+          setProofResult(
+            `${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`,
+          );
         }
       } else {
         setProofResult(message || "No required POAPs were found for this address.");
@@ -81,7 +85,7 @@ const EventAttendanceProof: React.FC<{
     } finally {
       setIsVerifying(false);
     }
-  }, [onVerified, userAddress, setPoaps, eventIds]);
+  }, [onVerified, userAddress, setPoaps]);
 
   useEffect(() => {
     if (userAddress) {
@@ -115,20 +119,22 @@ const EventAttendanceProof: React.FC<{
           </p>
           <div className="flex flex-wrap">
             {localPoaps.map(poap => (
-              <div key={poap.tokenId} className="mr-4 mb-4">
+              <div key={poap.token_id} className="mr-4 mb-4">
                 <Image
-                  src={imageLoadErrors[poap.tokenId] ? "/placeholder-poap.png" : poap.event?.image_url || "/placeholder-poap.png"}
+                  src={
+                    imageLoadErrors[poap.token_id]
+                      ? "/placeholder-poap.png"
+                      : poap.event?.image_url || "/placeholder-poap.png"
+                  }
                   alt={poap.event?.name || "POAP"}
                   width={64}
                   height={64}
                   className="rounded-full"
-                  onError={() => handleImageError(poap.tokenId)}
+                  onError={() => handleImageError(poap.token_id)}
                 />
                 <p className="text-sm text-center mt-1">{poap.event?.name || "Unknown Event"}</p>
                 <p className="text-xs text-center text-gray-700">
-                  {poap.event?.start_date
-                    ? new Date(poap.event.start_date).toLocaleDateString()
-                    : "Date unknown"}
+                  {poap.event?.start_date ? new Date(poap.event.start_date).toLocaleDateString() : "Date unknown"}
                 </p>
               </div>
             ))}

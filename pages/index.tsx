@@ -7,15 +7,13 @@ const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
 
 interface POAPEvent {
-  chain: string;
-  contract_address: string;
+  event: {
+    id: string;
+    name: string;
+    image_url: string;
+    start_date: string;
+  };
   token_id: string;
-  name: string;
-  description: string;
-  image_url: string;
-  created_at: string;
-  event_url: string;
-  event_id: string;
 }
 
 const stageDescriptions = {
@@ -28,7 +26,7 @@ const stageDescriptions = {
 const Home: React.FC = () => {
   const [currentStage, setCurrentStage] = useState<Stage>("identity");
   const [completedStages, setCompletedStages] = useState<Stage[]>([]);
-  const [poaps, setPoaps] = useState<POAPEvent[]>([]);
+  const [poaps, setPoaps] = useState<Array<POAPEvent>>([]);
   const [userAddress, setUserAddress] = useState<string>("");
 
   useEffect(() => {
@@ -62,7 +60,7 @@ const Home: React.FC = () => {
       case "identity":
         return (
           <IdentityVerification
-            onVerified={address => {
+            onVerified={(address: string) => {
               setUserAddress(address);
               handleStageCompletion("identity");
             }}
@@ -72,7 +70,7 @@ const Home: React.FC = () => {
         return (
           <EventAttendanceProof
             onVerified={() => handleStageCompletion("attendance")}
-            setPoaps={setPoaps}
+            setPoaps={(poaps: POAPEvent[]) => setPoaps(poaps)}
             userAddress={userAddress}
           />
         );

@@ -27,7 +27,7 @@ async function verifyPOAPOwnership(address, eventId) {
         console.log(`POAP found for event ${eventId}:`, JSON.stringify(response.data[0], null, 2));
         return true;
       }
-    } else if (typeof response.data === 'object' && response.data !== null) {
+    } else if (typeof response.data === "object" && response.data !== null) {
       console.log(`POAP found for event ${eventId}:`, JSON.stringify(response.data, null, 2));
       return true;
     }
