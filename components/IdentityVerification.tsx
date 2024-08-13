@@ -57,7 +57,7 @@ const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> 
           disabled={isVerifying}
         />
         {isLoading && (
-          <span className="absolute right-3 top-2 text-blue-500">
+          <span className="absolute right-3 top-2 text-blue-700">
             <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path
@@ -69,8 +69,8 @@ const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> 
           </span>
         )}
       </div>
-      {ensName && <p className="mb-2 text-green-600">Resolved ENS Name: {ensName}</p>}
-      {ensAddress && <p className="mb-2 text-green-600">Resolved Address: {ensAddress}</p>}
+      {ensName && <p className="mb-2 text-green-700">Resolved ENS Name: {ensName}</p>}
+      {ensAddress && <p className="mb-2 text-green-700">Resolved Address: {ensAddress}</p>}
       <button
         onClick={handleVerify}
         disabled={isVerifying || !inputAddress.trim() || isLoading}
@@ -78,7 +78,7 @@ const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> 
       >
         {isVerifying ? "Verifying..." : "Verify"}
       </button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
+      {error && <p className="text-red-600 mt-2">{error}</p>}
     </div>
   );
 };

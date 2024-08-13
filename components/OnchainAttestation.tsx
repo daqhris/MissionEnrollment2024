@@ -100,7 +100,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
           <option value="base">Base (Ethereum L2 Rollup)</option>
           <option value="optimism">Optimism (Ethereum L2 Rollup)</option>
         </select>
-        <p className="mt-2 text-sm text-gray-600">
+        <p className="mt-2 text-sm text-gray-700">
           Your attestation will be created on the selected rollup, leveraging its scalability and lower transaction
           costs.
         </p>
@@ -115,7 +115,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-700">
             This POAP data will be included in your onchain attestation as proof of your event attendance.
           </p>
         </div>
@@ -125,7 +125,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
         <p className="mb-2">
           <span className="font-semibold">Attester&apos;s onchain name:</span> {ATTESTER_NAME}
         </p>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-700">
           The attestation will be created by {ATTESTER_NAME} using the Ethereum Attestation Service protocol on the
           selected rollup.
         </p>
