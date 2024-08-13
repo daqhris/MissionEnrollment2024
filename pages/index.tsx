@@ -92,51 +92,53 @@ const Home: FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 text-white">
       <header className="bg-gray-800 shadow-md">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <Image src="/logo.png" alt="Logo" width={40} height={40} className="mr-2" />
-            <h1 className="text-2xl font-bold">Mission Enrollment 2024</h1>
+            <Image src="/logo.png" alt="Logo" width={60} height={60} className="mr-3 float-animation" />
+            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+              Mission Enrollment
+            </h1>
           </div>
           <nav>
-            <Link href="/recent" className="mr-4 hover:text-blue-400 transition-colors">
+            <Link href="/recent" className="mr-4 hover:text-blue-400 transition-colors btn btn-ghost">
               Recent Activities
             </Link>
-            <Link href="/blockExplorer" className="hover:text-blue-400 transition-colors">
+            <Link href="/blockExplorer" className="hover:text-blue-400 transition-colors btn btn-ghost">
               Block Explorer
             </Link>
           </nav>
         </div>
       </header>
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
-          <div className="mb-8 p-6 bg-gray-800 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-2">
+      <main className="container mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-12 p-8 bg-gray-800 rounded-xl shadow-lg card">
+            <h2 className="text-2xl font-semibold mb-4 text-gradient">
               Current Stage: {currentStage.charAt(0).toUpperCase() + currentStage.slice(1)}
             </h2>
-            <p className="text-lg text-gray-300">{stageDescriptions[currentStage]}</p>
-            <p className="mt-2 text-sm text-blue-400">
+            <p className="text-xl text-gray-300">{stageDescriptions[currentStage]}</p>
+            <p className="mt-4 text-md text-blue-400">
               Complete this stage to proceed to the next step of your mission enrollment.
             </p>
           </div>
-          {renderCurrentStage()}
-          <div className="mt-8">
-            <h3 className="text-xl font-semibold mb-4">Mission Progress:</h3>
-            <div className="w-full bg-gray-700 rounded-full h-4 mb-4">
+          <div className="mb-12">{renderCurrentStage()}</div>
+          <div className="mt-12">
+            <h3 className="text-2xl font-semibold mb-6 text-gradient">Mission Progress:</h3>
+            <div className="w-full bg-gray-700 rounded-full h-6 mb-6 overflow-hidden">
               <div
-                className="bg-blue-600 h-4 rounded-full transition-all duration-500 ease-in-out"
+                className="bg-gradient-to-r from-blue-500 to-purple-500 h-6 rounded-full transition-all duration-500 ease-in-out"
                 style={{ width: `${(completedStages.length / stages.length) * 100}%` }}
               />
             </div>
-            <ul className="space-y-4">
+            <ul className="space-y-6">
               {stages.map((stage, index) => (
                 <li
                   key={stage}
-                  className={`flex items-center p-4 rounded-lg shadow-md transition-all duration-300 ${
+                  className={`flex items-center p-6 rounded-xl shadow-lg transition-all duration-300 ${
                     isStageAccessible(stage)
-                      ? "bg-gray-800 border-l-4 border-blue-500 cursor-pointer hover:bg-gray-700"
-                      : "bg-gray-800 text-gray-500 cursor-not-allowed"
+                      ? "bg-gray-800 border-l-4 border-blue-500 cursor-pointer hover:bg-gray-700 card"
+                      : "bg-gray-800 text-gray-500 cursor-not-allowed opacity-60"
                   }`}
                   onClick={() => {
                     if (isStageAccessible(stage)) {
@@ -144,17 +146,17 @@ const Home: FC = () => {
                     }
                   }}
                 >
-                  <span className="mr-4 text-2xl">
+                  <span className="mr-6 text-3xl">
                     {completedStages.includes(stage) ? "✅" : currentStage === stage ? "🔵" : `${index + 1}`}
                   </span>
                   <div>
-                    <span className="font-semibold text-lg">{stage.charAt(0).toUpperCase() + stage.slice(1)}</span>
-                    <p className="text-sm mt-1 text-gray-400">{stageDescriptions[stage]}</p>
+                    <span className="font-semibold text-xl">{stage.charAt(0).toUpperCase() + stage.slice(1)}</span>
+                    <p className="text-md mt-2 text-gray-300">{stageDescriptions[stage]}</p>
                     {currentStage === stage && (
-                      <p className="text-xs mt-2 text-blue-400">You are here - complete this stage to proceed.</p>
+                      <p className="text-sm mt-3 text-blue-400">You are here - complete this stage to proceed.</p>
                     )}
                     {!isStageAccessible(stage) && (
-                      <p className="text-xs mt-2 text-gray-500">Complete previous stages to unlock.</p>
+                      <p className="text-sm mt-3 text-gray-500">Complete previous stages to unlock.</p>
                     )}
                   </div>
                 </li>
