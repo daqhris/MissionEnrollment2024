@@ -141,6 +141,18 @@ const Home: React.FC = () => {
           ))}
         </ul>
       </div>
+      <div className="mt-8 flex justify-center space-x-4">
+        <Link href="/recent">
+          <a className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+            Recent Activities
+          </a>
+        </Link>
+        <Link href="/blockExplorer">
+          <a className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+            Block Explorer
+          </a>
+        </Link>
+      </div>
     </div>
   );
 };
