@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import Link from 'next/link';
 import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
+import { NextPage } from 'next';
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
@@ -36,7 +38,7 @@ const Home: React.FC = () => {
   }, [completedStages, currentStage, setCurrentStage]);
 
   const handleStageCompletion = (stage: Stage) => {
-    setCompletedStages(prev => {
+    setCompletedStages((prev: Stage[]) => {
       const newCompletedStages = [...prev, stage];
       localStorage.setItem("completedStages", JSON.stringify(newCompletedStages));
       return newCompletedStages;
