@@ -4,29 +4,46 @@
 
 :root,
 [data-theme] {
-  background: oklch(var(--b2));
+  background: #1a202c; /* Dark background */
+  color: #e2e8f0; /* Light text for better contrast */
 }
 
 body {
   min-height: 100vh;
+  font-family: 'Arial', sans-serif; /* Improved readability */
 }
 
-h1,
-h2,
-h3,
-h4 {
-  margin-bottom: 0.5rem;
-  line-height: 1;
+h1, h2, h3, h4 {
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+  color: #ffffff; /* Bright white for headers */
 }
 
 p {
   margin: 1rem 0;
+  line-height: 1.6; /* Improved readability */
 }
 
 .btn {
-  @apply shadow-md;
+  @apply shadow-md px-4 py-2 rounded-md transition-colors duration-200;
+}
+
+.btn:hover {
+  @apply brightness-110;
+}
+
+.btn.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700;
 }
 
 .btn.btn-ghost {
-  @apply shadow-none;
+  @apply shadow-none bg-transparent text-current hover:bg-gray-700;
+}
+
+input, select {
+  @apply bg-gray-700 text-white border-gray-600 rounded-md p-2;
+}
+
+input:focus, select:focus {
+  @apply outline-none ring-2 ring-blue-500;
 }
