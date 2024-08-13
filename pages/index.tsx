@@ -1,9 +1,9 @@
-import React, { useEffect, useState, FC } from "react";
+import React, { useEffect, useState } from "react";
+import type { FC } from "react";
 import Link from "next/link";
 import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
-import { AppProps } from "next/app";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
@@ -25,7 +25,7 @@ const stageDescriptions = {
   complete: "Mission enrollment completed successfully",
 };
 
-const Home: React.FC = () => {
+const Home: FC = () => {
   const [currentStage, setCurrentStage] = useState<Stage>("identity");
   const [completedStages, setCompletedStages] = useState<Stage[]>([]);
   const [poaps, setPoaps] = useState<Array<POAPEvent>>([]);
