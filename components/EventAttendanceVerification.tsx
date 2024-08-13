@@ -12,7 +12,7 @@ interface POAPEvent {
     image_url: string;
     start_date: string;
   };
-  tokenId: string;
+  token_id: string;
 }
 
 const EventAttendanceProof: React.FC<{
@@ -117,14 +117,14 @@ const EventAttendanceProof: React.FC<{
           </p>
           <div className="flex flex-wrap">
             {localPoaps.map(poap => (
-              <div key={poap.tokenId} className="mr-4 mb-4">
+              <div key={poap.token_id} className="mr-4 mb-4">
                 <Image
-                  src={imageLoadErrors[poap.tokenId] ? "/placeholder-poap.png" : poap.event?.image_url || "/placeholder-poap.png"}
+                  src={imageLoadErrors[poap.token_id] ? "/placeholder-poap.png" : poap.event?.image_url || "/placeholder-poap.png"}
                   alt={poap.event?.name || "POAP"}
                   width={64}
                   height={64}
                   className="rounded-full"
-                  onError={() => handleImageError(poap.tokenId)}
+                  onError={() => handleImageError(poap.token_id)}
                 />
                 <p className="text-sm text-center mt-1">{poap.event?.name || "Unknown Event"}</p>
                 <p className="text-xs text-center text-gray-700">

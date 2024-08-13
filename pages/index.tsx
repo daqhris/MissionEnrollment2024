@@ -26,7 +26,7 @@ const stageDescriptions = {
 const Home: React.FC = () => {
   const [currentStage, setCurrentStage] = useState<Stage>("identity");
   const [completedStages, setCompletedStages] = useState<Stage[]>([]);
-  const [poaps, setPoaps] = useState<POAPEvent[]>([]);
+  const [poaps, setPoaps] = useState<Array<POAPEvent>>([]);
   const [userAddress, setUserAddress] = useState<string>("");
 
   useEffect(() => {

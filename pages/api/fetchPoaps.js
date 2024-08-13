@@ -51,7 +51,7 @@ export default async function handler(req, res) {
           start_date: poap.event.start_date || "",
           image_url: poap.event.image_url || "",
         },
-        tokenId: poap.tokenId || "",
+        token_id: poap.token_id || "",
       }));
 
     if (requiredPoaps.length > 0) {
