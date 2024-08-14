@@ -1,7 +1,7 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
-const POAP_API_URL = "https://api.poap.xyz/actions/scan";
+const POAP_API_URL = "https://api.poap.tech/actions/scan";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { address } = req.query;
