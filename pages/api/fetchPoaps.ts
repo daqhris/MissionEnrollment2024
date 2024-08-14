@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const response = await axios.get(`${POAP_API_URL}/${address}`, {
       headers: {
-        'X-API-Key': process.env.POAP_API_KEY
+        'X-API-Key': process.env.POAP_API_KEY,
       }
     });
     const poaps = response.data;

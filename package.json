@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
-    "start": "next dev",
+    "start": "next start",
     "build": "next build",
     "serve": "next start",
     "lint": "next lint",
@@ -29,6 +29,7 @@
     "@testing-library/dom": "^10.4.0",
     "axios": "^1.7.3",
     "blo": "^1.0.1",
+    "cssesc": "^3.0.0",
     "daisyui": "4.5.0",
     "ethers": "6.13.2",
     "express": "^4.19.2",
