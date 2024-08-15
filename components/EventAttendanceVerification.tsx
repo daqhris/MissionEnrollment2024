@@ -111,15 +111,19 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
         }
 
         retries++;
-        if (retries === maxRetries) {
+        if (retries >= maxRetries) {
           setProofResult("Failed to fetch POAPs after multiple attempts. Please try again later.");
           setLocalPoaps([]);
           setMissingPoaps(eventIds);
           return; // Exit the retry loop after max retries
         }
 
-        // Wait for a short time before retrying
-        await new Promise(resolve => setTimeout(resolve, 1000 * retries)); // Exponential backoff
+        // Provide user feedback before retrying
+        setProofResult(`Retrying... Attempt ${retries + 1} of ${maxRetries}`);
+
+        // Implement exponential backoff with jitter
+        const delay = Math.min(1000 * Math.pow(2, retries) + Math.random() * 1000, 10000);
+        await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
 
