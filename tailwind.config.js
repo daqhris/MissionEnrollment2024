@@ -11,6 +11,7 @@ module.exports = {
         dark: {
           primary: "#212638",
           "primary-content": "#F9FBFF",
+          "primary-accent": "#A0AEC0", // Added lighter shade for better contrast
           secondary: "#323f61",
           "secondary-content": "#F9FBFF",
           accent: "#4969A6",
