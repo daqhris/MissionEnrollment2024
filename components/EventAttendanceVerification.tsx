@@ -36,55 +36,74 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
     setLocalPoaps([]);
     setMissingPoaps([]);
 
-    try {
-      console.log(`Fetching POAPs for address: ${userAddress}`);
-      const response = await axios.get(`/api/fetchPoaps?address=${encodeURIComponent(userAddress)}`);
-      console.log("API response:", JSON.stringify(response.data, null, 2));
+    const maxRetries = 3;
+    let retries = 0;
 
-      const { poaps = [], message = "" } = response.data;
+    while (retries < maxRetries) {
+      try {
+        console.log(`Fetching POAPs for address: ${userAddress} (Attempt ${retries + 1})`);
+        const response = await axios.get(`/api/fetchPoaps?address=${encodeURIComponent(userAddress)}`);
+        console.log("API response:", JSON.stringify(response.data, null, 2));
 
-      // Ensure poaps is always an array
-      const validPoaps = Array.isArray(poaps) ? poaps : [];
-      setLocalPoaps(validPoaps);
-      setPoaps(validPoaps);
+        const { poaps = [], message = "" } = response.data;
 
-      // Set missing POAPs based on the difference between all event IDs and found POAPs
-      const foundEventIds = validPoaps.map(poap => poap.event.id);
-      const missingEventIds = eventIds.filter(id => !foundEventIds.includes(id));
-      setMissingPoaps(missingEventIds);
+        // Ensure poaps is always an array
+        const validPoaps = Array.isArray(poaps) ? poaps : [];
+        setLocalPoaps(validPoaps);
+        setPoaps(validPoaps);
 
-      if (validPoaps.length > 0) {
-        if (validPoaps.length === eventIds.length) {
-          setProofResult(`Proof successful! ${userAddress} has all required POAPs for ETHGlobal Brussels 2024.`);
-          onVerified();
+        // Set missing POAPs based on the difference between all event IDs and found POAPs
+        const foundEventIds = validPoaps.map(poap => poap.event.id);
+        const missingEventIds = eventIds.filter(id => !foundEventIds.includes(id));
+        setMissingPoaps(missingEventIds);
+
+        if (validPoaps.length > 0) {
+          if (validPoaps.length === eventIds.length) {
+            setProofResult(`Proof successful! ${userAddress} has all required POAPs for ETHGlobal Brussels 2024.`);
+            onVerified();
+          } else {
+            setProofResult(
+              `${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`,
+            );
+          }
         } else {
-          setProofResult(
-            `${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`,
-          );
+          setProofResult(message || "No required POAPs were found for this address.");
         }
-      } else {
-        setProofResult(message || "No required POAPs were found for this address.");
-      }
-    } catch (error) {
-      console.error("Error fetching POAP data:", error);
-      setLocalPoaps([]);
-      setMissingPoaps(eventIds);
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 400) {
-          setProofResult(error.response.data.error || "Invalid input. Please check your address and try again.");
-        } else if (error.response?.status === 404) {
-          setProofResult("No POAPs found for this address. Make sure you've attended ETHGlobal Brussels 2024.");
-        } else if (error.response?.status === 500) {
-          setProofResult("Server error. Please try again later or contact support if the issue persists.");
+
+        // If we reach here, the request was successful, so we break out of the retry loop
+        break;
+      } catch (error) {
+        console.error(`Error fetching POAP data (Attempt ${retries + 1}):`, error);
+
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 400) {
+            setProofResult(error.response.data.error || "Invalid input. Please check your address and try again.");
+            break; // Don't retry on bad request
+          } else if (error.response?.status === 404) {
+            setProofResult("No POAPs found for this address. Make sure you've attended ETHGlobal Brussels 2024.");
+            break; // Don't retry on not found
+          } else if (error.response?.status === 500) {
+            setProofResult("Server error. Retrying...");
+          } else {
+            setProofResult("Network error. Retrying...");
+          }
         } else {
-          setProofResult("Network error. Please check your internet connection and try again.");
+          setProofResult("An unexpected error occurred. Retrying...");
         }
-      } else {
-        setProofResult("An unexpected error occurred. Please try again or contact support.");
+
+        retries++;
+        if (retries === maxRetries) {
+          setProofResult("Failed to fetch POAPs after multiple attempts. Please try again later.");
+          setLocalPoaps([]);
+          setMissingPoaps(eventIds);
+        }
+
+        // Wait for a short time before retrying
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
-    } finally {
-      setIsVerifying(false);
     }
+
+    setIsVerifying(false);
   }, [onVerified, userAddress, setPoaps]);
 
   useEffect(() => {
