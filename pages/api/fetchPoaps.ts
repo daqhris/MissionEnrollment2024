@@ -58,11 +58,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
       timeout: 10000 // 10 seconds timeout
     });
-    const poaps = response.data;
+    const allPoaps = response.data;
 
-    console.log("Fetched POAPs data:", JSON.stringify(poaps, null, 2));
+    // Filter POAPs for ETHGlobal Brussels 2024
+    const filteredPoaps = allPoaps.filter((poap: any) => {
+      const eventDate = new Date(poap.event.start_date);
+      return poap.event.name.toLowerCase().includes("ethglobal brussels") &&
+             eventDate.getFullYear() === 2024 &&
+             eventDate >= new Date('2024-07-11') &&
+             eventDate <= new Date('2024-07-14');
+    });
 
-    return res.status(200).json({ poaps });
+    console.log("Filtered POAPs data:", JSON.stringify(filteredPoaps, null, 2));
+
+    return res.status(200).json({ poaps: filteredPoaps });
   } catch (error) {
     console.error("Error fetching POAPs:", error);
 
