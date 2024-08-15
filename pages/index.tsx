@@ -8,6 +8,7 @@ import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
 import { Address, Balance } from "~~/components/scaffold-eth";
 import VerifiedENSNameDisplay from "../components/VerifiedENSNameDisplay";
+import WalletConnectionGuide from "../components/WalletConnectionGuide";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
@@ -169,6 +170,7 @@ const Home: FC = () => {
               Complete this stage to proceed to the next step of your mission enrollment.
             </p>
           </div>
+          <WalletConnectionGuide theme={theme} />
           <div className="mb-12">{renderCurrentStage()}</div>
           <div className="mt-12">
             <h3
