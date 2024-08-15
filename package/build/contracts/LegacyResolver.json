@@ -1,3 +1,1 @@
-[
-  "function addr(bytes32) view returns (address)"
-]
+["function addr(bytes32) view returns (address)"]

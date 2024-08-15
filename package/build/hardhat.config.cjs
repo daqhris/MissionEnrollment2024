@@ -1,7 +1,9 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.archivedDeploymentPath = void 0;
 // from @nomicfoundation/hardhat-toolbox-viem to avoid module issue
@@ -15,7 +17,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 require("hardhat-abi-exporter");
 require("hardhat-contract-sizer");
 require("hardhat-deploy");
-import('@ensdomains/hardhat-chai-matchers-viem');
+import("@ensdomains/hardhat-chai-matchers-viem");
 // hardhat actions
 require("./tasks/esm_fix.cjs");
 // Load environment variables from .env file. Suppress warnings using silent
@@ -25,118 +27,107 @@ require("./tasks/esm_fix.cjs");
 dotenv_1.default.config({ debug: false });
 let real_accounts = undefined;
 if (process.env.DEPLOYER_KEY) {
-    real_accounts = [
-        process.env.DEPLOYER_KEY,
-        process.env.OWNER_KEY || process.env.DEPLOYER_KEY,
-    ];
+  real_accounts = [process.env.DEPLOYER_KEY, process.env.OWNER_KEY || process.env.DEPLOYER_KEY];
 }
 // circular dependency shared with actions
-exports.archivedDeploymentPath = './deployments/archive';
+exports.archivedDeploymentPath = "./deployments/archive";
 const config = {
-    networks: {
-        hardhat: {
-            saveDeployments: false,
-            tags: ['test', 'legacy', 'use_root'],
-            allowUnlimitedContractSize: false,
-        },
-        localhost: {
-            url: 'http://127.0.0.1:8545/',
-            saveDeployments: false,
-            tags: ['test', 'legacy', 'use_root'],
-        },
-        rinkeby: {
-            url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
-            tags: ['test', 'legacy', 'use_root'],
-            chainId: 4,
-            accounts: real_accounts,
-        },
-        ropsten: {
-            url: `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`,
-            tags: ['test', 'legacy', 'use_root'],
-            chainId: 3,
-            accounts: real_accounts,
-        },
-        goerli: {
-            url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
-            tags: ['test', 'legacy', 'use_root'],
-            chainId: 5,
-            accounts: real_accounts,
-        },
-        sepolia: {
-            url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
-            tags: ['test', 'legacy', 'use_root'],
-            chainId: 11155111,
-            accounts: real_accounts,
-        },
-        holesky: {
-            url: `https://holesky-rpc.nocturnode.tech`,
-            tags: ['test', 'legacy', 'use_root'],
-            chainId: 17000,
-            accounts: real_accounts,
-        },
-        mainnet: {
-            url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-            tags: ['legacy', 'use_root'],
-            chainId: 1,
-            accounts: real_accounts,
-        },
+  networks: {
+    hardhat: {
+      saveDeployments: false,
+      tags: ["test", "legacy", "use_root"],
+      allowUnlimitedContractSize: false,
     },
-    mocha: {},
-    solidity: {
-        compilers: [
-            {
-                version: '0.8.17',
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                        runs: 1200,
-                    },
-                },
-            },
-            // for DummyOldResolver contract
-            {
-                version: '0.4.11',
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                        runs: 200,
-                    },
-                },
-            },
-        ],
+    localhost: {
+      url: "http://127.0.0.1:8545/",
+      saveDeployments: false,
+      tags: ["test", "legacy", "use_root"],
     },
-    abiExporter: {
-        path: './build/contracts',
-        runOnCompile: true,
-        clear: true,
-        flat: true,
-        except: [
-            'Controllable$',
-            'INameWrapper$',
-            'SHA1$',
-            'Ownable$',
-            'NameResolver$',
-            'TestBytesUtils$',
-            'legacy/*',
-        ],
-        spacing: 2,
-        pretty: true,
+    rinkeby: {
+      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      tags: ["test", "legacy", "use_root"],
+      chainId: 4,
+      accounts: real_accounts,
     },
-    namedAccounts: {
-        deployer: {
-            default: 0,
+    ropsten: {
+      url: `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      tags: ["test", "legacy", "use_root"],
+      chainId: 3,
+      accounts: real_accounts,
+    },
+    goerli: {
+      url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      tags: ["test", "legacy", "use_root"],
+      chainId: 5,
+      accounts: real_accounts,
+    },
+    sepolia: {
+      url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      tags: ["test", "legacy", "use_root"],
+      chainId: 11155111,
+      accounts: real_accounts,
+    },
+    holesky: {
+      url: `https://holesky-rpc.nocturnode.tech`,
+      tags: ["test", "legacy", "use_root"],
+      chainId: 17000,
+      accounts: real_accounts,
+    },
+    mainnet: {
+      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      tags: ["legacy", "use_root"],
+      chainId: 1,
+      accounts: real_accounts,
+    },
+  },
+  mocha: {},
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.17",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1200,
+          },
         },
-        owner: {
-            default: 1,
-            1: '0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7',
+      },
+      // for DummyOldResolver contract
+      {
+        version: "0.4.11",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
         },
+      },
+    ],
+  },
+  abiExporter: {
+    path: "./build/contracts",
+    runOnCompile: true,
+    clear: true,
+    flat: true,
+    except: ["Controllable$", "INameWrapper$", "SHA1$", "Ownable$", "NameResolver$", "TestBytesUtils$", "legacy/*"],
+    spacing: 2,
+    pretty: true,
+  },
+  namedAccounts: {
+    deployer: {
+      default: 0,
     },
-    external: {
-        contracts: [
-            {
-                artifacts: [exports.archivedDeploymentPath],
-            },
-        ],
+    owner: {
+      default: 1,
+      1: "0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7",
     },
+  },
+  external: {
+    contracts: [
+      {
+        artifacts: [exports.archivedDeploymentPath],
+      },
+    ],
+  },
 };
 exports.default = config;

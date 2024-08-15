@@ -12,14 +12,7 @@ import scaffoldConfig from "~~/scaffold.config";
 
 const { targetNetworks, walletConnectProjectId } = scaffoldConfig;
 
-const wallets = [
-  metaMaskWallet,
-  walletConnectWallet,
-  ledgerWallet,
-  coinbaseWallet,
-  rainbowWallet,
-  safeWallet,
-];
+const wallets = [metaMaskWallet, walletConnectWallet, ledgerWallet, coinbaseWallet, rainbowWallet, safeWallet];
 
 /**
  * wagmi connectors for the wagmi context

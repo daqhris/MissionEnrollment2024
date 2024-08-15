@@ -6,7 +6,9 @@ import { useTheme } from "next-themes";
 import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
-import { RainbowKitCustomConnectButton, Address, Balance } from "~~/components/scaffold-eth";
+import { Address, Balance } from "~~/components/scaffold-eth";
+import VerifiedENSNameDisplay from "../components/VerifiedENSNameDisplay";
+import WalletConnectionGuide from "../components/WalletConnectionGuide";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
@@ -147,7 +149,6 @@ const Home: FC = () => {
             >
               {theme === "dark" ? "🌙" : "☀️"}
             </button>
-            <RainbowKitCustomConnectButton />
           </nav>
         </div>
       </header>
@@ -169,6 +170,7 @@ const Home: FC = () => {
               Complete this stage to proceed to the next step of your mission enrollment.
             </p>
           </div>
+          <WalletConnectionGuide theme={theme || "light"} />
           <div className="mb-12">{renderCurrentStage()}</div>
           <div className="mt-12">
             <h3
@@ -242,6 +244,7 @@ const Home: FC = () => {
               >
                 Connected Wallet:
               </h3>
+              <VerifiedENSNameDisplay address={userAddress} theme={theme || "light"} />
               <Address address={userAddress} />
               <Balance address={userAddress} />
             </div>

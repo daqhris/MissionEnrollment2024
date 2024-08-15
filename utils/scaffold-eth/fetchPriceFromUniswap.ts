@@ -61,7 +61,10 @@ export const fetchPriceFromUniswap = async (targetNetwork: ChainWithAttributes):
 // Simple implementation of Uniswap V2 pair address computation
 const computePairAddress = (tokenA: string, tokenB: string): Address => {
   const [token0, token1] = tokenA.toLowerCase() < tokenB.toLowerCase() ? [tokenA, tokenB] : [tokenB, tokenA];
-  const salt = `0x${Buffer.from([...Buffer.from(token0.slice(2), 'hex'), ...Buffer.from(token1.slice(2), 'hex')]).toString('hex')}`;
+  const salt = `0x${Buffer.from([
+    ...Buffer.from(token0.slice(2), "hex"),
+    ...Buffer.from(token1.slice(2), "hex"),
+  ]).toString("hex")}`;
   // This is a simplified version and may not be accurate for all cases
   return `0x${keccak256(salt).slice(-40)}` as Address;
 };

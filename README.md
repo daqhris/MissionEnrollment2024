@@ -3,7 +3,7 @@
 **An enrollment tool for a collaborative mission on the Superchain.**
 
 This app has 3 features that certify the enrollment of its user for an future mission.
-Its use requires an onchain name, a non-fungible token from an in-person event, and the validation of an attestation signed by *daqhris.eth* on either **Base** or **Optimism** blockchains.
+Its use requires an onchain name, a non-fungible token from an in-person event, and the validation of an attestation signed by _daqhris.eth_ on either **Base** or **Optimism** blockchains.
 
 This project provides a transparent process that requires 3 phases of control and validation: identity verification, event participation, and public attestation on the Superchain.  
 It is built as a web application with **Next.js** and **React**, and runs on top of smart contracts integrating blockchain protocols: Ethereum Name Service (**ENS**), Ethereum Attestation Service (**EAS**) and Proof of Attendance Protocol (**POAP**).
@@ -42,12 +42,14 @@ It is built as a web application with **Next.js** and **React**, and runs on top
 ### Installation
 
 1. Clone the repository:
+
    ```
    git clone https://github.com/yourusername/MissionEnrollment.git
    cd MissionEnrollment
    ```
 
 2. Install dependencies:
+
    ```
    yarn install
    ```
@@ -58,6 +60,7 @@ It is built as a web application with **Next.js** and **React**, and runs on top
 ### Running the Application
 
 1. Start the development server:
+
    ```
    yarn dev
    ```
@@ -74,7 +77,7 @@ It is built as a web application with **Next.js** and **React**, and runs on top
    a. Enter your ENS name or Ethereum address for identity verification.  
    b. The application will verify your onchain identity using ENS.  
    c. If applicable, the app will check for ETHGlobal Brussels 2024 POAP ownership.  
-   d. Review the details of your mission participation. 
+   d. Review the details of your mission participation.
 
 3. Create an onchain attestation for your mission enrollment:  
    a. Click the "Create Attestation" button to initiate the process.  
@@ -103,7 +106,7 @@ The app builder participated in this global hackathon when it was held for the f
 If necessary, users should verify the authenticity of mission enrollments through additional public means.  
 The source code was forked from the project [TruthBot by EAS](https://github.com/ethereum-attestation-service/eas-is-true) and parts of the codebase require components from [Scaffold-ETH 2](https://github.com/scaffold-eth/scaffold-eth-2).
 
-The app creation was initiated by *daqhris.eth* at a virtual hackathon: [ETHGlobal Superhack 2024](https://ethglobal.com/events/superhack2024).  
+The app creation was initiated by _daqhris.eth_ at a virtual hackathon: [ETHGlobal Superhack 2024](https://ethglobal.com/events/superhack2024).  
 Its build and deploy phases were made possible by the assistance of Devin, an AI software engineer.
 
 [ethglobal.com/showcase/missionenrollment-i4fkr](https://ethglobal.com/showcase/missionenrollment-i4fkr)

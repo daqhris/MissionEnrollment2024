@@ -1,3 +1,1 @@
-[
-  "function testEscape(string) pure returns (string)"
-]
+["function testEscape(string) pure returns (string)"]
