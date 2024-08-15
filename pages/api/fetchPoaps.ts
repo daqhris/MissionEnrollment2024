@@ -1,28 +1,30 @@
 import axios, { AxiosError } from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
+import Redis from 'ioredis';
 
 const POAP_API_URL = "https://api.poap.tech/actions/scan";
 
-// Simple in-memory rate limiting
-const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+// Redis-based rate limiting
+
+const RATE_LIMIT_WINDOW = 15 * 60; // 15 minutes in seconds
 const MAX_REQUESTS = 100;
-const requestCounts = new Map<string, { count: number; timestamp: number }>();
 
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const requestData = requestCounts.get(ip);
+const redis = new Redis(process.env.REDIS_URL);
 
-  if (!requestData || now - requestData.timestamp > RATE_LIMIT_WINDOW) {
-    requestCounts.set(ip, { count: 1, timestamp: now });
-    return false;
+async function isRateLimited(ip: string): Promise<boolean> {
+  const key = `ratelimit:${ip}`;
+  const multi = redis.multi();
+
+  multi.incr(key);
+  multi.expire(key, RATE_LIMIT_WINDOW);
+
+  const [count] = await multi.exec();
+
+  if (!count || !Array.isArray(count)) {
+    return false; // Assume not rate limited if Redis fails
   }
 
-  if (requestData.count >= MAX_REQUESTS) {
-    return true;
-  }
-
-  requestData.count++;
-  return false;
+  return count[1] > MAX_REQUESTS;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -32,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: "Invalid client IP" });
   }
 
-  if (isRateLimited(clientIp)) {
+  if (await isRateLimited(clientIp)) {
     return res.status(429).json({ error: "Rate limit exceeded. Please try again later" });
   }
 
