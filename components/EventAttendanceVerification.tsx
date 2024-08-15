@@ -55,10 +55,12 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
 
         function isEthGlobalBrusselsPOAP(poap: POAPEvent): boolean {
           const eventDate = new Date(poap.event.start_date);
-          return poap.event.name.toLowerCase().includes("ethglobal brussels") &&
-                 eventDate.getFullYear() === 2024 &&
-                 eventDate >= new Date("2024-07-11") &&
-                 eventDate <= new Date("2024-07-14");
+          return (
+            poap.event.name.toLowerCase().includes("ethglobal brussels") &&
+            eventDate.getFullYear() === 2024 &&
+            eventDate >= new Date("2024-07-11") &&
+            eventDate <= new Date("2024-07-14")
+          );
         }
 
         setLocalPoaps(filteredPoaps);
@@ -76,7 +78,7 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
             onVerified();
           } else {
             setProofResult(
-              `${userAddress} has a POAP from ETHGlobal Brussels 2024, but it may not be the specific required one. Please check with the event organizers.`
+              `${userAddress} has a POAP from ETHGlobal Brussels 2024, but it may not be the specific required one. Please check with the event organizers.`,
             );
           }
         } else {
