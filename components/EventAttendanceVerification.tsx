@@ -51,13 +51,15 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
         const validPoaps = Array.isArray(poaps) ? poaps : [];
 
         // Filter POAPs for ETHGlobal Brussels 2024
-        const filteredPoaps = validPoaps.filter(poap => {
+        const filteredPoaps = validPoaps.filter(isEthGlobalBrusselsPOAP);
+
+        function isEthGlobalBrusselsPOAP(poap: POAPEvent): boolean {
           const eventDate = new Date(poap.event.start_date);
           return poap.event.name.toLowerCase().includes("ethglobal brussels") &&
                  eventDate.getFullYear() === 2024 &&
                  eventDate >= new Date('2024-07-11') &&
                  eventDate <= new Date('2024-07-14');
-        });
+        }
 
         setLocalPoaps(filteredPoaps);
         setPoaps(filteredPoaps);
@@ -68,17 +70,17 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
         setMissingPoaps(missingEventIds);
 
         if (filteredPoaps.length > 0) {
-          const requiredPoapCount = 1; // Assuming only one POAP is required
+          const requiredPoapCount = 1; // Only one POAP is required for ETHGlobal Brussels 2024
           if (filteredPoaps.length >= requiredPoapCount) {
-            setProofResult(`Proof successful! ${userAddress} has the required POAP for ETHGlobal Brussels 2024.`);
+            setProofResult(`Proof successful! ${userAddress} has a valid POAP for ETHGlobal Brussels 2024.`);
             onVerified();
           } else {
             setProofResult(
-              `${userAddress} has ${filteredPoaps.length} out of ${requiredPoapCount} required POAP(s) for ETHGlobal Brussels 2024.`,
+              `${userAddress} has a POAP from ETHGlobal Brussels 2024, but it may not be the specific required one. Please check with the event organizers.`
             );
           }
         } else {
-          setProofResult(message || "No required POAPs were found for this address.");
+          setProofResult("No POAPs from ETHGlobal Brussels 2024 were found for this address.");
         }
 
         break; // Success, exit the retry loop
