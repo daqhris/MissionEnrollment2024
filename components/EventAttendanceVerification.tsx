@@ -36,10 +36,10 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
     setLocalPoaps([]);
     setMissingPoaps([]);
 
-    const maxRetries = 5;
+    const maxRetries = 3;
     let retries = 0;
 
-    const fetchWithRetry = async () => {
+    while (retries < maxRetries) {
       try {
         console.log(`Fetching POAPs for address: ${userAddress} (Attempt ${retries + 1})`);
         const response = await axios.get(`/api/fetchPoaps?address=${encodeURIComponent(userAddress)}`);
@@ -59,8 +59,6 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
                  eventDate <= new Date('2024-07-14');
         });
 
-        console.log("Filtered POAPs:", filteredPoaps);
-
         setLocalPoaps(filteredPoaps);
         setPoaps(filteredPoaps);
 
@@ -70,20 +68,20 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
         setMissingPoaps(missingEventIds);
 
         if (filteredPoaps.length > 0) {
-          const requiredPoapCount = 1; // Only one POAP is required for ETHGlobal Brussels 2024
+          const requiredPoapCount = 1; // Assuming only one POAP is required
           if (filteredPoaps.length >= requiredPoapCount) {
             setProofResult(`Proof successful! ${userAddress} has the required POAP for ETHGlobal Brussels 2024.`);
             onVerified();
           } else {
             setProofResult(
-              `${userAddress} has a POAP from ETHGlobal Brussels 2024, but it may not be the specific required one. Please check with the event organizers.`
+              `${userAddress} has ${filteredPoaps.length} out of ${requiredPoapCount} required POAP(s) for ETHGlobal Brussels 2024.`,
             );
           }
         } else {
-          setProofResult("No POAPs from ETHGlobal Brussels 2024 were found for this address.");
+          setProofResult(message || "No required POAPs were found for this address.");
         }
 
-        return true; // Success
+        break; // Success, exit the retry loop
       } catch (error) {
         console.error(`Error fetching POAP data (Attempt ${retries + 1}):`, error);
 
@@ -92,56 +90,42 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
           switch (status) {
             case 400:
               setProofResult("Invalid input. Please check your address and try again.");
-              return false; // Don't retry on bad request
+              return; // Don't retry on bad request
             case 401:
               setProofResult("Unauthorized. Please check your API key configuration.");
-              return false; // Don't retry on unauthorized
+              return; // Don't retry on unauthorized
             case 404:
               setProofResult("No POAPs found for this address. Make sure you've attended ETHGlobal Brussels 2024.");
-              return false; // Don't retry on not found
+              return; // Don't retry on not found
             case 429:
-              // Implement specific handling for rate limiting
-              const retryAfter = parseInt(error.response?.headers['retry-after'] || '60', 10);
-              setProofResult(`Rate limit exceeded. Retrying in ${retryAfter} seconds...`);
-              await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
-              return null; // Retry after waiting
+              setProofResult("Too many requests. Please try again later.");
+              return; // Don't retry on rate limit
             default:
               if (status && status >= 500) {
                 setProofResult("Server error. Retrying...");
-                return null; // Retry on server errors
               } else {
                 setProofResult("Network error. Retrying...");
-                return null; // Retry on network errors
               }
           }
         } else {
           setProofResult("An unexpected error occurred. Retrying...");
-          return null; // Retry on unexpected errors
         }
+
+        retries++;
+        if (retries >= maxRetries) {
+          setProofResult("Failed to fetch POAPs after multiple attempts. Please try again later.");
+          setLocalPoaps([]);
+          setMissingPoaps(eventIds);
+          return; // Exit the retry loop after max retries
+        }
+
+        // Provide user feedback before retrying
+        setProofResult(`Retrying... Attempt ${retries + 1} of ${maxRetries}`);
+
+        // Implement exponential backoff with jitter
+        const delay = Math.min(1000 * Math.pow(2, retries) + Math.random() * 1000, 10000);
+        await new Promise(resolve => setTimeout(resolve, delay));
       }
-    };
-
-    while (retries < maxRetries) {
-      const result = await fetchWithRetry();
-      if (result === true) break; // Success
-      if (result === false) return; // Don't retry
-
-      retries++;
-      if (retries >= maxRetries) {
-        setProofResult("Failed to fetch POAPs after multiple attempts. Please try again later.");
-        setLocalPoaps([]);
-        setMissingPoaps(eventIds);
-        return;
-      }
-
-      // Provide user feedback before retrying
-      setProofResult(`Retrying... Attempt ${retries + 1} of ${maxRetries}`);
-
-      // Implement exponential backoff with jitter
-      const baseDelay = 1000 * Math.pow(2, retries);
-      const jitter = Math.random() * 1000;
-      const delay = Math.min(baseDelay + jitter, 30000); // Cap at 30 seconds
-      await new Promise(resolve => setTimeout(resolve, delay));
     }
 
     setIsVerifying(false);

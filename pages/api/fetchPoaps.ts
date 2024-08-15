@@ -3,34 +3,27 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const POAP_API_URL = "https://api.poap.tech/actions/scan";
 
-// In-memory rate limiting
-const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes in milliseconds
+// Simple in-memory rate limiting
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
 const MAX_REQUESTS = 100;
-
-const rateLimitStore: { [key: string]: { count: number; timestamp: number } } = {};
+const requestCounts = new Map<string, { count: number; timestamp: number }>();
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
-  const clientData = rateLimitStore[ip];
+  const requestData = requestCounts.get(ip);
 
-  if (!clientData || now - clientData.timestamp > RATE_LIMIT_WINDOW) {
-    rateLimitStore[ip] = { count: 1, timestamp: now };
+  if (!requestData || now - requestData.timestamp > RATE_LIMIT_WINDOW) {
+    requestCounts.set(ip, { count: 1, timestamp: now });
     return false;
   }
 
-  clientData.count++;
-  return clientData.count > MAX_REQUESTS;
-}
+  if (requestData.count >= MAX_REQUESTS) {
+    return true;
+  }
 
-// Clean up expired entries periodically
-setInterval(() => {
-  const now = Date.now();
-  Object.keys(rateLimitStore).forEach(ip => {
-    if (now - rateLimitStore[ip].timestamp > RATE_LIMIT_WINDOW) {
-      delete rateLimitStore[ip];
-    }
-  });
-}, RATE_LIMIT_WINDOW);
+  requestData.count++;
+  return false;
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -65,20 +58,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
       timeout: 10000 // 10 seconds timeout
     });
-    const allPoaps = response.data;
+    const poaps = response.data;
 
-    // Filter POAPs for ETHGlobal Brussels 2024
-    const filteredPoaps = allPoaps.filter((poap: any) => {
-      const eventDate = new Date(poap.event.start_date);
-      return poap.event.name.toLowerCase().includes("ethglobal brussels") &&
-             eventDate.getFullYear() === 2024 &&
-             eventDate >= new Date('2024-07-11') &&
-             eventDate <= new Date('2024-07-14');
-    });
+    console.log("Fetched POAPs data:", JSON.stringify(poaps, null, 2));
 
-    console.log("Filtered POAPs data:", JSON.stringify(filteredPoaps, null, 2));
-
-    return res.status(200).json({ poaps: filteredPoaps });
+    return res.status(200).json({ poaps });
   } catch (error) {
     console.error("Error fetching POAPs:", error);
 
