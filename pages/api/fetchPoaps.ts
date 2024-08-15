@@ -48,27 +48,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Log the POAP_API_KEY (partially masked for security)
-  const maskedApiKey = process.env.POAP_API_KEY ?
-    `${process.env.POAP_API_KEY.slice(0, 4)}${"*".repeat(Math.max(0, process.env.POAP_API_KEY.length - 8))}${process.env.POAP_API_KEY.slice(-4)}` :
-    "Not set";
+  const maskedApiKey = process.env.POAP_API_KEY
+    ? `${process.env.POAP_API_KEY.slice(0, 4)}${"*".repeat(
+        Math.max(0, process.env.POAP_API_KEY.length - 8)
+      )}${process.env.POAP_API_KEY.slice(-4)}`
+    : "Not set";
   console.log(`Using POAP_API_KEY: ${maskedApiKey}`);
 
   try {
     const response = await axios.get(`${POAP_API_URL}/${address}`, {
       headers: {
-        'X-API-Key': process.env.POAP_API_KEY
+        "X-API-Key": process.env.POAP_API_KEY,
       },
-      timeout: 10000 // 10 seconds timeout
+      timeout: 10000, // 10 seconds timeout
     });
     const allPoaps = response.data;
 
     // Filter POAPs for ETHGlobal Brussels 2024
     const filteredPoaps = allPoaps.filter((poap: any) => {
       const eventDate = new Date(poap.event.start_date);
-      return poap.event.name.toLowerCase().includes("ethglobal brussels") &&
-             eventDate.getFullYear() === 2024 &&
-             eventDate >= new Date('2024-07-11') &&
-             eventDate <= new Date('2024-07-14');
+      const eventStartDate = new Date("2024-07-11T00:00:00Z");
+      const eventEndDate = new Date("2024-07-14T23:59:59Z");
+
+      return (
+        poap.event.name.toLowerCase().includes("ethglobal brussels") &&
+        eventDate >= eventStartDate &&
+        eventDate <= eventEndDate
+      );
     });
 
     console.log("Filtered POAPs data:", JSON.stringify(filteredPoaps, null, 2));
