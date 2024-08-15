@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
-import { RainbowKitCustomConnectButton, Address, Balance } from "~~/components/scaffold-eth";
+import { Address, Balance } from "~~/components/scaffold-eth";
 import VerifiedENSNameDisplay from "../components/VerifiedENSNameDisplay";
 import WalletConnectionGuide from "../components/WalletConnectionGuide";
 
@@ -36,7 +36,6 @@ const Home: FC = () => {
   const [poaps, setPoaps] = useState<Array<POAPEvent>>([]);
   const [userAddress, setUserAddress] = useState<string>("");
   const { theme, setTheme } = useTheme();
-  const currentTheme = theme as string;
 
   const toggleDarkMode = () => setTheme(theme === "dark" ? "light" : "dark");
 
