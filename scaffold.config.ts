@@ -4,6 +4,8 @@ export type ScaffoldConfig = {
   targetNetworks: readonly chains.Chain[];
   pollingInterval: number;
   onlyLocalBurnerWallet: boolean;
+  walletConnectProjectId: string;
+  alchemyApiKey: string;
 };
 
 const scaffoldConfig = {
@@ -16,6 +18,12 @@ const scaffoldConfig = {
 
   // Only show the Burner Wallet when running on hardhat network
   onlyLocalBurnerWallet: true,
+
+  // WalletConnect Project ID
+  walletConnectProjectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || "YOUR_WALLET_CONNECT_PROJECT_ID",
+
+  // Alchemy API Key
+  alchemyApiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || "YOUR_ALCHEMY_API_KEY",
 } as const satisfies ScaffoldConfig;
 
 export default scaffoldConfig;
