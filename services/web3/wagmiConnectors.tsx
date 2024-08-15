@@ -10,7 +10,7 @@ import {
 import * as chains from "viem/chains";
 import scaffoldConfig from "~~/scaffold.config";
 
-const { targetNetworks } = scaffoldConfig;
+const { targetNetworks, walletConnectProjectId } = scaffoldConfig;
 
 const wallets = [
   metaMaskWallet,
@@ -34,6 +34,6 @@ export const wagmiConnectors = connectorsForWallets(
 
   {
     appName: "scaffold-eth-2",
-    projectId: scaffoldConfig.walletConnectProjectId,
+    projectId: walletConnectProjectId || "YOUR_WALLET_CONNECT_PROJECT_ID",
   },
 );

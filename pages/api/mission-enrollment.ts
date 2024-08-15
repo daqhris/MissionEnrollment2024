@@ -13,10 +13,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const EASContractAddress = "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"; // Sepolia v0.26
     const missionEnrollmentSchemaUid = "0x40e5abe23a3378a9a43b7e874c5cb8dfd4d6b0823501d317acee41e08d3af4dd";
 
-    const provider = new ethers.JsonRpcProvider(
-      `https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`,
-    );
-    const signer = new ethers.Wallet(process.env.ETH_KEY as string, provider);
+    const provider = new ethers.JsonRpcProvider("https://rpc.sepolia.org");
+
+    // Note: The signer should be initialized in a secure way, not using environment variables
+    // This is a placeholder and should be replaced with a proper secure method
+    const signer = new ethers.Wallet("YOUR_PRIVATE_KEY_HERE", provider);
+
     const eas = new EAS(EASContractAddress);
     await eas.connect(signer);
 

@@ -15,6 +15,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: "Server configuration error" });
   }
 
+  // Log the POAP_API_KEY (partially masked for security)
+  const maskedApiKey = process.env.POAP_API_KEY.slice(0, 4) + '*'.repeat(process.env.POAP_API_KEY.length - 8) + process.env.POAP_API_KEY.slice(-4);
+  console.log(`Using POAP_API_KEY: ${maskedApiKey}`);
+
   try {
     const response = await axios.get(`${POAP_API_URL}/${address}`, {
       headers: {
@@ -22,6 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     });
     const poaps = response.data;
+
+    console.log("Fetched POAPs data:", JSON.stringify(poaps, null, 2));
 
     return res.status(200).json({ poaps });
   } catch (error) {
