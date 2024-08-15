@@ -170,7 +170,7 @@ const Home: FC = () => {
               Complete this stage to proceed to the next step of your mission enrollment.
             </p>
           </div>
-          <WalletConnectionGuide theme={theme} />
+          <WalletConnectionGuide theme={theme || "light"} />
           <div className="mb-12">{renderCurrentStage()}</div>
           <div className="mt-12">
             <h3
