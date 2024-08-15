@@ -45,7 +45,7 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
         const response = await axios.get(`/api/fetchPoaps?address=${encodeURIComponent(userAddress)}`);
         console.log("API response:", JSON.stringify(response.data, null, 2));
 
-        const { poaps = [], message = "" } = response.data;
+        const { poaps = [] } = response.data;
 
         // Ensure poaps is always an array
         const validPoaps = Array.isArray(poaps) ? poaps : [];
@@ -57,8 +57,8 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
           const eventDate = new Date(poap.event.start_date);
           return poap.event.name.toLowerCase().includes("ethglobal brussels") &&
                  eventDate.getFullYear() === 2024 &&
-                 eventDate >= new Date('2024-07-11') &&
-                 eventDate <= new Date('2024-07-14');
+                 eventDate >= new Date("2024-07-11") &&
+                 eventDate <= new Date("2024-07-14");
         }
 
         setLocalPoaps(filteredPoaps);

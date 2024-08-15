@@ -26,9 +26,9 @@ function isRateLimited(ip: string): boolean {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  const clientIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
-  if (typeof clientIp !== 'string') {
+  if (typeof clientIp !== "string") {
     return res.status(400).json({ error: "Invalid client IP" });
   }
 
@@ -48,7 +48,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Log the POAP_API_KEY (partially masked for security)
-  const maskedApiKey = process.env.POAP_API_KEY.slice(0, 4) + '*'.repeat(process.env.POAP_API_KEY.length - 8) + process.env.POAP_API_KEY.slice(-4);
+  const maskedApiKey = process.env.POAP_API_KEY ?
+    `${process.env.POAP_API_KEY.slice(0, 4)}${"*".repeat(Math.max(0, process.env.POAP_API_KEY.length - 8))}${process.env.POAP_API_KEY.slice(-4)}` :
+    "Not set";
   console.log(`Using POAP_API_KEY: ${maskedApiKey}`);
 
   try {
