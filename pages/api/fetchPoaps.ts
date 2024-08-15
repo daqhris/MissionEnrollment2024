@@ -1,31 +1,36 @@
 import axios, { AxiosError } from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
-import Redis from 'ioredis';
 
 const POAP_API_URL = "https://api.poap.tech/actions/scan";
 
-// Redis-based rate limiting
-
-const RATE_LIMIT_WINDOW = 15 * 60; // 15 minutes in seconds
+// In-memory rate limiting
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes in milliseconds
 const MAX_REQUESTS = 100;
 
-const redis = new Redis(process.env.REDIS_URL);
+const rateLimitStore: { [key: string]: { count: number; timestamp: number } } = {};
 
-async function isRateLimited(ip: string): Promise<boolean> {
-  const key = `ratelimit:${ip}`;
-  const multi = redis.multi();
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const clientData = rateLimitStore[ip];
 
-  multi.incr(key);
-  multi.expire(key, RATE_LIMIT_WINDOW);
-
-  const [count] = await multi.exec();
-
-  if (!count || !Array.isArray(count)) {
-    return false; // Assume not rate limited if Redis fails
+  if (!clientData || now - clientData.timestamp > RATE_LIMIT_WINDOW) {
+    rateLimitStore[ip] = { count: 1, timestamp: now };
+    return false;
   }
 
-  return count[1] > MAX_REQUESTS;
+  clientData.count++;
+  return clientData.count > MAX_REQUESTS;
 }
+
+// Clean up expired entries periodically
+setInterval(() => {
+  const now = Date.now();
+  Object.keys(rateLimitStore).forEach(ip => {
+    if (now - rateLimitStore[ip].timestamp > RATE_LIMIT_WINDOW) {
+      delete rateLimitStore[ip];
+    }
+  });
+}, RATE_LIMIT_WINDOW);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -34,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: "Invalid client IP" });
   }
 
-  if (await isRateLimited(clientIp)) {
+  if (isRateLimited(clientIp)) {
     return res.status(429).json({ error: "Rate limit exceeded. Please try again later" });
   }
 
@@ -60,11 +65,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
       timeout: 10000 // 10 seconds timeout
     });
-    const poaps = response.data;
+    const allPoaps = response.data;
 
-    console.log("Fetched POAPs data:", JSON.stringify(poaps, null, 2));
+    // Filter POAPs for ETHGlobal Brussels 2024
+    const filteredPoaps = allPoaps.filter((poap: any) => {
+      const eventDate = new Date(poap.event.start_date);
+      return poap.event.name.toLowerCase().includes("ethglobal brussels") &&
+             eventDate.getFullYear() === 2024 &&
+             eventDate >= new Date('2024-07-11') &&
+             eventDate <= new Date('2024-07-14');
+    });
 
-    return res.status(200).json({ poaps });
+    console.log("Filtered POAPs data:", JSON.stringify(filteredPoaps, null, 2));
+
+    return res.status(200).json({ poaps: filteredPoaps });
   } catch (error) {
     console.error("Error fetching POAPs:", error);
 
