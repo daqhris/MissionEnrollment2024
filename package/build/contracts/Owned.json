@@ -1,5 +1,1 @@
-[
-  "constructor()",
-  "function owner() view returns (address)",
-  "function setOwner(address)"
-]
+["constructor()", "function owner() view returns (address)", "function setOwner(address)"]

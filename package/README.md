@@ -25,7 +25,7 @@ import {
   ReverseRegistrar,
   StablePriceOracle,
   TestRegistrar,
-} from '@ensdomains/ens-contracts'
+} from "@ensdomains/ens-contracts";
 ```
 
 ## Importing from solidity

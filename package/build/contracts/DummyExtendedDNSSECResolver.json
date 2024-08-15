@@ -1,4 +1,1 @@
-[
-  "function resolve(bytes,bytes,bytes) view returns (bytes)",
-  "function supportsInterface(bytes4) pure returns (bool)"
-]
+["function resolve(bytes,bytes,bytes) view returns (bytes)", "function supportsInterface(bytes4) pure returns (bool)"]

@@ -2,13 +2,19 @@
 module.exports = {
   testEnvironment: "jest-environment-jsdom",
   transform: {
-    "^.+\\.(ts|tsx)$": ["ts-jest", {
-      tsconfig: 'tsconfig.jest.json',
-      useESM: true,
-    }],
-    "^.+\\.(js|jsx)$": ["babel-jest", {
-      presets: ["@babel/preset-env", "@babel/preset-react"],
-    }],
+    "^.+\\.(ts|tsx)$": [
+      "ts-jest",
+      {
+        tsconfig: "tsconfig.jest.json",
+        useESM: true,
+      },
+    ],
+    "^.+\\.(js|jsx)$": [
+      "babel-jest",
+      {
+        presets: ["@babel/preset-env", "@babel/preset-react"],
+      },
+    ],
   },
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",

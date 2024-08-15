@@ -1,5 +1,1 @@
-[
-  "constructor(int256)",
-  "function latestAnswer() view returns (int256)",
-  "function set(int256)"
-]
+["constructor(int256)", "function latestAnswer() view returns (int256)", "function set(int256)"]

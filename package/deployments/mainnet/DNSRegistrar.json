@@ -356,9 +356,7 @@
         "blockNumber": 19027588,
         "transactionHash": "0x5ddb98103acbe8b5a68ac1b7e45abbddda5dff8ff2b65c5ed26e36cf34bec43e",
         "address": "0xB32cB5677a7C971689228EC835800432B339bA2B",
-        "topics": [
-          "0x9176b7f47e4504df5e5516c99d90d82ac7cbd49cc77e7f22ba2ac2f2e3a3eba8"
-        ],
+        "topics": ["0x9176b7f47e4504df5e5516c99d90d82ac7cbd49cc77e7f22ba2ac2f2e3a3eba8"],
         "data": "0x000000000000000000000000823bda9ca8c47d072376ecd595530c8fb2faa3ed",
         "logIndex": 104,
         "blockHash": "0x68fbaf4525e996d170cc181078aae224e20e0729313fdc879f53409a20572b74"

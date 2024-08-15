@@ -48,9 +48,7 @@
     "status": 1,
     "byzantium": true
   },
-  "args": [
-    "ens-metadata-service.appspot.com/name/0x{id}"
-  ],
+  "args": ["ens-metadata-service.appspot.com/name/0x{id}"],
   "numDeployments": 1,
   "solcInputHash": "3fa59c31b7672c86eff32031f5a10f8a",
   "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_metaDataUri\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"uri\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/wrapper/StaticMetadataService.sol\":\"StaticMetadataService\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1300},\"remappings\":[]},\"sources\":{\"contracts/wrapper/StaticMetadataService.sol\":{\"content\":\"//SPDX-License-Identifier: MIT\\npragma solidity ~0.8.17;\\n\\ncontract StaticMetadataService {\\n    string private _uri;\\n\\n    constructor(string memory _metaDataUri) {\\n        _uri = _metaDataUri;\\n    }\\n\\n    function uri(uint256) public view returns (string memory) {\\n        return _uri;\\n    }\\n}\\n\",\"keccak256\":\"0x28aad4cb829118de64965e06af8e785e6b2efa5207859d2efc63e404c26cfea3\",\"license\":\"MIT\"}},\"version\":1}",

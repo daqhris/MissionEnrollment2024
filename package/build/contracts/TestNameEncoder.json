@@ -1,3 +1,1 @@
-[
-  "function encodeName(string) pure returns (bytes, bytes32)"
-]
+["function encodeName(string) pure returns (bytes, bytes32)"]

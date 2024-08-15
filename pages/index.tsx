@@ -7,6 +7,8 @@ import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
 import { RainbowKitCustomConnectButton, Address, Balance } from "~~/components/scaffold-eth";
+import VerifiedENSNameDisplay from "../components/VerifiedENSNameDisplay";
+import WalletConnectionGuide from "../components/WalletConnectionGuide";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
@@ -34,6 +36,7 @@ const Home: FC = () => {
   const [poaps, setPoaps] = useState<Array<POAPEvent>>([]);
   const [userAddress, setUserAddress] = useState<string>("");
   const { theme, setTheme } = useTheme();
+  const currentTheme = theme as string;
 
   const toggleDarkMode = () => setTheme(theme === "dark" ? "light" : "dark");
 
@@ -147,7 +150,7 @@ const Home: FC = () => {
             >
               {theme === "dark" ? "🌙" : "☀️"}
             </button>
-            <RainbowKitCustomConnectButton />
+            <WalletConnectionGuide theme={theme || "light"} />
           </nav>
         </div>
       </header>
@@ -242,6 +245,7 @@ const Home: FC = () => {
               >
                 Connected Wallet:
               </h3>
+              <VerifiedENSNameDisplay address={userAddress} theme={theme || "light"} />
               <Address address={userAddress} />
               <Balance address={userAddress} />
             </div>
