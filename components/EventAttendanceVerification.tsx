@@ -63,17 +63,18 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
         setPoaps(filteredPoaps);
 
         // Set missing POAPs based on the difference between all event IDs and found POAPs
-        const foundEventIds = validPoaps.map(poap => poap.event.id);
+        const foundEventIds = filteredPoaps.map(poap => poap.event.id);
         const missingEventIds = eventIds.filter(id => !foundEventIds.includes(id));
         setMissingPoaps(missingEventIds);
 
         if (filteredPoaps.length > 0) {
-          if (filteredPoaps.length >= 1) {
+          const requiredPoapCount = 1; // Assuming only one POAP is required
+          if (filteredPoaps.length >= requiredPoapCount) {
             setProofResult(`Proof successful! ${userAddress} has the required POAP for ETHGlobal Brussels 2024.`);
             onVerified();
           } else {
             setProofResult(
-              `${userAddress} has ${filteredPoaps.length} out of 1 required POAP for ETHGlobal Brussels 2024.`,
+              `${userAddress} has ${filteredPoaps.length} out of ${requiredPoapCount} required POAP(s) for ETHGlobal Brussels 2024.`,
             );
           }
         } else {
