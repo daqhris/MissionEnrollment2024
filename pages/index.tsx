@@ -8,7 +8,6 @@ import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
 import { Address, Balance } from "~~/components/scaffold-eth";
 import VerifiedENSNameDisplay from "../components/VerifiedENSNameDisplay";
-import WalletConnectionGuide from "../components/WalletConnectionGuide";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
@@ -149,7 +148,6 @@ const Home: FC = () => {
             >
               {theme === "dark" ? "🌙" : "☀️"}
             </button>
-            <WalletConnectionGuide theme={theme || "light"} />
           </nav>
         </div>
       </header>
