@@ -49,21 +49,31 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
 
         // Ensure poaps is always an array
         const validPoaps = Array.isArray(poaps) ? poaps : [];
-        setLocalPoaps(validPoaps);
-        setPoaps(validPoaps);
+
+        // Filter POAPs for ETHGlobal Brussels 2024
+        const filteredPoaps = validPoaps.filter(poap => {
+          const eventDate = new Date(poap.event.start_date);
+          return poap.event.name.toLowerCase().includes("ethglobal brussels") &&
+                 eventDate.getFullYear() === 2024 &&
+                 eventDate >= new Date('2024-07-11') &&
+                 eventDate <= new Date('2024-07-14');
+        });
+
+        setLocalPoaps(filteredPoaps);
+        setPoaps(filteredPoaps);
 
         // Set missing POAPs based on the difference between all event IDs and found POAPs
         const foundEventIds = validPoaps.map(poap => poap.event.id);
         const missingEventIds = eventIds.filter(id => !foundEventIds.includes(id));
         setMissingPoaps(missingEventIds);
 
-        if (validPoaps.length > 0) {
-          if (validPoaps.length === eventIds.length) {
-            setProofResult(`Proof successful! ${userAddress} has all required POAPs for ETHGlobal Brussels 2024.`);
+        if (filteredPoaps.length > 0) {
+          if (filteredPoaps.length >= 1) {  // Changed to check for at least one POAP
+            setProofResult(`Proof successful! ${userAddress} has the required POAP for ETHGlobal Brussels 2024.`);
             onVerified();
           } else {
             setProofResult(
-              `${userAddress} has ${validPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`,
+              `${userAddress} has ${filteredPoaps.length} out of 1 required POAP for ETHGlobal Brussels 2024.`,
             );
           }
         } else {
