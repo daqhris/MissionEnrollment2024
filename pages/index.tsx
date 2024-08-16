@@ -31,10 +31,10 @@ const stageDescriptions: Record<Stage, string> = {
 };
 
 const Home: FC = () => {
+  const { address } = useAccount();
   const [currentStage, setCurrentStage] = useState<Stage>("identity");
   const [completedStages, setCompletedStages] = useState<Stage[]>([]);
   const [poaps, setPoaps] = useState<POAPEvent[]>([]);
-  const { address } = useAccount();
   const { theme, setTheme } = useTheme();
 
   const toggleDarkMode = () => setTheme(theme === "dark" ? "light" : "dark");
@@ -80,6 +80,7 @@ const Home: FC = () => {
           <EventAttendanceProof
             onVerified={() => handleStageCompletion("attendance")}
             setPoaps={setPoaps}
+            userAddress={address || ""}
           />
         );
       case "attestation":

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useAccount } from "wagmi";
 
 interface Poap {
   event: {
@@ -13,22 +12,22 @@ interface Poap {
 interface EventAttendanceProofProps {
   onVerified: () => void;
   setPoaps: (poaps: Poap[]) => void;
+  userAddress: string | undefined;
 }
 
-const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified, setPoaps }) => {
-  const { address } = useAccount();
+const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified, setPoaps, userAddress }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPoaps = async () => {
-      if (!address) return;
+      if (!userAddress) return;
 
       setLoading(true);
       setError(null);
 
       try {
-        const response = await axios.get(`/api/fetchPoaps?address=${address}`);
+        const response = await axios.get(`/api/fetchPoaps?address=${userAddress}`);
         const fetchedPoaps = response.data.poaps;
         setPoaps(fetchedPoaps);
         if (fetchedPoaps.length > 0) {
@@ -49,7 +48,7 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
     };
 
     fetchPoaps();
-  }, [address, onVerified, setPoaps]);
+  }, [userAddress, onVerified, setPoaps]);
 
   if (loading) return <p className="text-center">Loading POAPs...</p>;
   if (error) return <p className="error text-center text-red-500">{error}</p>;
