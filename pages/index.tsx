@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import type { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useAccount } from "wagmi";
 import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
@@ -33,7 +34,7 @@ const Home: FC = () => {
   const [currentStage, setCurrentStage] = useState<Stage>("identity");
   const [completedStages, setCompletedStages] = useState<Stage[]>([]);
   const [poaps, setPoaps] = useState<POAPEvent[]>([]);
-  const [userAddress, setUserAddress] = useState<string>("");
+  const { address } = useAccount();
   const { theme, setTheme } = useTheme();
 
   const toggleDarkMode = () => setTheme(theme === "dark" ? "light" : "dark");
@@ -69,8 +70,7 @@ const Home: FC = () => {
       case "identity":
         return (
           <IdentityVerification
-            onVerified={(address: string) => {
-              setUserAddress(address);
+            onVerified={() => {
               handleStageCompletion("identity");
             }}
           />
@@ -80,7 +80,6 @@ const Home: FC = () => {
           <EventAttendanceProof
             onVerified={() => handleStageCompletion("attendance")}
             setPoaps={setPoaps}
-            userAddress={userAddress}
           />
         );
       case "attestation":
@@ -224,7 +223,7 @@ const Home: FC = () => {
               ))}
             </ul>
           </div>
-          {userAddress && (
+          {address && (
             <div className={`mt-8 p-4 ${theme === "dark" ? "bg-gray-800" : "bg-white"} rounded-xl shadow-lg`}>
               <h3
                 className={`text-xl font-semibold mb-4 ${
@@ -233,7 +232,7 @@ const Home: FC = () => {
               >
                 Connected Wallet:
               </h3>
-              <VerifiedENSNameDisplay address={userAddress} theme={theme || "light"} />
+              <VerifiedENSNameDisplay address={address} theme={theme || "light"} />
             </div>
           )}
         </div>

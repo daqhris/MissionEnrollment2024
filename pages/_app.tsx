@@ -2,11 +2,12 @@ import React from "react";
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { RainbowKitProvider, getDefaultWallets } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { WagmiConfig } from "wagmi";
+import { WagmiConfig, createConfig } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
+import { createPublicClient, http } from "viem";
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
 
@@ -14,10 +15,16 @@ if (!projectId) {
   throw new Error("NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID is not defined");
 }
 
-const wagmiConfig = getDefaultConfig({
-  appName: "Mission Enrollment",
-  projectId,
+const wagmiConfig = createConfig({
   chains: [mainnet, sepolia],
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+  },
+  connectors: getDefaultWallets({
+    projectId,
+    appName: "Mission Enrollment",
+  }).connectors,
 });
 
 // Configure Apollo Client
