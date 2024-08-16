@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 const POAP_API_URL = "https://api.poap.tech/actions/scan";
 
@@ -71,13 +71,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const eventEndDate = new Date("2024-07-14T23:59:59Z");
 
       return (
-        poap.event.name.toLowerCase().includes("ethglobal brussels") &&
+        poap.event.name.toLowerCase() === "ethglobal brussels 2024" &&
         eventDate >= eventStartDate &&
         eventDate <= eventEndDate
       );
     });
 
-    console.log("Filtered POAPs data:", JSON.stringify(filteredPoaps, null, 2));
+    // console.log("Filtered POAPs data:", JSON.stringify(filteredPoaps, null, 2));
 
     return res.status(200).json({ poaps: filteredPoaps });
   } catch (error) {
