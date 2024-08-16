@@ -9,7 +9,7 @@ import { ContractAbi, ContractName, UseScaffoldEventConfig } from "~~/utils/scaf
 // import { POAPClient } from '@poap/poap-eth-sdk';
 
 /**
- * Wrapper around wagmi's useEventSubscriber hook which automatically loads (by name) the contract ABI and
+ * Wrapper around wagmi's useWatchContractEvent hook which automatically loads (by name) the contract ABI and
  * address from the contracts present in deployedContracts.ts & externalContracts.ts
  * @param config - The config settings
  * @param config.contractName - deployed contract name
@@ -39,7 +39,7 @@ export const useScaffoldWatchContractEvent = <
     address: deployedContractData?.address,
     abi: deployedContractData?.abi as Abi,
     chainId: targetNetwork.id,
-    onLogs: listenerWithIndexedArgs,
     eventName,
+    onLogs: listenerWithIndexedArgs,
   });
 };

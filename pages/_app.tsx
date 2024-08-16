@@ -7,7 +7,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiConfig, createConfig } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
-import { createPublicClient, http } from "viem";
+import { http } from "viem";
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
 
