@@ -3,7 +3,7 @@ import { useTargetNetwork } from "./useTargetNetwork";
 import { QueryObserverResult, RefetchOptions, useQueryClient } from "@tanstack/react-query";
 import type { ExtractAbiFunctionNames } from "abitype";
 import { ReadContractErrorType } from "viem";
-import { useBlockNumber, useReadContract } from "wagmi";
+import { useBlockNumber, useContractRead } from "wagmi";
 import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
 import {
   AbiFunctionReturnType,
@@ -35,18 +35,16 @@ export const useScaffoldReadContract = <
   // set watch to true by default
   const defaultWatch = watch ?? true;
 
-  const readContractHookRes = useReadContract({
+  const readContractHookRes = useContractRead({
     chainId: targetNetwork.id,
     functionName,
     address: deployedContract?.address,
     abi: deployedContract?.abi,
     args,
     ...(readContractConfig as any),
-    query: {
-      enabled: !Array.isArray(args) || !args.some(arg => arg === undefined),
-      ...queryOptions,
-    },
-  }) as Omit<ReturnType<typeof useReadContract>, "data" | "refetch"> & {
+    enabled: !Array.isArray(args) || !args.some(arg => arg === undefined),
+    ...queryOptions,
+  }) as Omit<ReturnType<typeof useContractRead>, "data" | "refetch"> & {
     data: AbiFunctionReturnType<ContractAbi, TFunctionName> | undefined;
     refetch: (
       options?: RefetchOptions | undefined,

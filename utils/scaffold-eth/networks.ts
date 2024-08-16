@@ -1,4 +1,4 @@
-import * as chains from "viem/chains";
+import * as chains from "wagmi/chains";
 import scaffoldConfig from "~~/scaffold.config";
 
 type ChainAttributes = {

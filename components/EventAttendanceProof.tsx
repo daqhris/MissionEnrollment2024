@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useAccount } from 'wagmi';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useAccount } from "wagmi";
 
 interface Poap {
   event: {
@@ -10,11 +10,13 @@ interface Poap {
   imageUrl: string;
 }
 
-// Removed EventAttendanceProofProps as it's no longer needed
+interface EventAttendanceProofProps {
+  onVerified: () => void;
+  setPoaps: (poaps: Poap[]) => void;
+}
 
-const EventAttendanceProof: React.FC = () => {
+const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified, setPoaps }) => {
   const { address } = useAccount();
-  const [poaps, setPoaps] = useState<Poap[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,37 +29,35 @@ const EventAttendanceProof: React.FC = () => {
 
       try {
         const response = await axios.get(`/api/fetchPoaps?address=${address}`);
-        setPoaps(response.data.poaps);
+        const fetchedPoaps = response.data.poaps;
+        setPoaps(fetchedPoaps);
+        if (fetchedPoaps.length > 0) {
+          onVerified();
+        } else {
+          setError("No ETHGlobal Brussels 2024 POAP found for this address.");
+        }
       } catch (err) {
-        setError('Failed to fetch POAPs. Please try again later.');
-        console.error('Error fetching POAPs:', err);
+        if (axios.isAxiosError(err) && err.response) {
+          setError(`Failed to fetch POAPs: ${err.response.data.error}`);
+        } else {
+          setError("Failed to fetch POAPs. Please try again later.");
+        }
+        console.error("Error fetching POAPs:", err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchPoaps();
-  }, [address]);
+  }, [address, onVerified, setPoaps]);
 
-  if (loading) return <p>Loading POAPs...</p>;
-  if (error) return <p className="error">{error}</p>;
+  if (loading) return <p className="text-center">Loading POAPs...</p>;
+  if (error) return <p className="error text-center text-red-500">{error}</p>;
 
   return (
-    <div className="event-attendance-proof">
-      <h2>Event Attendance Proof</h2>
-      {poaps.length === 0 ? (
-        <p>No POAPs found for this event.</p>
-      ) : (
-        <ul>
-          {poaps.map((poap, index) => (
-            <li key={index}>
-              <h3>{poap.event.name}</h3>
-              <p>{poap.event.description}</p>
-              <img src={poap.imageUrl} alt={`POAP for ${poap.event.name}`} />
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="event-attendance-proof text-center">
+      <h2 className="text-2xl font-bold mb-4">Event Attendance Proof</h2>
+      <p>Checking for ETHGlobal Brussels 2024 POAP...</p>
     </div>
   );
 };
