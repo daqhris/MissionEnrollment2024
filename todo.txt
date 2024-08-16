@@ -1,5 +1,0 @@
-- [ ] Ensure users are prompted to connect their Ethereum wallets.
-- [ ] Implement or verify the POAP data retrieval process using the API.
-- [ ] Filter and validate the retrieved POAP data for specific events.
-- [ ] Display event-specific POAP data in the `EventAttendanceProof` component.
-- [ ] Transition users to the `OnchainAttestation` component post-verification.
