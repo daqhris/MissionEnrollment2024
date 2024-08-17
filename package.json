@@ -46,6 +46,7 @@
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",
+    "react-toastify": "^10.0.5",
     "styled-components": "^6.1.11",
     "tailwind-styled-components": "^2.2.0",
     "use-debounce": "^8.0.4",
