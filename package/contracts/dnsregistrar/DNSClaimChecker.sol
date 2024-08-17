@@ -8,68 +8,53 @@ import "../utils/HexUtils.sol";
 import "@ensdomains/buffer/contracts/Buffer.sol";
 
 library DNSClaimChecker {
-    using BytesUtils for bytes;
-    using HexUtils for bytes;
-    using RRUtils for *;
-    using Buffer for Buffer.buffer;
+  using BytesUtils for bytes;
+  using HexUtils for bytes;
+  using RRUtils for *;
+  using Buffer for Buffer.buffer;
 
-    uint16 constant CLASS_INET = 1;
-    uint16 constant TYPE_TXT = 16;
+  uint16 constant CLASS_INET = 1;
+  uint16 constant TYPE_TXT = 16;
 
-    function getOwnerAddress(
-        bytes memory name,
-        bytes memory data
-    ) internal pure returns (address, bool) {
-        // Add "_ens." to the front of the name.
-        Buffer.buffer memory buf;
-        buf.init(name.length + 5);
-        buf.append("\x04_ens");
-        buf.append(name);
+  function getOwnerAddress(bytes memory name, bytes memory data) internal pure returns (address, bool) {
+    // Add "_ens." to the front of the name.
+    Buffer.buffer memory buf;
+    buf.init(name.length + 5);
+    buf.append("\x04_ens");
+    buf.append(name);
 
-        for (
-            RRUtils.RRIterator memory iter = data.iterateRRs(0);
-            !iter.done();
-            iter.next()
-        ) {
-            if (iter.name().compareNames(buf.buf) != 0) continue;
-            bool found;
-            address addr;
-            (addr, found) = parseRR(data, iter.rdataOffset, iter.nextOffset);
-            if (found) {
-                return (addr, true);
-            }
-        }
-
-        return (address(0x0), false);
+    for (RRUtils.RRIterator memory iter = data.iterateRRs(0); !iter.done(); iter.next()) {
+      if (iter.name().compareNames(buf.buf) != 0) continue;
+      bool found;
+      address addr;
+      (addr, found) = parseRR(data, iter.rdataOffset, iter.nextOffset);
+      if (found) {
+        return (addr, true);
+      }
     }
 
-    function parseRR(
-        bytes memory rdata,
-        uint256 idx,
-        uint256 endIdx
-    ) internal pure returns (address, bool) {
-        while (idx < endIdx) {
-            uint256 len = rdata.readUint8(idx);
-            idx += 1;
+    return (address(0x0), false);
+  }
 
-            bool found;
-            address addr;
-            (addr, found) = parseString(rdata, idx, len);
+  function parseRR(bytes memory rdata, uint256 idx, uint256 endIdx) internal pure returns (address, bool) {
+    while (idx < endIdx) {
+      uint256 len = rdata.readUint8(idx);
+      idx += 1;
 
-            if (found) return (addr, true);
-            idx += len;
-        }
+      bool found;
+      address addr;
+      (addr, found) = parseString(rdata, idx, len);
 
-        return (address(0x0), false);
+      if (found) return (addr, true);
+      idx += len;
     }
 
-    function parseString(
-        bytes memory str,
-        uint256 idx,
-        uint256 len
-    ) internal pure returns (address, bool) {
-        // TODO: More robust parsing that handles whitespace and multiple key/value pairs
-        if (str.readUint32(idx) != 0x613d3078) return (address(0x0), false); // 0x613d3078 == 'a=0x'
-        return str.hexToAddress(idx + 4, idx + len);
-    }
+    return (address(0x0), false);
+  }
+
+  function parseString(bytes memory str, uint256 idx, uint256 len) internal pure returns (address, bool) {
+    // TODO: More robust parsing that handles whitespace and multiple key/value pairs
+    if (str.readUint32(idx) != 0x613d3078) return (address(0x0), false); // 0x613d3078 == 'a=0x'
+    return str.hexToAddress(idx + 4, idx + len);
+  }
 }

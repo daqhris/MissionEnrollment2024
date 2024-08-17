@@ -44,25 +44,25 @@ const config = {
       tags: ["test", "legacy", "use_root"],
     },
     rinkeby: {
-      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      url: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
       tags: ["test", "legacy", "use_root"],
       chainId: 4,
       accounts: real_accounts,
     },
     ropsten: {
-      url: `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      url: `https://eth-ropsten.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
       tags: ["test", "legacy", "use_root"],
       chainId: 3,
       accounts: real_accounts,
     },
     goerli: {
-      url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
       tags: ["test", "legacy", "use_root"],
       chainId: 5,
       accounts: real_accounts,
     },
     sepolia: {
-      url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      url: `https://eth-sepolia.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
       tags: ["test", "legacy", "use_root"],
       chainId: 11155111,
       accounts: real_accounts,
@@ -74,7 +74,7 @@ const config = {
       accounts: real_accounts,
     },
     mainnet: {
-      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
       tags: ["legacy", "use_root"],
       chainId: 1,
       accounts: real_accounts,

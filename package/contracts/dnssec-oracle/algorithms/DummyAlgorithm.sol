@@ -7,11 +7,7 @@ import "./Algorithm.sol";
  *      signatures, for testing.
  */
 contract DummyAlgorithm is Algorithm {
-    function verify(
-        bytes calldata,
-        bytes calldata,
-        bytes calldata
-    ) external view override returns (bool) {
-        return true;
-    }
+  function verify(bytes calldata, bytes calldata, bytes calldata) external view override returns (bool) {
+    return true;
+  }
 }

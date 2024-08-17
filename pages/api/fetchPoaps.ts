@@ -3,7 +3,6 @@ import { ethers } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const POAP_API_URL = "https://api.poap.tech/actions/scan";
-const INFURA_URL = `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`;
 console.log(`ETHEREUM_RPC_URL: ${process.env.ETHEREUM_RPC_URL}`);
 
 // Simple in-memory rate limiting
@@ -49,26 +48,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let resolvedAddress: string;
   try {
     console.log(`ETHEREUM_RPC_URL: ${process.env.ETHEREUM_RPC_URL}`);
-    console.log(`INFURA_URL: ${INFURA_URL}`);
     const provider = new ethers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL);
-    const fallbackProvider = new ethers.JsonRpcProvider(INFURA_URL);
 
     if (address.endsWith(".eth")) {
       console.log(`Attempting to resolve ENS name: ${address}`);
-      let primaryResult = await provider.resolveName(address);
-      console.log(`Primary provider resolution result: ${primaryResult}`);
+      const resolvedResult = await provider.resolveName(address);
+      console.log(`Provider resolution result: ${resolvedResult}`);
 
-      if (!primaryResult) {
-        console.log("Primary provider failed to resolve. Trying fallback provider.");
-        primaryResult = await fallbackProvider.resolveName(address);
-        console.log(`Fallback provider resolution result: ${primaryResult}`);
-      }
-
-      if (primaryResult) {
-        resolvedAddress = primaryResult;
+      if (resolvedResult) {
+        resolvedAddress = resolvedResult;
         console.log(`Successfully resolved ENS name ${address} to: ${resolvedAddress}`);
       } else {
-        console.log(`Failed to resolve ENS name ${address} with both providers`);
+        console.log(`Failed to resolve ENS name ${address}`);
         throw new Error("ENS name could not be resolved");
       }
     } else {
@@ -95,10 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: "Server configuration error" });
   }
 
-  if (!process.env.INFURA_PROJECT_ID) {
-    console.error("INFURA_PROJECT_ID is not set in the environment variables");
-    return res.status(500).json({ error: "Server configuration error" });
-  }
+  // Removed check for INFURA_PROJECT_ID as we're now using Alchemy
 
   console.log(`Attempting to fetch POAPs for address: ${encodedAddress}`);
 
