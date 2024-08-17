@@ -10,24 +10,34 @@ library AttestationUtils {
     ISchemaRegistry schemaRegistry;
   }
 
+  error InvalidSchema();
+  error InvalidReceiver();
+  error InvalidTokenId();
+  error InvalidSignature();
+
   function submitAttestation(
     EAS memory eas,
     bytes32 schema,
     address receiver,
     uint256 tokenId,
-    bytes memory signature
+    bytes calldata signature
   ) internal returns (bytes32) {
-    bytes memory data = abi.encode(tokenId, signature);
+    if (schema == bytes32(0)) revert InvalidSchema();
+    if (receiver == address(0)) revert InvalidReceiver();
+    if (tokenId == 0) revert InvalidTokenId();
+    if (signature.length == 0) revert InvalidSignature();
+
+    bytes memory data = abi.encodePacked(tokenId, signature);
 
     AttestationRequest memory request = AttestationRequest({
       schema: schema,
       data: AttestationRequestData({
         recipient: receiver,
-        expirationTime: 0, // No expiration
+        expirationTime: 0,
         revocable: true,
-        refUID: bytes32(0), // No reference UID
+        refUID: bytes32(0),
         data: data,
-        value: 0 // No value transfer
+        value: 0
       })
     });
 
@@ -36,11 +46,15 @@ library AttestationUtils {
 
   function createENSSchema(EAS memory eas) internal returns (bytes32) {
     string memory schema = "address userAddress,string ensName,uint256 registrationDate";
-    return eas.schemaRegistry.register(schema, ISchemaResolver(address(0)), true);
+    return _registerSchema(eas, schema);
   }
 
   function createPOAPSchema(EAS memory eas) internal returns (bytes32) {
     string memory schema = "address userAddress,uint256 poapTokenId,string eventName,uint256 eventDate";
+    return _registerSchema(eas, schema);
+  }
+
+  function _registerSchema(EAS memory eas, string memory schema) private returns (bytes32) {
     return eas.schemaRegistry.register(schema, ISchemaResolver(address(0)), true);
   }
 }

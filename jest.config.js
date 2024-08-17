@@ -7,21 +7,37 @@ module.exports = {
       {
         tsconfig: "tsconfig.jest.json",
         useESM: true,
+        babelConfig: {
+          presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"],
+          plugins: ["@babel/plugin-transform-runtime"],
+        },
       },
     ],
     "^.+\\.(js|jsx)$": [
       "babel-jest",
       {
         presets: ["@babel/preset-env", "@babel/preset-react"],
+        plugins: ["@babel/plugin-transform-runtime"],
       },
     ],
   },
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
   preset: "ts-jest",
   transformIgnorePatterns: ["/node_modules/(?!(wagmi|@wagmi|@tanstack|viem|@viem))"],
   extensionsToTreatAsEsm: [".ts", ".tsx"],
-  setupFilesAfterEnv: [require.resolve("@testing-library/jest-dom/extend-expect"), "<rootDir>/jest.setup.js"],
+  setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect", "<rootDir>/jest.setup.js"],
   moduleFileExtensions: ["js", "jsx", "ts", "tsx", "json", "node"],
+  collectCoverage: true,
+  coverageDirectory: "coverage",
+  coverageReporters: ["text", "lcov"],
+  testPathIgnorePatterns: ["/node_modules/", "/.next/"],
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.jest.json',
+      jsx: 'react-jsx',
+    },
+  },
 };
