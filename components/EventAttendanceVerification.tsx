@@ -205,9 +205,25 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
       >
         {isVerifying ? (
           <span className="flex items-center justify-center">
-            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
             Verifying...
           </span>
@@ -215,9 +231,15 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
           "Verify Attendance"
         )}
       </button>
-      {isVerifying && <p className="text-blue-700 mb-6 text-center">Verifying attendance for {manualAddress || userAddress}...</p>}
+      {isVerifying && (
+        <p className="text-blue-700 mb-6 text-center">
+          Verifying attendance for {manualAddress || userAddress}...
+        </p>
+      )}
       {!isVerifying && !manualAddress && !userAddress && (
-        <p className="text-yellow-600 mb-6 text-center">Please connect your wallet or enter an Ethereum address to verify</p>
+        <p className="text-yellow-600 mb-6 text-center">
+          Please connect your wallet or enter an Ethereum address to verify
+        </p>
       )}
       {localPoaps && localPoaps.length > 0 && (
         <div className="mt-6 bg-green-100 p-6 rounded-lg">
@@ -229,7 +251,10 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {localPoaps.map(poap => (
-              <div key={poap.token_id} className="flex flex-col items-center p-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div
+                key={poap.token_id}
+                className="flex flex-col items-center p-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              >
                 <Image
                   src={
                     imageLoadErrors[poap.token_id]
@@ -254,12 +279,12 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
       {missingPoaps && missingPoaps.length > 0 && (
         <div className="mt-6 bg-yellow-100 p-6 rounded-lg">
           <h3 className="text-xl font-semibold text-yellow-900 mb-4">Missing POAPs</h3>
-          <p className="text-yellow-800">
-            The following POAPs were not found for your address:
-          </p>
+          <p className="text-yellow-800">The following POAPs were not found for your address:</p>
           <ul className="list-disc list-inside mt-2">
             {missingPoaps.map(poap => (
-              <li key={poap} className="text-yellow-700">{poap}</li>
+              <li key={poap} className="text-yellow-700">
+                {poap}
+              </li>
             ))}
           </ul>
         </div>
@@ -268,12 +293,34 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
         <div className={`mt-6 p-6 rounded-lg ${proofResult.includes("successful") ? "bg-green-100" : "bg-red-100"}`}>
           <p className={`flex items-center ${proofResult.includes("successful") ? "text-green-800" : "text-red-700"}`}>
             {proofResult.includes("successful") ? (
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <svg
+                className="w-6 h-6 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             ) : (
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-6 h-6 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             )}
             {proofResult}
