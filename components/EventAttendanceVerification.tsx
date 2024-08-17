@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import eventIdsData from "../event_ids.json";
 import axios from "axios";
+import { useEnsAddress } from "wagmi";
 
 const { eventIds } = eventIdsData;
 
@@ -157,11 +158,26 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
 
   useEffect(() => {
     const validAddress = manualAddress || userAddress;
-    const isValid = Boolean(validAddress && isValidEthereumAddress(validAddress));
-    if (isValid) {
+    const isEthereumAddress = isValidEthereumAddress(validAddress);
+    const isENS = validAddress?.endsWith('.eth');
+
+    if (isEthereumAddress) {
       fetchPOAPs(validAddress);
+    } else if (isENS) {
+      const { data: resolvedAddress, isLoading, isError } = useEnsAddress({
+        name: validAddress,
+        chainId: 1, // Mainnet
+      });
+
+      if (isLoading) {
+        setProofResult("Resolving ENS name...");
+      } else if (isError || !resolvedAddress) {
+        setProofResult("Unable to resolve ENS name. Please try again or use an Ethereum address.");
+      } else {
+        fetchPOAPs(resolvedAddress);
+      }
     } else if (validAddress) {
-      setProofResult("Please enter a valid Ethereum address");
+      setProofResult("Please enter a valid Ethereum address or ENS name");
     }
   }, [userAddress, manualAddress, fetchPOAPs]);
 
@@ -169,7 +185,7 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
     setImageLoadErrors(prev => ({ ...prev, [tokenId]: true }));
   };
 
-  const isValidEthereumAddress = (address: string) => /^0x[a-fA-F0-9]{40}$/.test(address);
+const isValidEthereumAddress = (address: string) => /^0x[a-fA-F0-9]{40}$/.test(address) || /^[a-zA-Z0-9-]+\.eth$/.test(address);
 
   return (
     <div className="p-6 bg-white shadow-lg rounded-lg">
@@ -178,25 +194,25 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
       <div className="relative mb-6">
         <input
           type="text"
-          placeholder="Enter Ethereum address (optional)"
+          placeholder="Enter Ethereum address or ENS name (optional)"
           value={manualAddress}
           onChange={e => setManualAddress(e.target.value)}
           className={`w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
-            manualAddress && !isValidEthereumAddress(manualAddress) ? "border-red-500" : "border-gray-300"
+            manualAddress && !isValidEthereumAddress(manualAddress) && !manualAddress.endsWith('.eth') ? "border-red-500" : "border-gray-300"
           }`}
           title="Enter your Ethereum address or ENS name to verify attendance"
         />
-        {manualAddress && !isValidEthereumAddress(manualAddress) && (
-          <p className="absolute -bottom-6 left-0 text-red-500 text-sm">Please enter a valid Ethereum address</p>
+        {manualAddress && !isValidEthereumAddress(manualAddress) && !manualAddress.endsWith('.eth') && (
+          <p className="absolute -bottom-6 left-0 text-red-500 text-sm">Please enter a valid Ethereum address or ENS name</p>
         )}
       </div>
       <button
         onClick={() => {
           const addressToUse = manualAddress || userAddress;
-          if (addressToUse && isValidEthereumAddress(addressToUse)) {
+          if (addressToUse && (isValidEthereumAddress(addressToUse) || addressToUse.endsWith('.eth'))) {
             fetchPOAPs(addressToUse);
           } else {
-            setProofResult("Please enter a valid Ethereum address or connect your wallet");
+            setProofResult("Please enter a valid Ethereum address or ENS name, or connect your wallet");
           }
         }}
         disabled={isVerifying || (!manualAddress && !userAddress)}
@@ -238,7 +254,7 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
       )}
       {!isVerifying && !manualAddress && !userAddress && (
         <p className="text-yellow-600 mb-6 text-center">
-          Please connect your wallet or enter an Ethereum address to verify
+          Please connect your wallet or enter an Ethereum address or ENS name to verify
         </p>
       )}
       {localPoaps && localPoaps.length > 0 && (
