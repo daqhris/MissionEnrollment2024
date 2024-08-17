@@ -9,6 +9,8 @@ import VerifiedENSNameDisplay from "../components/VerifiedENSNameDisplay";
 import WalletConnectionGuide from "../components/WalletConnectionGuide";
 import { useTheme } from "next-themes";
 import { useAccount } from "wagmi";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
@@ -72,24 +74,42 @@ const Home: FC = () => {
           <IdentityVerification
             onVerified={() => {
               handleStageCompletion("identity");
+              toast.success("Identity verified successfully!");
             }}
           />
         );
       case "attendance":
         return (
           <EventAttendanceProof
-            onVerified={() => handleStageCompletion("attendance")}
+            onVerified={() => {
+              handleStageCompletion("attendance");
+              toast.success("Attendance verified successfully!");
+            }}
             setPoaps={setPoaps}
             userAddress={address || ""}
           />
         );
       case "attestation":
-        return <OnchainAttestation onAttestationComplete={() => handleStageCompletion("attestation")} poaps={poaps} />;
+        return (
+          <OnchainAttestation
+            onAttestationComplete={() => {
+              handleStageCompletion("attestation");
+              toast.success("Attestation completed successfully!");
+            }}
+            poaps={poaps}
+          />
+        );
       case "complete":
         return (
-          <div className="p-6 bg-gray-800 shadow-lg rounded-lg text-white">
+          <div className="p-6 bg-gray-800 shadow-lg rounded-lg text-white animate-fade-in">
             <h2 className="text-2xl font-bold mb-4">Mission Enrollment Complete!</h2>
             <p>Congratulations! You have successfully completed all stages of the mission enrollment.</p>
+            <button
+              className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+              onClick={() => toast.success("Thank you for completing the mission enrollment!")}
+            >
+              Finish
+            </button>
           </div>
         );
       default:
@@ -103,6 +123,18 @@ const Home: FC = () => {
         theme === "dark" ? "bg-gray-900 text-white" : "bg-gradient-to-br from-gray-100 to-blue-100 text-gray-900"
       }`}
     >
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={theme === "dark" ? "dark" : "light"}
+      />
       <header className={`${theme === "dark" ? "bg-gray-800" : "bg-white"} shadow-md`}>
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
@@ -198,6 +230,9 @@ const Home: FC = () => {
                   onClick={() => {
                     if (isStageAccessible(stage)) {
                       setCurrentStage(stage);
+                      toast.info(`Switched to ${stage} stage`);
+                    } else {
+                      toast.warning("Complete previous stages to unlock this stage");
                     }
                   }}
                 >
