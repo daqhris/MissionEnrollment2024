@@ -38,9 +38,6 @@ export const DisplayVariable = ({
     functionName: abiFunction.name,
     abi: abi,
     chainId: targetNetwork.id,
-    query: {
-      retry: false,
-    },
   });
 
   const { showAnimation } = useAnimationConfig(result);

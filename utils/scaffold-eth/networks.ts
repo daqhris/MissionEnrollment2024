@@ -1,4 +1,4 @@
-import * as chains from "viem/chains";
+import * as chains from "wagmi/chains";
 import scaffoldConfig from "~~/scaffold.config";
 
 type ChainAttributes = {
@@ -24,7 +24,6 @@ export const RPC_CHAIN_NAMES: Record<number, string> = {
   [chains.arbitrumSepolia.id]: "arb-sepolia",
   [chains.polygon.id]: "polygon-mainnet",
   [chains.polygonMumbai.id]: "polygon-mumbai",
-  [chains.polygonAmoy.id]: "polygon-amoy",
   [chains.astar.id]: "astar-mainnet",
   [chains.polygonZkEvm.id]: "polygonzkevm-mainnet",
   [chains.polygonZkEvmTestnet.id]: "polygonzkevm-testnet",
