@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -20,7 +20,7 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchPoaps = async () => {
+  const fetchPoaps = useCallback(async () => {
     if (!userAddress) {
       setError("Please connect your wallet to verify attendance.");
       return;
@@ -34,17 +34,21 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
       const fetchedPoaps = response.data.poaps;
       setPoaps(fetchedPoaps);
       if (fetchedPoaps.length > 0) {
-        const ethGlobalBrusselsPOAP = fetchedPoaps.find((poap: Poap) =>
-          poap.event.name.toLowerCase() === "ethglobal brussels 2024",
+        const ethGlobalBrusselsPOAP = fetchedPoaps.find(
+          (poap: Poap) => poap.event.name.toLowerCase() === "ethglobal brussels 2024",
         );
         if (ethGlobalBrusselsPOAP) {
           onVerified();
           toast.success("ETHGlobal Brussels 2024 POAP verified successfully!");
         } else {
-          toast.warning("You have POAPs, but none from ETHGlobal Brussels 2024. Please make sure you've claimed the correct POAP.");
+          toast.warning(
+            "You have POAPs, but none from ETHGlobal Brussels 2024. Please make sure you've claimed the correct POAP.",
+          );
         }
       } else {
-        toast.info("No POAPs found for this address. Make sure you've claimed your ETHGlobal Brussels 2024 POAP and try again.");
+        toast.info(
+          "No POAPs found for this address. Make sure you've claimed your ETHGlobal Brussels 2024 POAP and try again.",
+        );
       }
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -62,31 +66,25 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
     } finally {
       setLoading(false);
     }
-  };
+  }, [userAddress, setPoaps, onVerified]);
 
   useEffect(() => {
     if (userAddress) {
       fetchPoaps();
     }
-  }, [userAddress]);
+  }, [userAddress, fetchPoaps]);
 
   return (
     <div className="event-attendance-proof text-center">
-      <h2 className="text-2xl font-bold mb-4">
-        Event Attendance Proof
-      </h2>
+      <h2 className="text-2xl font-bold mb-4">Event Attendance Proof</h2>
       {loading ? (
         <div className="flex justify-center items-center">
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
-          <p className="ml-2">
-            Loading POAPs...
-          </p>
+          <p className="ml-2">Loading POAPs...</p>
         </div>
       ) : error ? (
         <div>
-          <p className="text-red-500 mb-2">
-            {error}
-          </p>
+          <p className="text-red-500 mb-2">{error}</p>
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={fetchPoaps}
@@ -97,9 +95,7 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
         </div>
       ) : (
         <div>
-          <p className="mb-2">
-            Click the button below to verify your ETHGlobal Brussels 2024 POAP.
-          </p>
+          <p className="mb-2">Click the button below to verify your ETHGlobal Brussels 2024 POAP.</p>
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={fetchPoaps}

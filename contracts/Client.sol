@@ -65,7 +65,13 @@ library Client {
   }
 
   function reverseNode(address addr) internal pure returns (bytes32) {
-    return keccak256(abi.encodePacked(bytes32(0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2), keccak256(abi.encodePacked(addr))));
+    return
+      keccak256(
+        abi.encodePacked(
+          bytes32(0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2),
+          keccak256(abi.encodePacked(addr))
+        )
+      );
   }
 
   function namehash(bytes memory name) internal pure returns (bytes32) {

@@ -5,42 +5,42 @@ import "@ethereum-attestation-service/eas-contracts/contracts/IEAS.sol";
 import "@ethereum-attestation-service/eas-contracts/contracts/ISchemaRegistry.sol";
 
 library AttestationUtils {
-    struct EAS {
-        IEAS eas;
-        ISchemaRegistry schemaRegistry;
-    }
+  struct EAS {
+    IEAS eas;
+    ISchemaRegistry schemaRegistry;
+  }
 
-    function submitAttestation(
-        EAS memory eas,
-        bytes32 schema,
-        address receiver,
-        uint256 tokenId,
-        bytes memory signature
-    ) internal returns (bytes32) {
-        bytes memory data = abi.encode(tokenId, signature);
+  function submitAttestation(
+    EAS memory eas,
+    bytes32 schema,
+    address receiver,
+    uint256 tokenId,
+    bytes memory signature
+  ) internal returns (bytes32) {
+    bytes memory data = abi.encode(tokenId, signature);
 
-        AttestationRequest memory request = AttestationRequest({
-            schema: schema,
-            data: AttestationRequestData({
-                recipient: receiver,
-                expirationTime: 0, // No expiration
-                revocable: true,
-                refUID: bytes32(0), // No reference UID
-                data: data,
-                value: 0 // No value transfer
-            })
-        });
+    AttestationRequest memory request = AttestationRequest({
+      schema: schema,
+      data: AttestationRequestData({
+        recipient: receiver,
+        expirationTime: 0, // No expiration
+        revocable: true,
+        refUID: bytes32(0), // No reference UID
+        data: data,
+        value: 0 // No value transfer
+      })
+    });
 
-        return eas.eas.attest(request);
-    }
+    return eas.eas.attest(request);
+  }
 
-    function createENSSchema(EAS memory eas) internal returns (bytes32) {
-        string memory schema = "address userAddress,string ensName,uint256 registrationDate";
-        return eas.schemaRegistry.register(schema, ISchemaResolver(address(0)), true);
-    }
+  function createENSSchema(EAS memory eas) internal returns (bytes32) {
+    string memory schema = "address userAddress,string ensName,uint256 registrationDate";
+    return eas.schemaRegistry.register(schema, ISchemaResolver(address(0)), true);
+  }
 
-    function createPOAPSchema(EAS memory eas) internal returns (bytes32) {
-        string memory schema = "address userAddress,uint256 poapTokenId,string eventName,uint256 eventDate";
-        return eas.schemaRegistry.register(schema, ISchemaResolver(address(0)), true);
-    }
+  function createPOAPSchema(EAS memory eas) internal returns (bytes32) {
+    string memory schema = "address userAddress,uint256 poapTokenId,string eventName,uint256 eventDate";
+    return eas.schemaRegistry.register(schema, ISchemaResolver(address(0)), true);
+  }
 }

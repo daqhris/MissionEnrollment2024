@@ -16,39 +16,39 @@ import "./profiles/ExtendedResolver.sol";
  * address.
  */
 contract OwnedResolver is
-    Ownable,
-    ABIResolver,
-    AddrResolver,
-    ContentHashResolver,
-    DNSResolver,
-    InterfaceResolver,
-    NameResolver,
-    PubkeyResolver,
-    TextResolver,
-    ExtendedResolver
+  Ownable,
+  ABIResolver,
+  AddrResolver,
+  ContentHashResolver,
+  DNSResolver,
+  InterfaceResolver,
+  NameResolver,
+  PubkeyResolver,
+  TextResolver,
+  ExtendedResolver
 {
-    function isAuthorised(bytes32) internal view override returns (bool) {
-        return msg.sender == owner();
-    }
+  function isAuthorised(bytes32) internal view override returns (bool) {
+    return msg.sender == owner();
+  }
 
-    function supportsInterface(
-        bytes4 interfaceID
+  function supportsInterface(
+    bytes4 interfaceID
+  )
+    public
+    view
+    virtual
+    override(
+      ABIResolver,
+      AddrResolver,
+      ContentHashResolver,
+      DNSResolver,
+      InterfaceResolver,
+      NameResolver,
+      PubkeyResolver,
+      TextResolver
     )
-        public
-        view
-        virtual
-        override(
-            ABIResolver,
-            AddrResolver,
-            ContentHashResolver,
-            DNSResolver,
-            InterfaceResolver,
-            NameResolver,
-            PubkeyResolver,
-            TextResolver
-        )
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceID);
-    }
+    returns (bool)
+  {
+    return super.supportsInterface(interfaceID);
+  }
 }
