@@ -1,6 +1,6 @@
 import axios from "axios";
+import { ethers } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ethers, JsonRpcProvider } from "ethers";
 
 const POAP_API_URL = "https://api.poap.tech/actions/scan";
 const INFURA_URL = `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`;
@@ -53,13 +53,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const provider = new ethers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL);
     const fallbackProvider = new ethers.JsonRpcProvider(INFURA_URL);
 
-    if (address.endsWith('.eth')) {
+    if (address.endsWith(".eth")) {
       console.log(`Attempting to resolve ENS name: ${address}`);
       let primaryResult = await provider.resolveName(address);
       console.log(`Primary provider resolution result: ${primaryResult}`);
 
       if (!primaryResult) {
-        console.log('Primary provider failed to resolve. Trying fallback provider.');
+        console.log("Primary provider failed to resolve. Trying fallback provider.");
         primaryResult = await fallbackProvider.resolveName(address);
         console.log(`Fallback provider resolution result: ${primaryResult}`);
       }
@@ -77,7 +77,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } catch (error) {
     console.error("Error in ENS resolution process:", error);
-    return res.status(400).json({ error: "Failed to resolve ENS name or invalid address", details: (error as Error).message });
+    return res
+      .status(400)
+      .json({ error: "Failed to resolve ENS name or invalid address", details: (error as Error).message });
   }
 
   const normalizedAddress = resolvedAddress.toLowerCase();
@@ -103,7 +105,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     console.log(`Fetching POAPs for address: ${encodedAddress}`);
     console.log(`POAP API URL: ${POAP_API_URL}/${encodedAddress}`);
-    console.log(`POAP API Key (masked): ${process.env.POAP_API_KEY?.slice(0, 4)}...${process.env.POAP_API_KEY?.slice(-4)}`);
+    console.log(
+      `POAP API Key (masked): ${process.env.POAP_API_KEY?.slice(0, 4)}...${process.env.POAP_API_KEY?.slice(-4)}`,
+    );
 
     const response = await axios.get(`${POAP_API_URL}/${encodedAddress}`, {
       headers: {
@@ -117,7 +121,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log(`Successfully fetched POAPs for address: ${encodedAddress}`);
 
     if (!response.data) {
-      throw new Error('Empty response data from POAP API');
+      throw new Error("Empty response data from POAP API");
     }
 
     if (!Array.isArray(response.data)) {
@@ -136,11 +140,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const eventStartDate = new Date("2024-07-11T00:00:00Z");
       const eventEndDate = new Date("2024-07-14T23:59:59Z");
 
-      const isCorrectEvent = poap.event.name.toLowerCase().includes("ethglobal brussels") &&
-                             poap.event.name.toLowerCase().includes("2024");
+      const isCorrectEvent =
+        poap.event.name.toLowerCase().includes("ethglobal brussels") && poap.event.name.toLowerCase().includes("2024");
       const isWithinDateRange = eventDate >= eventStartDate && eventDate <= eventEndDate;
 
-      console.log(`POAP event: ${poap.event.name}, Date: ${eventDate}, IsCorrectEvent: ${isCorrectEvent}, IsWithinDateRange: ${isWithinDateRange}`);
+      console.log(
+        `POAP event: ${poap.event.name}, Date: ${eventDate}, IsCorrectEvent: ${isCorrectEvent}, IsWithinDateRange: ${isWithinDateRange}`,
+      );
 
       return isCorrectEvent && isWithinDateRange;
     });
