@@ -28,7 +28,6 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
   const [missingPoaps, setMissingPoaps] = useState<string[]>([]);
   const [imageLoadErrors, setImageLoadErrors] = useState<Record<string, boolean>>({});
   const [manualAddress, setManualAddress] = useState<string>("");
-  const [hasValidAddress, setHasValidAddress] = useState(false);
 
   // ENS resolution is no longer needed as we're using the provided userAddress
 
@@ -153,8 +152,7 @@ const fetchPOAPs = useCallback(async (addressToFetch: string) => {
 
 useEffect(() => {
   const validAddress = manualAddress || userAddress;
-  const isValid = validAddress && isValidEthereumAddress(validAddress);
-  setHasValidAddress(isValid);
+  const isValid = Boolean(validAddress && isValidEthereumAddress(validAddress));
   if (isValid) {
     fetchPOAPs(validAddress);
   } else if (validAddress) {
