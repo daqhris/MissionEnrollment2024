@@ -1,7 +1,7 @@
 import React from "react";
-import IdentityVerification from "./IdentityVerification";
+import { render, fireEvent, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import IdentityVerification from "./IdentityVerification";
 import { useEnsAddress, useEnsName } from "wagmi";
 
 // Mock the wagmi hooks

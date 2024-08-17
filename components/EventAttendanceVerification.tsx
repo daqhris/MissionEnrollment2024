@@ -172,21 +172,24 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
   const isValidEthereumAddress = (address: string) => /^0x[a-fA-F0-9]{40}$/.test(address);
 
   return (
-    <div className="p-4 bg-white shadow rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Event Attendance Proof</h2>
-      <p className="mb-4">Verifying your attendance at ETHGlobal Brussels 2024:</p>
-      <input
-        type="text"
-        placeholder="Enter Ethereum address (optional)"
-        value={manualAddress}
-        onChange={e => setManualAddress(e.target.value)}
-        className={`w-full p-2 mb-4 border rounded ${
-          manualAddress && !isValidEthereumAddress(manualAddress) ? "border-red-500" : ""
-        }`}
-      />
-      {manualAddress && !isValidEthereumAddress(manualAddress) && (
-        <p className="text-red-500 mb-2">Please enter a valid Ethereum address</p>
-      )}
+    <div className="p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-3xl font-bold mb-6 text-center">Event Attendance Proof</h2>
+      <p className="mb-6 text-center text-gray-600">Verify your attendance at ETHGlobal Brussels 2024:</p>
+      <div className="relative mb-6">
+        <input
+          type="text"
+          placeholder="Enter Ethereum address (optional)"
+          value={manualAddress}
+          onChange={e => setManualAddress(e.target.value)}
+          className={`w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+            manualAddress && !isValidEthereumAddress(manualAddress) ? "border-red-500" : "border-gray-300"
+          }`}
+          title="Enter your Ethereum address or ENS name to verify attendance"
+        />
+        {manualAddress && !isValidEthereumAddress(manualAddress) && (
+          <p className="absolute -bottom-6 left-0 text-red-500 text-sm">Please enter a valid Ethereum address</p>
+        )}
+      </div>
       <button
         onClick={() => {
           const addressToUse = manualAddress || userAddress;
@@ -197,25 +200,61 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
           }
         }}
         disabled={isVerifying || (!manualAddress && !userAddress)}
-        className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:bg-gray-300 mb-4"
+        className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 mb-6 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+        title="Click to verify your attendance using POAPs"
       >
-        {isVerifying ? "Verifying..." : "Verify Attendance"}
+        {isVerifying ? (
+          <span className="flex items-center justify-center">
+            <svg
+              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Verifying...
+          </span>
+        ) : (
+          "Verify Attendance"
+        )}
       </button>
-      {isVerifying && <p className="text-blue-700 mb-4">Verifying attendance for {manualAddress || userAddress}...</p>}
+      {isVerifying && (
+        <p className="text-blue-700 mb-6 text-center">
+          Verifying attendance for {manualAddress || userAddress}...
+        </p>
+      )}
       {!isVerifying && !manualAddress && !userAddress && (
-        <p className="text-yellow-600 mb-4">Please connect your wallet or enter an Ethereum address to verify</p>
+        <p className="text-yellow-600 mb-6 text-center">
+          Please connect your wallet or enter an Ethereum address to verify
+        </p>
       )}
       {localPoaps && localPoaps.length > 0 && (
-        <div className="mt-4 bg-green-100 p-4 rounded">
-          <h3 className="text-lg font-semibold text-green-900 mb-2">POAPs Found</h3>
-          <p className="text-green-800 mb-4">
+        <div className="mt-6 bg-green-100 p-6 rounded-lg">
+          <h3 className="text-xl font-semibold text-green-900 mb-4">POAPs Found</h3>
+          <p className="text-green-800 mb-6">
             {localPoaps.length === eventIds.length
               ? "You have all required POAPs for ETHGlobal Brussels 2024."
               : `You have ${localPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`}
           </p>
-          <div className="flex flex-wrap">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {localPoaps.map(poap => (
-              <div key={poap.token_id} className="mr-4 mb-4">
+              <div
+                key={poap.token_id}
+                className="flex flex-col items-center p-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              >
                 <Image
                   src={
                     imageLoadErrors[poap.token_id]
@@ -223,13 +262,13 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
                       : poap.event?.image_url || "/placeholder-poap.png"
                   }
                   alt={poap.event?.name || "POAP"}
-                  width={64}
-                  height={64}
-                  className="rounded-full"
+                  width={80}
+                  height={80}
+                  className="rounded-full mb-2"
                   onError={() => handleImageError(poap.token_id)}
                 />
-                <p className="text-sm text-center mt-1">{poap.event?.name || "Unknown Event"}</p>
-                <p className="text-xs text-center text-gray-700">
+                <p className="text-sm font-medium text-center">{poap.event?.name || "Unknown Event"}</p>
+                <p className="text-xs text-center text-gray-500">
                   {poap.event?.start_date ? new Date(poap.event.start_date).toLocaleDateString() : "Date unknown"}
                 </p>
               </div>
@@ -238,16 +277,54 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
         </div>
       )}
       {missingPoaps && missingPoaps.length > 0 && (
-        <div className="mt-4 bg-yellow-100 p-4 rounded">
-          <h3 className="text-lg font-semibold text-yellow-900 mb-2">Missing POAPs</h3>
-          <p className="text-yellow-800 mb-2">
-            The following POAPs were not found for your address: {missingPoaps.join(", ")}
-          </p>
+        <div className="mt-6 bg-yellow-100 p-6 rounded-lg">
+          <h3 className="text-xl font-semibold text-yellow-900 mb-4">Missing POAPs</h3>
+          <p className="text-yellow-800">The following POAPs were not found for your address:</p>
+          <ul className="list-disc list-inside mt-2">
+            {missingPoaps.map(poap => (
+              <li key={poap} className="text-yellow-700">
+                {poap}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       {proofResult && (
-        <div className={`mt-4 p-4 rounded ${proofResult.includes("successful") ? "bg-green-100" : "bg-red-100"}`}>
-          <p className={proofResult.includes("successful") ? "text-green-800" : "text-red-700"}>{proofResult}</p>
+        <div className={`mt-6 p-6 rounded-lg ${proofResult.includes("successful") ? "bg-green-100" : "bg-red-100"}`}>
+          <p className={`flex items-center ${proofResult.includes("successful") ? "text-green-800" : "text-red-700"}`}>
+            {proofResult.includes("successful") ? (
+              <svg
+                className="w-6 h-6 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="w-6 h-6 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            )}
+            {proofResult}
+          </p>
         </div>
       )}
     </div>
