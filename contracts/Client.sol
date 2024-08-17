@@ -4,6 +4,9 @@ pragma solidity ^0.8.0;
 import "@ensdomains/ens-contracts/contracts/registry/ENS.sol";
 import "@ensdomains/ens-contracts/contracts/resolvers/Resolver.sol";
 
+bytes4 constant EVM_EXTRA_ARGS_V1_TAG = 0x12345678;
+bytes4 constant EVM_EXTRA_ARGS_V2_TAG = 0x87654321;
+
 // End consumer library.
 library Client {
   /// @dev RMN depends on this struct, if changing, please notify the RMN maintainers.
@@ -23,8 +26,6 @@ library Client {
     bytes extraArgs; // Populate this with _argsToBytes(EVMExtraArgsV2)
   }
 
-  // Removed EVM_EXTRA_ARGS_V1_TAG constant
-
   struct EVMExtraArgsV1 {
     uint256 gasLimit;
   }
@@ -33,7 +34,7 @@ library Client {
     return abi.encodeWithSelector(EVM_EXTRA_ARGS_V1_TAG, extraArgs);
   }
 
-  // Removed EVM_EXTRA_ARGS_V2_TAG constant
+
 
   /// @param gasLimit: gas limit for the callback on the destination chain.
   /// @param allowOutOfOrderExecution: if true, it indicates that the message can be executed in any order relative to other messages from the same sender.

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { BrowserProvider } from "ethers";
+import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 
 // This component uses the Ethereum Attestation Service (EAS) protocol
@@ -42,8 +42,8 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
 
     try {
       const eas = new EAS(EAS_CONTRACT_ADDRESS);
-      const provider = new BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
       eas.connect(signer);
 
       const schemaEncoder = new SchemaEncoder("address userAddress,uint256 tokenId,uint256 timestamp,address attester");
@@ -139,25 +139,9 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
       >
         {isAttesting ? (
           <span className="flex items-center justify-center">
-            <svg
-              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
+            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
             </svg>
             Creating Attestation...
           </span>
@@ -165,9 +149,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
           `Create EAS Attestation on ${selectedRollup}`
         )}
       </button>
-      {!address && (
-        <p className="mt-2 text-sm text-red-500">Please connect your wallet to create an attestation.</p>
-      )}
+      {!address && <p className="mt-2 text-sm text-red-500">Please connect your wallet to create an attestation.</p>}
       {address && !selectedRollup && (
         <p className="mt-2 text-sm text-red-500">Please select a rollup for the attestation.</p>
       )}
@@ -177,13 +159,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
       {attestationStatus && (
         <div className="mt-6 p-4 bg-green-100 border border-green-400 rounded-lg">
           <p className="text-green-700 flex items-center">
-            <svg
-              className="w-6 h-6 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
             {attestationStatus}

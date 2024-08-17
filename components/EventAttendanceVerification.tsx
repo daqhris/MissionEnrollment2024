@@ -16,13 +16,17 @@ interface POAPEvent {
   token_id: string;
 }
 
-interface EventAttendanceProofProps {
+interface EventAttendanceVerificationProps {
   onVerified: () => void;
   setPoaps: (poaps: POAPEvent[]) => void;
   userAddress: string;
 }
 
-const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified, setPoaps, userAddress }) => {
+const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = ({
+  onVerified,
+  setPoaps,
+  userAddress,
+}) => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [proofResult, setProofResult] = useState<string | null>(null);
   const [localPoaps, setLocalPoaps] = useState<POAPEvent[]>([]);
@@ -30,12 +34,17 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
   const [imageLoadErrors, setImageLoadErrors] = useState<Record<string, boolean>>({});
   const [manualAddress, setManualAddress] = useState<string>("");
 
-  // ENS resolution is no longer needed as we're using the provided userAddress
+  const {
+    data: resolvedAddress,
+    isLoading: isResolvingENS,
+    isError: ensResolutionError,
+  } = useEnsAddress({
+    name: manualAddress,
+    chainId: 1, // Mainnet
+  });
 
   const fetchPOAPs = useCallback(
     async (addressToFetch: string) => {
-      // Address validation is now handled before calling this function
-
       setIsVerifying(true);
       setProofResult(null);
       setLocalPoaps([]);
@@ -54,35 +63,20 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
 
           const { poaps = [] } = response.data;
 
-          // Ensure poaps is always an array
           const validPoaps = Array.isArray(poaps) ? poaps : [];
-
-          // Filter POAPs for ETHGlobal Brussels 2024
           const filteredPoaps = validPoaps.filter(isEthGlobalBrusselsPOAP);
-
-          function isEthGlobalBrusselsPOAP(poap: POAPEvent): boolean {
-            const eventDate = new Date(poap.event.start_date);
-            return (
-              poap.event.name.toLowerCase().includes("ethglobal brussels") &&
-              poap.event.name.toLowerCase().includes("2024") &&
-              eventDate.getFullYear() === 2024 &&
-              eventDate >= new Date("2024-07-11") &&
-              eventDate <= new Date("2024-07-14")
-            );
-          }
 
           console.log("Filtered POAPs:", filteredPoaps);
 
           setLocalPoaps(filteredPoaps);
           setPoaps(filteredPoaps);
 
-          // Set missing POAPs based on the difference between all event IDs and found POAPs
           const foundEventIds = filteredPoaps.map(poap => poap.event.id);
           const missingEventIds = eventIds.filter(id => !foundEventIds.includes(id));
           setMissingPoaps(missingEventIds);
 
           if (filteredPoaps.length > 0) {
-            const requiredPoapCount = 1; // Only one POAP is required for ETHGlobal Brussels 2024
+            const requiredPoapCount = 1;
             if (filteredPoaps.length >= requiredPoapCount) {
               setProofResult(`Proof successful! ${addressToFetch} has a valid POAP for ETHGlobal Brussels 2024.`);
               onVerified();
@@ -95,7 +89,7 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
             setProofResult("No POAPs from ETHGlobal Brussels 2024 were found for this address.");
           }
 
-          break; // Success, exit the retry loop
+          break;
         } catch (error) {
           console.error(`Error fetching POAP data (Attempt ${retries + 1}):`, error);
 
@@ -108,19 +102,19 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
               case 400:
                 setProofResult(`Invalid input: ${errorMessage}. Please check your address and try again.`);
                 setIsVerifying(false);
-                return; // Don't retry on bad request
+                return;
               case 401:
                 setProofResult("Unauthorized. Please check your API key configuration.");
                 setIsVerifying(false);
-                return; // Don't retry on unauthorized
+                return;
               case 404:
                 setProofResult("No POAPs found for this address. Make sure you've attended ETHGlobal Brussels 2024.");
                 setIsVerifying(false);
-                return; // Don't retry on not found
+                return;
               case 429:
                 setProofResult("Too many requests. Please try again later.");
                 setIsVerifying(false);
-                return; // Don't retry on rate limit
+                return;
               default:
                 if (status && status >= 500) {
                   setProofResult(`Server error: ${errorMessage}. Retrying...`);
@@ -139,13 +133,11 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
             setLocalPoaps([]);
             setMissingPoaps(eventIds);
             setIsVerifying(false);
-            return; // Exit the retry loop after max retries
+            return;
           }
 
-          // Provide user feedback before retrying
           setProofResult(`Retrying... Attempt ${retries + 1} of ${maxRetries}`);
 
-          // Implement exponential backoff with jitter
           const delay = Math.min(1000 * Math.pow(2, retries) + Math.random() * 1000, 10000);
           await new Promise(resolve => setTimeout(resolve, delay));
         }
@@ -159,33 +151,40 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
   useEffect(() => {
     const validAddress = manualAddress || userAddress;
     const isEthereumAddress = isValidEthereumAddress(validAddress);
-    const isENS = validAddress?.endsWith('.eth');
+    const isENS = validAddress?.endsWith(".eth");
 
     if (isEthereumAddress) {
       fetchPOAPs(validAddress);
     } else if (isENS) {
-      const { data: resolvedAddress, isLoading, isError } = useEnsAddress({
-        name: validAddress,
-        chainId: 1, // Mainnet
-      });
-
-      if (isLoading) {
+      if (isResolvingENS) {
         setProofResult("Resolving ENS name...");
-      } else if (isError || !resolvedAddress) {
+      } else if (ensResolutionError || !resolvedAddress) {
         setProofResult("Unable to resolve ENS name. Please try again or use an Ethereum address.");
-      } else {
+      } else if (resolvedAddress) {
         fetchPOAPs(resolvedAddress);
       }
     } else if (validAddress) {
       setProofResult("Please enter a valid Ethereum address or ENS name");
     }
-  }, [userAddress, manualAddress, fetchPOAPs]);
+  }, [userAddress, manualAddress, fetchPOAPs, resolvedAddress, isResolvingENS, ensResolutionError]);
+
+  const isValidEthereumAddress = (address: string) =>
+    /^0x[a-fA-F0-9]{40}$/.test(address) || /^[a-zA-Z0-9-]+\.eth$/.test(address);
+
+  const isEthGlobalBrusselsPOAP = (poap: POAPEvent): boolean => {
+    const eventDate = new Date(poap.event.start_date);
+    return (
+      poap.event.name.toLowerCase().includes("ethglobal brussels") &&
+      poap.event.name.toLowerCase().includes("2024") &&
+      eventDate.getFullYear() === 2024 &&
+      eventDate >= new Date("2024-07-11") &&
+      eventDate <= new Date("2024-07-14")
+    );
+  };
 
   const handleImageError = (tokenId: string) => {
     setImageLoadErrors(prev => ({ ...prev, [tokenId]: true }));
   };
-
-const isValidEthereumAddress = (address: string) => /^0x[a-fA-F0-9]{40}$/.test(address) || /^[a-zA-Z0-9-]+\.eth$/.test(address);
 
   return (
     <div className="p-6 bg-white shadow-lg rounded-lg">
@@ -198,18 +197,22 @@ const isValidEthereumAddress = (address: string) => /^0x[a-fA-F0-9]{40}$/.test(a
           value={manualAddress}
           onChange={e => setManualAddress(e.target.value)}
           className={`w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
-            manualAddress && !isValidEthereumAddress(manualAddress) && !manualAddress.endsWith('.eth') ? "border-red-500" : "border-gray-300"
+            manualAddress && !isValidEthereumAddress(manualAddress)
+              ? "border-red-500"
+              : "border-gray-300"
           }`}
           title="Enter your Ethereum address or ENS name to verify attendance"
         />
-        {manualAddress && !isValidEthereumAddress(manualAddress) && !manualAddress.endsWith('.eth') && (
-          <p className="absolute -bottom-6 left-0 text-red-500 text-sm">Please enter a valid Ethereum address or ENS name</p>
+        {manualAddress && !isValidEthereumAddress(manualAddress) && (
+          <p className="absolute -bottom-6 left-0 text-red-500 text-sm">
+            Please enter a valid Ethereum address or ENS name
+          </p>
         )}
       </div>
       <button
         onClick={() => {
           const addressToUse = manualAddress || userAddress;
-          if (addressToUse && (isValidEthereumAddress(addressToUse) || addressToUse.endsWith('.eth'))) {
+          if (addressToUse && isValidEthereumAddress(addressToUse)) {
             fetchPOAPs(addressToUse);
           } else {
             setProofResult("Please enter a valid Ethereum address or ENS name, or connect your wallet");
@@ -221,25 +224,9 @@ const isValidEthereumAddress = (address: string) => /^0x[a-fA-F0-9]{40}$/.test(a
       >
         {isVerifying ? (
           <span className="flex items-center justify-center">
-            <svg
-              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
+            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
             </svg>
             Verifying...
           </span>
@@ -285,7 +272,9 @@ const isValidEthereumAddress = (address: string) => /^0x[a-fA-F0-9]{40}$/.test(a
                 />
                 <p className="text-sm font-medium text-center">{poap.event?.name || "Unknown Event"}</p>
                 <p className="text-xs text-center text-gray-500">
-                  {poap.event?.start_date ? new Date(poap.event.start_date).toLocaleDateString() : "Date unknown"}
+                  {poap.event?.start_date
+                    ? new Date(poap.event.start_date).toLocaleDateString()
+                    : "Date unknown"}
                 </p>
               </div>
             ))}
@@ -306,37 +295,23 @@ const isValidEthereumAddress = (address: string) => /^0x[a-fA-F0-9]{40}$/.test(a
         </div>
       )}
       {proofResult && (
-        <div className={`mt-6 p-6 rounded-lg ${proofResult.includes("successful") ? "bg-green-100" : "bg-red-100"}`}>
-          <p className={`flex items-center ${proofResult.includes("successful") ? "text-green-800" : "text-red-700"}`}>
+        <div
+          className={`mt-6 p-6 rounded-lg ${
+            proofResult.includes("successful") ? "bg-green-100" : "bg-red-100"
+          }`}
+        >
+          <p
+            className={`flex items-center ${
+              proofResult.includes("successful") ? "text-green-800" : "text-red-700"
+            }`}
+          >
             {proofResult.includes("successful") ? (
-              <svg
-                className="w-6 h-6 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
+              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             ) : (
-              <svg
-                className="w-6 h-6 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             )}
             {proofResult}
@@ -347,4 +322,4 @@ const isValidEthereumAddress = (address: string) => /^0x[a-fA-F0-9]{40}$/.test(a
   );
 };
 
-export default EventAttendanceProof;
+export default EventAttendanceVerification;
