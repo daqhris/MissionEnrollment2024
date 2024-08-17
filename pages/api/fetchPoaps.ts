@@ -1,7 +1,10 @@
 import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { ethers, JsonRpcProvider } from "ethers";
 
 const POAP_API_URL = "https://api.poap.tech/actions/scan";
+const INFURA_URL = `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`;
+console.log(`ETHEREUM_RPC_URL: ${process.env.ETHEREUM_RPC_URL}`);
 
 // Simple in-memory rate limiting
 const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
@@ -39,11 +42,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { address } = req.query;
 
   if (!address || typeof address !== "string") {
-    console.error("Invalid or missing Ethereum address:", address);
-    return res.status(400).json({ error: "Invalid or missing Ethereum address" });
+    console.error("Invalid or missing address:", address);
+    return res.status(400).json({ error: "Invalid or missing address" });
   }
 
-  const normalizedAddress = address.toLowerCase();
+  let resolvedAddress: string;
+  try {
+    console.log(`ETHEREUM_RPC_URL: ${process.env.ETHEREUM_RPC_URL}`);
+    console.log(`INFURA_URL: ${INFURA_URL}`);
+    const provider = new ethers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL);
+    const fallbackProvider = new ethers.JsonRpcProvider(INFURA_URL);
+
+    if (address.endsWith('.eth')) {
+      console.log(`Attempting to resolve ENS name: ${address}`);
+      let primaryResult = await provider.resolveName(address);
+      console.log(`Primary provider resolution result: ${primaryResult}`);
+
+      if (!primaryResult) {
+        console.log('Primary provider failed to resolve. Trying fallback provider.');
+        primaryResult = await fallbackProvider.resolveName(address);
+        console.log(`Fallback provider resolution result: ${primaryResult}`);
+      }
+
+      if (primaryResult) {
+        resolvedAddress = primaryResult;
+        console.log(`Successfully resolved ENS name ${address} to: ${resolvedAddress}`);
+      } else {
+        console.log(`Failed to resolve ENS name ${address} with both providers`);
+        throw new Error("ENS name could not be resolved");
+      }
+    } else {
+      resolvedAddress = address;
+      console.log(`Using provided address: ${resolvedAddress}`);
+    }
+  } catch (error) {
+    console.error("Error in ENS resolution process:", error);
+    return res.status(400).json({ error: "Failed to resolve ENS name or invalid address", details: (error as Error).message });
+  }
+
+  const normalizedAddress = resolvedAddress.toLowerCase();
   if (!/^0x[a-f0-9]{40}$/.test(normalizedAddress)) {
     console.error("Invalid Ethereum address format:", normalizedAddress);
     return res.status(400).json({ error: "Invalid Ethereum address format" });
@@ -56,6 +93,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: "Server configuration error" });
   }
 
+  if (!process.env.INFURA_PROJECT_ID) {
+    console.error("INFURA_PROJECT_ID is not set in the environment variables");
+    return res.status(500).json({ error: "Server configuration error" });
+  }
+
   console.log(`Attempting to fetch POAPs for address: ${encodedAddress}`);
 
   try {
@@ -63,20 +105,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log(`POAP API URL: ${POAP_API_URL}/${encodedAddress}`);
     console.log(`POAP API Key (masked): ${process.env.POAP_API_KEY?.slice(0, 4)}...${process.env.POAP_API_KEY?.slice(-4)}`);
 
-    console.log(`Making API request to: ${POAP_API_URL}/${encodedAddress}`);
-    console.log(`Using API Key (masked): ${process.env.POAP_API_KEY?.slice(0, 4)}...${process.env.POAP_API_KEY?.slice(-4)}`);
     const response = await axios.get(`${POAP_API_URL}/${encodedAddress}`, {
       headers: {
         "X-API-Key": process.env.POAP_API_KEY,
       },
       timeout: 10000, // 10 seconds timeout
     });
-    console.log(`API Response Status: ${response.status}`);
-    console.log(`API Response Data Length: ${response.data.length}`);
 
     console.log(`POAP API Response Status: ${response.status}`);
+    console.log(`Response headers:`, response.headers);
     console.log(`Successfully fetched POAPs for address: ${encodedAddress}`);
+
+    if (!response.data) {
+      throw new Error('Empty response data from POAP API');
+    }
+
+    if (!Array.isArray(response.data)) {
+      console.error(`Unexpected response format:`, response.data);
+      throw new Error(`Unexpected response format from POAP API`);
+    }
+
     console.log(`Number of POAPs fetched: ${response.data.length}`);
+    console.log(`First POAP in response:`, JSON.stringify(response.data[0], null, 2));
 
     const allPoaps = response.data;
 
@@ -103,9 +153,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (axios.isAxiosError(error)) {
       if (error.response) {
-        switch (error.response.status) {
+        const statusCode = error.response.status;
+        const errorMessage = error.response.data?.error || "Unknown error";
+        console.error(`POAP API Error: Status ${statusCode}, Message: ${errorMessage}`);
+
+        switch (statusCode) {
           case 400:
-            return res.status(400).json({ error: "Bad request to POAP API" });
+            return res.status(400).json({ error: `Bad request to POAP API: ${errorMessage}` });
           case 401:
             return res.status(401).json({ error: "Unauthorized. Check POAP API key" });
           case 404:
@@ -113,13 +167,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           case 429:
             return res.status(429).json({ error: "Rate limit exceeded. Please try again later" });
           default:
-            return res.status(500).json({ error: "Error from POAP API" });
+            return res.status(500).json({ error: `Error from POAP API: ${errorMessage}` });
         }
       } else if (error.request) {
+        console.error("POAP API request failed:", error.request);
         return res.status(503).json({ error: "POAP API is unreachable" });
       }
     }
 
+    console.error("Unexpected error:", error);
     return res.status(500).json({ error: "Unexpected error fetching POAPs" });
   }
 }
