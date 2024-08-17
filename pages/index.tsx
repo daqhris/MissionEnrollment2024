@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import type { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useAccount } from "wagmi";
 import EventAttendanceProof from "../components/EventAttendanceVerification";
 import IdentityVerification from "../components/IdentityVerification";
 import OnchainAttestation from "../components/OnchainAttestation";
 import VerifiedENSNameDisplay from "../components/VerifiedENSNameDisplay";
 import WalletConnectionGuide from "../components/WalletConnectionGuide";
 import { useTheme } from "next-themes";
+import { useAccount } from "wagmi";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
