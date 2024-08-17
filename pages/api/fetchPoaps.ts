@@ -39,21 +39,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { address } = req.query;
 
   if (!address || typeof address !== "string") {
-    return res.status(400).json({ error: "Invalid address provided" });
+    console.error("Invalid or missing Ethereum address:", address);
+    return res.status(400).json({ error: "Invalid or missing Ethereum address" });
   }
+
+  const normalizedAddress = address.toLowerCase();
+  if (!/^0x[a-f0-9]{40}$/.test(normalizedAddress)) {
+    console.error("Invalid Ethereum address format:", normalizedAddress);
+    return res.status(400).json({ error: "Invalid Ethereum address format" });
+  }
+
+  const encodedAddress = encodeURIComponent(address.toLowerCase());
 
   if (!process.env.POAP_API_KEY) {
     console.error("POAP_API_KEY is not set in the environment variables");
     return res.status(500).json({ error: "Server configuration error" });
   }
 
+  console.log(`Attempting to fetch POAPs for address: ${encodedAddress}`);
+
   try {
-    const response = await axios.get(`${POAP_API_URL}/${address}`, {
+    console.log(`Fetching POAPs for address: ${encodedAddress}`);
+    console.log(`POAP API URL: ${POAP_API_URL}/${encodedAddress}`);
+    console.log(`POAP API Key (masked): ${process.env.POAP_API_KEY?.slice(0, 4)}...${process.env.POAP_API_KEY?.slice(-4)}`);
+
+    console.log(`Making API request to: ${POAP_API_URL}/${encodedAddress}`);
+    console.log(`Using API Key (masked): ${process.env.POAP_API_KEY?.slice(0, 4)}...${process.env.POAP_API_KEY?.slice(-4)}`);
+    const response = await axios.get(`${POAP_API_URL}/${encodedAddress}`, {
       headers: {
         "X-API-Key": process.env.POAP_API_KEY,
       },
       timeout: 10000, // 10 seconds timeout
     });
+    console.log(`API Response Status: ${response.status}`);
+    console.log(`API Response Data Length: ${response.data.length}`);
+
+    console.log(`POAP API Response Status: ${response.status}`);
+    console.log(`Successfully fetched POAPs for address: ${encodedAddress}`);
+    console.log(`Number of POAPs fetched: ${response.data.length}`);
+
     const allPoaps = response.data;
 
     // Filter POAPs for ETHGlobal Brussels 2024
@@ -62,12 +86,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const eventStartDate = new Date("2024-07-11T00:00:00Z");
       const eventEndDate = new Date("2024-07-14T23:59:59Z");
 
-      return (
-        poap.event.name.toLowerCase() === "ethglobal brussels 2024" &&
-        eventDate >= eventStartDate &&
-        eventDate <= eventEndDate
-      );
+      const isCorrectEvent = poap.event.name.toLowerCase().includes("ethglobal brussels") &&
+                             poap.event.name.toLowerCase().includes("2024");
+      const isWithinDateRange = eventDate >= eventStartDate && eventDate <= eventEndDate;
+
+      console.log(`POAP event: ${poap.event.name}, Date: ${eventDate}, IsCorrectEvent: ${isCorrectEvent}, IsWithinDateRange: ${isWithinDateRange}`);
+
+      return isCorrectEvent && isWithinDateRange;
     });
+
+    console.log(`Filtered ${filteredPoaps.length} POAPs out of ${allPoaps.length} total POAPs`);
 
     return res.status(200).json({ poaps: filteredPoaps });
   } catch (error) {
