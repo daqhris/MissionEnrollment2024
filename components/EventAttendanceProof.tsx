@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 interface Poap {
   event: {
@@ -19,44 +20,95 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchPoaps = async () => {
-      if (!userAddress) return;
+  const fetchPoaps = async () => {
+    if (!userAddress) {
+      setError("Please connect your wallet to verify attendance.");
+      return;
+    }
 
-      setLoading(true);
-      setError(null);
+    setLoading(true);
+    setError(null);
 
-      try {
-        const response = await axios.get(`/api/fetchPoaps?address=${userAddress}`);
-        const fetchedPoaps = response.data.poaps;
-        setPoaps(fetchedPoaps);
-        if (fetchedPoaps.length > 0) {
+    try {
+      const response = await axios.get(`/api/fetchPoaps?address=${userAddress}`);
+      const fetchedPoaps = response.data.poaps;
+      setPoaps(fetchedPoaps);
+      if (fetchedPoaps.length > 0) {
+        const ethGlobalBrusselsPOAP = fetchedPoaps.find((poap: Poap) =>
+          poap.event.name.toLowerCase() === "ethglobal brussels 2024",
+        );
+        if (ethGlobalBrusselsPOAP) {
           onVerified();
+          toast.success("ETHGlobal Brussels 2024 POAP verified successfully!");
         } else {
-          setError("No ETHGlobal Brussels 2024 POAP found for this address.");
+          toast.warning("You have POAPs, but none from ETHGlobal Brussels 2024. Please make sure you've claimed the correct POAP.");
         }
-      } catch (err) {
-        if (axios.isAxiosError(err) && err.response) {
-          setError(`Failed to fetch POAPs: ${err.response.data.error}`);
-        } else {
-          setError("Failed to fetch POAPs. Please try again later.");
-        }
-        console.error("Error fetching POAPs:", err);
-      } finally {
-        setLoading(false);
+      } else {
+        toast.info("No POAPs found for this address. Make sure you've claimed your ETHGlobal Brussels 2024 POAP and try again.");
       }
-    };
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          toast.error(`Failed to fetch POAPs: ${err.response.data.error || "Unknown error"}. Please try again later.`);
+        } else if (err.request) {
+          toast.error("Network error. Please check your internet connection and try again.");
+        } else {
+          toast.error("An unexpected error occurred. Please try again later or contact support if the issue persists.");
+        }
+      } else {
+        toast.error("Failed to fetch POAPs. Please try again later or contact support if the issue persists.");
+      }
+      console.error("Error fetching POAPs:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchPoaps();
-  }, [userAddress, onVerified, setPoaps]);
-
-  if (loading) return <p className="text-center">Loading POAPs...</p>;
-  if (error) return <p className="error text-center text-red-500">{error}</p>;
+  useEffect(() => {
+    if (userAddress) {
+      fetchPoaps();
+    }
+  }, [userAddress]);
 
   return (
     <div className="event-attendance-proof text-center">
-      <h2 className="text-2xl font-bold mb-4">Event Attendance Proof</h2>
-      <p>Checking for ETHGlobal Brussels 2024 POAP...</p>
+      <h2 className="text-2xl font-bold mb-4">
+        Event Attendance Proof
+      </h2>
+      {loading ? (
+        <div className="flex justify-center items-center">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+          <p className="ml-2">
+            Loading POAPs...
+          </p>
+        </div>
+      ) : error ? (
+        <div>
+          <p className="text-red-500 mb-2">
+            {error}
+          </p>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={fetchPoaps}
+            disabled={loading}
+          >
+            Retry Verification
+          </button>
+        </div>
+      ) : (
+        <div>
+          <p className="mb-2">
+            Click the button below to verify your ETHGlobal Brussels 2024 POAP.
+          </p>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={fetchPoaps}
+            disabled={loading}
+          >
+            Verify Attendance
+          </button>
+        </div>
+      )}
     </div>
   );
 };
