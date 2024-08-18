@@ -26,8 +26,8 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
   onVerified,
   setPoaps,
   userAddress,
-}) => {
-  const [isVerifying, setIsVerifying] = useState(false);
+}): JSX.Element => {
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [proofResult, setProofResult] = useState<string | null>(null);
   const [localPoaps, setLocalPoaps] = useState<POAPEvent[]>([]);
   const [missingPoaps, setMissingPoaps] = useState<string[]>([]);
@@ -44,7 +44,7 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
   });
 
   const fetchPOAPs = useCallback(
-    async (addressToFetch: string) => {
+    async (addressToFetch: string): Promise<void> => {
       setIsVerifying(true);
       setProofResult(null);
       setLocalPoaps([]);
@@ -148,7 +148,7 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
     [onVerified, setPoaps],
   );
 
-  useEffect(() => {
+  useEffect((): void => {
     const validAddress = manualAddress || userAddress;
     const isEthereumAddress = isValidEthereumAddress(validAddress);
     const isENS = validAddress?.endsWith(".eth");
@@ -168,7 +168,7 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
     }
   }, [userAddress, manualAddress, fetchPOAPs, resolvedAddress, isResolvingENS, ensResolutionError]);
 
-  const isValidEthereumAddress = (address: string) =>
+  const isValidEthereumAddress = (address: string): boolean =>
     /^0x[a-fA-F0-9]{40}$/.test(address) || /^[a-zA-Z0-9-]+\.eth$/.test(address);
 
   const isEthGlobalBrusselsPOAP = (poap: POAPEvent): boolean => {
@@ -182,7 +182,7 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
     );
   };
 
-  const handleImageError = (tokenId: string) => {
+  const handleImageError = (tokenId: string): void => {
     setImageLoadErrors(prev => ({ ...prev, [tokenId]: true }));
   };
 
@@ -195,11 +195,9 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
           type="text"
           placeholder="Enter Ethereum address or ENS name (optional)"
           value={manualAddress}
-          onChange={e => setManualAddress(e.target.value)}
+          onChange={(e): void => setManualAddress(e.target.value)}
           className={`w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
-            manualAddress && !isValidEthereumAddress(manualAddress)
-              ? "border-red-500"
-              : "border-gray-300"
+            manualAddress && !isValidEthereumAddress(manualAddress) ? "border-red-500" : "border-gray-300"
           }`}
           title="Enter your Ethereum address or ENS name to verify attendance"
         />
@@ -210,7 +208,7 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
         )}
       </div>
       <button
-        onClick={() => {
+        onClick={(): void => {
           const addressToUse = manualAddress || userAddress;
           if (addressToUse && isValidEthereumAddress(addressToUse)) {
             fetchPOAPs(addressToUse);
@@ -224,9 +222,18 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
       >
         {isVerifying ? (
           <span className="flex items-center justify-center">
-            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg
+              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              />
             </svg>
             Verifying...
           </span>
@@ -235,9 +242,7 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
         )}
       </button>
       {isVerifying && (
-        <p className="text-blue-700 mb-6 text-center">
-          Verifying attendance for {manualAddress || userAddress}...
-        </p>
+        <p className="text-blue-700 mb-6 text-center">Verifying attendance for {manualAddress || userAddress}...</p>
       )}
       {!isVerifying && !manualAddress && !userAddress && (
         <p className="text-yellow-600 mb-6 text-center">
@@ -268,13 +273,11 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
                   width={80}
                   height={80}
                   className="rounded-full mb-2"
-                  onError={() => handleImageError(poap.token_id)}
+                  onError={(): void => handleImageError(poap.token_id)}
                 />
                 <p className="text-sm font-medium text-center">{poap.event?.name || "Unknown Event"}</p>
                 <p className="text-xs text-center text-gray-500">
-                  {poap.event?.start_date
-                    ? new Date(poap.event.start_date).toLocaleDateString()
-                    : "Date unknown"}
+                  {poap.event?.start_date ? new Date(poap.event.start_date).toLocaleDateString() : "Date unknown"}
                 </p>
               </div>
             ))}
@@ -295,23 +298,32 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
         </div>
       )}
       {proofResult && (
-        <div
-          className={`mt-6 p-6 rounded-lg ${
-            proofResult.includes("successful") ? "bg-green-100" : "bg-red-100"
-          }`}
-        >
-          <p
-            className={`flex items-center ${
-              proofResult.includes("successful") ? "text-green-800" : "text-red-700"
-            }`}
-          >
+        <div className={`mt-6 p-6 rounded-lg ${proofResult.includes("successful") ? "bg-green-100" : "bg-red-100"}`}>
+          <p className={`flex items-center ${proofResult.includes("successful") ? "text-green-800" : "text-red-700"}`}>
             {proofResult.includes("successful") ? (
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                className="w-6 h-6 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             ) : (
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-6 h-6 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             )}
             {proofResult}

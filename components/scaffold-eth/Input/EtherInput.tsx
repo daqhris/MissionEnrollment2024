@@ -6,7 +6,7 @@ import { useGlobalState } from "~~/services/store/store";
 
 const MAX_DECIMALS_USD = 2;
 
-function etherValueToDisplayValue(usdMode: boolean, etherValue: string, nativeCurrencyPrice: number) {
+function etherValueToDisplayValue(usdMode: boolean, etherValue: string, nativeCurrencyPrice: number): string {
   if (usdMode && nativeCurrencyPrice) {
     const parsedEthValue = parseFloat(etherValue);
     if (Number.isNaN(parsedEthValue)) {
@@ -24,7 +24,7 @@ function etherValueToDisplayValue(usdMode: boolean, etherValue: string, nativeCu
   }
 }
 
-function displayValueToEtherValue(usdMode: boolean, displayValue: string, nativeCurrencyPrice: number) {
+function displayValueToEtherValue(usdMode: boolean, displayValue: string, nativeCurrencyPrice: number): string {
   if (usdMode && nativeCurrencyPrice) {
     const parsedDisplayValue = parseFloat(displayValue);
     if (Number.isNaN(parsedDisplayValue)) {
@@ -51,7 +51,7 @@ export const EtherInput = ({
   onChange,
   disabled,
   usdMode,
-}: CommonInputProps & { usdMode?: boolean }) => {
+}: CommonInputProps & { usdMode?: boolean }): JSX.Element => {
   const [transitoryDisplayValue, setTransitoryDisplayValue] = useState<string>();
   const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
   const isNativeCurrencyPriceFetching = useGlobalState(state => state.nativeCurrency.isFetching);
@@ -60,7 +60,7 @@ export const EtherInput = ({
 
   // The displayValue is derived from the ether value that is controlled outside of the component
   // In usdMode, it is converted to its usd value, in regular mode it is unaltered
-  const displayValue = useMemo(() => {
+  const displayValue = useMemo((): string => {
     const newDisplayValue = etherValueToDisplayValue(displayUsdMode, value, nativeCurrencyPrice || 0);
     if (transitoryDisplayValue && parseFloat(newDisplayValue) === parseFloat(transitoryDisplayValue)) {
       return transitoryDisplayValue;
@@ -70,7 +70,7 @@ export const EtherInput = ({
     return newDisplayValue;
   }, [nativeCurrencyPrice, transitoryDisplayValue, displayUsdMode, value]);
 
-  const handleChangeNumber = (newValue: string) => {
+  const handleChangeNumber = (newValue: string): void => {
     if (newValue && !SIGNED_NUMBER_REGEX.test(newValue)) {
       return;
     }

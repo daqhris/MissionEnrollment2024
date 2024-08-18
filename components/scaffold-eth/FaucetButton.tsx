@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { createWalletClient, http, parseEther } from "viem";
 import { hardhat } from "viem/chains";
 import { useAccount } from "wagmi";
@@ -20,7 +20,7 @@ const localWalletClient = createWalletClient({
 /**
  * FaucetButton button which lets you grab eth.
  */
-export const FaucetButton = () => {
+export const FaucetButton = (): JSX.Element | null => {
   const { address, chain: ConnectedChain } = useAccount();
 
   const { data: balance } = useWatchBalance({ address });
@@ -29,7 +29,7 @@ export const FaucetButton = () => {
 
   const faucetTxn = useTransactor(localWalletClient);
 
-  const sendETH = async () => {
+  const sendETH = async (): Promise<void> => {
     if (!address) return;
     try {
       setLoading(true);

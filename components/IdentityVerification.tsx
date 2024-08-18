@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useEnsAddress, useEnsName } from "wagmi";
 
-const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> = ({ onVerified }) => {
-  const [inputAddress, setInputAddress] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [error, setError] = useState("");
+const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> = ({ onVerified }): JSX.Element => {
+  const [inputAddress, setInputAddress] = useState<string>("");
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const { data: ensName, isLoading: isEnsNameLoading } = useEnsName({ address: inputAddress as `0x${string}` });
   const { data: ensAddress, isLoading: isEnsAddressLoading } = useEnsAddress({ name: inputAddress });
 
   const isLoading = isEnsNameLoading || isEnsAddressLoading;
 
-  useEffect(() => {
+  useEffect((): void => {
     if (inputAddress) {
       setError("");
     }
   }, [inputAddress]);
 
-  const handleVerify = async () => {
+  const handleVerify = async (): Promise<void> => {
     setIsVerifying(true);
     setError("");
 
@@ -61,7 +61,7 @@ const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> 
         <input
           type="text"
           value={inputAddress}
-          onChange={e => setInputAddress(e.target.value)}
+          onChange={(e): void => setInputAddress(e.target.value)}
           className="w-full max-w-md p-2 border rounded mb-4"
           placeholder="vitalik.eth or 0x..."
           disabled={isVerifying || isLoading}
@@ -79,7 +79,11 @@ const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> 
           </span>
         )}
       </div>
-      {isLoading && <p role="status" className="mb-2 text-blue-700">Resolving ENS name...</p>}
+      {isLoading && (
+        <p role="status" className="mb-2 text-blue-700">
+          Resolving ENS name...
+        </p>
+      )}
       {!isLoading && ensName && <p className="mb-2 text-green-700">Resolved ENS Name: {ensName}</p>}
       {!isLoading && ensAddress && <p className="mb-2 text-green-700">Resolved Address: {ensAddress}</p>}
       <button

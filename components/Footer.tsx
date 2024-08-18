@@ -77,7 +77,7 @@ const FooterLinks = tw.div`
 //   gap-1
 // `;
 
-export const Footer = () => {
+export const Footer = (): JSX.Element => {
   const { targetNetwork } = useTargetNetwork();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
 

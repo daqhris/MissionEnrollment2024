@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Address as AddressType, createWalletClient, http, parseEther } from "viem";
 import { hardhat } from "viem/chains";
 import { useAccount } from "wagmi";
@@ -23,7 +23,7 @@ const localWalletClient = createWalletClient({
 /**
  * Faucet modal which lets you send ETH to any address.
  */
-export const Faucet = () => {
+export const Faucet = (): JSX.Element | null => {
   const [loading, setLoading] = useState(false);
   const [inputAddress, setInputAddress] = useState<AddressType>();
   const [faucetAddress, setFaucetAddress] = useState<AddressType>();
@@ -39,7 +39,7 @@ export const Faucet = () => {
   // - Update UI to show POAP status
 
   useEffect(() => {
-    const getFaucetAddress = async () => {
+    const getFaucetAddress = async (): Promise<void> => {
       try {
         const accounts = await localWalletClient.getAddresses();
         setFaucetAddress(accounts[FAUCET_ACCOUNT_INDEX]);
@@ -62,7 +62,7 @@ export const Faucet = () => {
     getFaucetAddress();
   }, []);
 
-  const sendETH = async () => {
+  const sendETH = async (): Promise<void> => {
     if (!faucetAddress || !inputAddress) {
       return;
     }
@@ -117,9 +117,9 @@ export const Faucet = () => {
               <AddressInput
                 placeholder="Destination Address"
                 value={inputAddress ?? ""}
-                onChange={value => setInputAddress(value as AddressType)}
+                onChange={(value): void => setInputAddress(value as AddressType)}
               />
-              <EtherInput placeholder="Amount to send" value={sendValue} onChange={value => setSendValue(value)} />
+              <EtherInput placeholder="Amount to send" value={sendValue} onChange={(value): void => setSendValue(value)} />
               <button className="h-10 btn btn-primary btn-sm px-2 rounded-full" onClick={sendETH} disabled={loading}>
                 {!loading ? (
                   <BanknotesIcon className="h-6 w-6" />

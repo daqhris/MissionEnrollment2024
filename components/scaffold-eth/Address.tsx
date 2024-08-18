@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Address as AddressType, getAddress, isAddress } from "viem";
@@ -32,7 +32,7 @@ const blockieSizeMap = {
 /**
  * Displays an address (or ENS) with a Blockie image and option to copy address.
  */
-export const Address = ({ address, disableAddressLink, format, size = "base" }: AddressProps) => {
+export const Address = ({ address, disableAddressLink, format, size = "base" }: AddressProps): JSX.Element => {
   const [ens, setEns] = useState<string | null>();
   const [ensAvatar, setEnsAvatar] = useState<string | null>();
   const [addressCopied, setAddressCopied] = useState(false);
@@ -57,11 +57,11 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
   });
 
   // We need to apply this pattern to avoid Hydration errors.
-  useEffect(() => {
+  useEffect((): void => {
     setEns(fetchedEns);
   }, [fetchedEns]);
 
-  useEffect(() => {
+  useEffect((): void => {
     setEnsAvatar(fetchedEnsAvatar);
   }, [fetchedEnsAvatar]);
 
@@ -123,9 +123,9 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
       ) : (
         <CopyToClipboard
           text={checkSumAddress}
-          onCopy={() => {
+          onCopy={(): void => {
             setAddressCopied(true);
-            setTimeout(() => {
+            setTimeout((): void => {
               setAddressCopied(false);
             }, 800);
           }}

@@ -5,7 +5,7 @@ interface ErrorProps {
   statusCode?: number;
 }
 
-const Error = ({ statusCode }: ErrorProps) => {
+const Error = ({ statusCode }: ErrorProps): React.ReactElement => {
   return (
     <div>
       <h1>Error {statusCode}</h1>
@@ -14,9 +14,9 @@ const Error = ({ statusCode }: ErrorProps) => {
   );
 };
 
-Error.getInitialProps = ({ res, err }: NextPageContext) => {
+Error.getInitialProps = ({ res, err }: NextPageContext): Promise<ErrorProps> => {
   const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
-  return { statusCode };
+  return Promise.resolve({ statusCode });
 };
 
 export default Error;

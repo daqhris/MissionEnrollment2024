@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { blo } from "blo";
 import { useDebounceValue } from "usehooks-ts";
 import { Address, isAddress } from "viem";
@@ -6,10 +6,15 @@ import { normalize } from "viem/ens";
 import { useEnsAddress, useEnsAvatar, useEnsName } from "wagmi";
 import { CommonInputProps, InputBase, isENS } from "~~/components/scaffold-eth";
 
+interface AddressInputProps extends CommonInputProps<Address | string> {
+  value: Address | string;
+  onChange: (newValue: Address | string) => void;
+}
+
 /**
  * Address input with ENS name resolution
  */
-export const AddressInput = ({ value, name, placeholder, onChange, disabled }: CommonInputProps<Address | string>) => {
+export const AddressInput: React.FC<AddressInputProps> = ({ value, name, placeholder, onChange, disabled }) => {
   // Debounce the input to keep clean RPC calls when resolving ENS names
   // If the input is an address, we don't need to debounce it
   const [_debouncedValue] = useDebounceValue(value, 500);
@@ -33,7 +38,7 @@ export const AddressInput = ({ value, name, placeholder, onChange, disabled }: C
     },
   });
 
-  const [enteredEnsName, setEnteredEnsName] = useState<string>();
+  const [enteredEnsName, setEnteredEnsName] = useState<string | undefined>();
   const {
     data: ensName,
     isLoading: isEnsNameLoading,
@@ -48,7 +53,7 @@ export const AddressInput = ({ value, name, placeholder, onChange, disabled }: C
     },
   });
 
-  const { data: ensAvatar, isLoading: isEnsAvtarLoading } = useEnsAvatar({
+  const { data: ensAvatar, isLoading: isEnsAvatarLoading } = useEnsAvatar({
     name: ensName ? normalize(ensName) : undefined,
     chainId: 1,
     query: {
@@ -67,7 +72,7 @@ export const AddressInput = ({ value, name, placeholder, onChange, disabled }: C
   }, [ensAddress, onChange, debouncedValue]);
 
   const handleChange = useCallback(
-    (newValue: Address) => {
+    (newValue: Address | string) => {
       setEnteredEnsName(undefined);
       onChange(newValue);
     },
@@ -83,22 +88,22 @@ export const AddressInput = ({ value, name, placeholder, onChange, disabled }: C
     ensAddress === null;
 
   return (
-    <InputBase<Address>
+    <InputBase<Address | string>
       name={name}
       placeholder={placeholder}
       error={ensAddress === null}
-      value={value as Address}
+      value={value}
       onChange={handleChange}
       disabled={isEnsAddressLoading || isEnsNameLoading || disabled}
       reFocus={reFocus}
       prefix={
         ensName ? (
           <div className="flex bg-base-300 rounded-l-full items-center">
-            {isEnsAvtarLoading && <div className="skeleton bg-base-200 w-[35px] h-[35px] rounded-full shrink-0"></div>}
+            {isEnsAvatarLoading && <div className="skeleton bg-base-200 w-[35px] h-[35px] rounded-full shrink-0"></div>}
             {ensAvatar ? (
               <span className="w-[35px]">
                 {
-                  // eslint-disable-next-line
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img className="w-full rounded-full" src={ensAvatar} alt={`${ensAddress} avatar`} />
                 }
               </span>

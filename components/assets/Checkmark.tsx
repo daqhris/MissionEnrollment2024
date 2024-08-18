@@ -4,7 +4,7 @@ type Props = {
   className?: string;
 };
 
-export function Checkmark({ className }: Props) {
+export function Checkmark({ className }: Props): JSX.Element {
   return (
     <svg
       className={`h-5 w-5 text-white ${className}`}

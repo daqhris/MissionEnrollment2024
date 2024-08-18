@@ -10,7 +10,7 @@ type NetworkOptionsProps = {
   hidden?: boolean;
 };
 
-export const NetworkOptions = ({ hidden = false }: NetworkOptionsProps) => {
+export const NetworkOptions = ({ hidden = false }: NetworkOptionsProps): JSX.Element => {
   const { switchChain } = useSwitchChain();
   const { chain } = useAccount();
   const { resolvedTheme } = useTheme();
@@ -25,7 +25,7 @@ export const NetworkOptions = ({ hidden = false }: NetworkOptionsProps) => {
             <button
               className="menu-item btn-sm !rounded-xl flex gap-3 py-3 whitespace-nowrap"
               type="button"
-              onClick={() => {
+              onClick={(): void => {
                 switchChain({ chainId: allowedNetwork.id });
               }}
             >

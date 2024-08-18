@@ -11,7 +11,7 @@ export const metadata = getMetadata({
   description: "Using LLM's and EAS to verify the truth of a statement",
 });
 
-const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
+const ScaffoldEthApp = ({ children }: { children: React.ReactNode }): React.ReactElement => {
   return (
     <html suppressHydrationWarning>
       <body>

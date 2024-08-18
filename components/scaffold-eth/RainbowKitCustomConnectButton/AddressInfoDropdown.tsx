@@ -31,15 +31,15 @@ export const AddressInfoDropdown = ({
   ensAvatar,
   displayName,
   blockExplorerAddressLink,
-}: AddressInfoDropdownProps) => {
+}: AddressInfoDropdownProps): JSX.Element => {
   const { disconnect } = useDisconnect();
   const checkSumAddress = getAddress(address);
 
-  const [addressCopied, setAddressCopied] = useState(false);
+  const [addressCopied, setAddressCopied] = useState<boolean>(false);
 
-  const [selectingNetwork, setSelectingNetwork] = useState(false);
+  const [selectingNetwork, setSelectingNetwork] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDetailsElement>(null);
-  const closeDropdown = () => {
+  const closeDropdown = (): void => {
     setSelectingNetwork(false);
     dropdownRef.current?.removeAttribute("open");
   };
@@ -72,9 +72,9 @@ export const AddressInfoDropdown = ({
             ) : (
               <CopyToClipboard
                 text={checkSumAddress}
-                onCopy={() => {
+                onCopy={(): void => {
                   setAddressCopied(true);
-                  setTimeout(() => {
+                  setTimeout((): void => {
                     setAddressCopied(false);
                   }, 800);
                 }}
@@ -113,7 +113,7 @@ export const AddressInfoDropdown = ({
               <button
                 className="btn-sm !rounded-xl flex gap-3 py-3"
                 type="button"
-                onClick={() => {
+                onClick={(): void => {
                   setSelectingNetwork(true);
                 }}
               >
@@ -125,7 +125,7 @@ export const AddressInfoDropdown = ({
             <button
               className="menu-item text-error btn-sm !rounded-xl flex gap-3 py-3"
               type="button"
-              onClick={() => disconnect()}
+              onClick={(): void => disconnect()}
             >
               <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" /> <span>Disconnect</span>
             </button>
