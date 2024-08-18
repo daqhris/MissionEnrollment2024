@@ -1,18 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
+import ContractInput from "./ContractInput";
 import { InheritanceTooltip } from "./InheritanceTooltip";
 import { Abi, AbiFunction } from "abitype";
 import { Address } from "viem";
 import { useReadContract } from "wagmi";
 import {
-  ContractInput,
-  displayTxResult,
   getFunctionInputKey,
   getInitialFormState,
   getParsedContractFunctionArgs,
   transformAbiFunction,
 } from "~~/app/debug/_components/contract";
+import { DisplayContent, displayTxResult } from "~~/app/debug/_components/contract/utilsDisplay";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 
@@ -23,13 +23,15 @@ type ReadOnlyFunctionFormProps = {
   abi: Abi;
 };
 
-export const ReadOnlyFunctionForm = ({
+type FormState = Record<string, unknown>;
+
+export const ReadOnlyFunctionForm: React.FC<ReadOnlyFunctionFormProps> = ({
   contractAddress,
   abiFunction,
   inheritedFrom,
   abi,
-}: ReadOnlyFunctionFormProps) => {
-  const [form, setForm] = useState<Record<string, any>>(() => getInitialFormState(abiFunction));
+}): JSX.Element => {
+  const [form, setForm] = useState<FormState>(() => getInitialFormState(abiFunction));
   const [result, setResult] = useState<unknown>();
   const { targetNetwork } = useTargetNetwork();
 
@@ -45,7 +47,7 @@ export const ReadOnlyFunctionForm = ({
     },
   });
 
-  useEffect(() => {
+  useEffect((): void => {
     if (error) {
       const parsedError = getParsedError(error);
       notification.error(parsedError);
@@ -53,14 +55,17 @@ export const ReadOnlyFunctionForm = ({
   }, [error]);
 
   const transformedFunction = transformAbiFunction(abiFunction);
-  const inputElements = transformedFunction.inputs.map((input, inputIndex) => {
+  const inputElements = transformedFunction.inputs.map((input, inputIndex): JSX.Element => {
     const key = getFunctionInputKey(abiFunction.name, input, inputIndex);
     return (
       <ContractInput
         key={key}
-        setForm={updatedFormValue => {
+        setForm={(updatedFormValue: SetStateAction<FormState>): void => {
           setResult(undefined);
-          setForm(updatedFormValue);
+          setForm((prevForm: FormState): FormState => ({
+            ...prevForm,
+            ...(typeof updatedFormValue === 'function' ? updatedFormValue(prevForm) : updatedFormValue),
+          }));
         }}
         form={form}
         stateObjectKey={key}
@@ -68,6 +73,11 @@ export const ReadOnlyFunctionForm = ({
       />
     );
   });
+
+  const handleRead = async (): Promise<void> => {
+    const { data } = await refetch();
+    setResult(data);
+  };
 
   return (
     <div className="flex flex-col gap-3 py-5 first:pt-0 last:pb-1">
@@ -81,16 +91,13 @@ export const ReadOnlyFunctionForm = ({
           {result !== null && result !== undefined && (
             <div className="bg-secondary rounded-3xl text-sm px-4 py-1.5 break-words overflow-auto">
               <p className="font-bold m-0 mb-1">Result:</p>
-              <pre className="whitespace-pre-wrap break-words">{displayTxResult(result, "sm")}</pre>
+              <pre className="whitespace-pre-wrap break-words">{displayTxResult(result as DisplayContent)}</pre>
             </div>
           )}
         </div>
         <button
           className="btn btn-secondary btn-sm self-end md:self-start"
-          onClick={async () => {
-            const { data } = await refetch();
-            setResult(data);
-          }}
+          onClick={handleRead}
           disabled={isFetching}
         >
           {isFetching && <span className="loading loading-spinner loading-xs"></span>}

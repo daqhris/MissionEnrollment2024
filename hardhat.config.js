@@ -1,9 +1,22 @@
 // Load environment variables
 require("dotenv").config();
 
+// Import Hardhat plugins
+require("@nomiclabs/hardhat-ethers");
+require("@nomiclabs/hardhat-waffle");
+require("hardhat-deploy");
+require("hardhat-gas-reporter");
+require("@nomicfoundation/hardhat-verify");
+
+// Add console log to check environment variable values
+console.log('ALCHEMY_API_KEY:', process.env.ALCHEMY_API_KEY);
+console.log('PRIVATE_KEY:', process.env.PRIVATE_KEY ? '****' + process.env.PRIVATE_KEY.slice(-4) : 'undefined');
+console.log('BLOCKSCOUT_API_KEY:', process.env.BLOCKSCOUT_API_KEY ? '****' + process.env.BLOCKSCOUT_API_KEY.slice(-4) : 'undefined');
+console.log('DEPLOYER_ETH_ADDRESS:', process.env.DEPLOYER_ETH_ADDRESS);
+
 // Ensure required environment variables are set
-if (!process.env.INFURA_API_KEY || !process.env.PRIVATE_KEY) {
-  console.error("Please set INFURA_API_KEY and PRIVATE_KEY in your .env file");
+if (!process.env.ALCHEMY_API_KEY || !process.env.PRIVATE_KEY || !process.env.BLOCKSCOUT_API_KEY || !process.env.DEPLOYER_ETH_ADDRESS) {
+  console.error("Please set ALCHEMY_API_KEY, PRIVATE_KEY, BLOCKSCOUT_API_KEY, and DEPLOYER_ETH_ADDRESS in your .env file");
   process.exit(1);
 }
 
@@ -11,10 +24,13 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.8.4",
-      },
-      {
         version: "0.8.20",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
       },
     ],
   },
@@ -30,18 +46,52 @@ module.exports = {
       accounts: [process.env.PRIVATE_KEY],
       chainId: 11155111,
     },
-    kovan: {
-      url: `https://eth-kovan.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
+    "base-sepolia": {
+      url: "https://sepolia.base.org",
       accounts: [process.env.PRIVATE_KEY],
-      chainId: 42,
+      chainId: 84532,
+      gasPrice: 1000000000,
+      verify: {
+        etherscan: {
+          apiUrl: "https://api-sepolia.basescan.org",
+          apiKey: process.env.BLOCKSCOUT_API_KEY,
+        },
+      },
     },
-    // Configuration for other networks can be added here
+    "optimism-sepolia": {
+      url: "https://sepolia.optimism.io",
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 11155420,
+      gasPrice: 1000000000,
+    },
+  },
+  namedAccounts: {
+    deployer: {
+      default: 0,
+    },
   },
   paths: {
     sources: "./contracts",
     tests: "./test",
     cache: "./cache",
     artifacts: "./artifacts",
+    deploy: "./deploy",
   },
-  // Add any additional plugins or configurations needed
+  gasReporter: {
+    enabled: process.env.REPORT_GAS !== undefined,
+    currency: "USD",
+  },
+  etherscan: {
+    apiKey: process.env.BLOCKSCOUT_OPTIMISM_API_KEY,
+    customChains: [
+      {
+        network: "optimism-sepolia",
+        chainId: 11155420,
+        urls: {
+          apiURL: "https://api-sepolia-optimistic.etherscan.io/api",
+          browserURL: "https://sepolia-optimism.etherscan.io"
+        }
+      }
+    ]
+  },
 };

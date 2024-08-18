@@ -1,7 +1,10 @@
 import { useRouter } from "next/router";
 import { GetStaticProps } from "next";
 
-export async function getStaticPaths() {
+export async function getStaticPaths(): Promise<{
+  paths: { params: { uid: string } }[];
+  fallback: boolean;
+}> {
   // In a real-world scenario, you would fetch the list of UIDs from an API or database
   // For this example, we'll generate a few static paths
   const uids = ["1", "2", "3"];
@@ -13,7 +16,7 @@ export async function getStaticPaths() {
   return { paths, fallback: false };
 }
 
-const AttestationPage = ({ uid }: { uid: string }) => {
+const AttestationPage: React.FC<{ uid: string }> = ({ uid }: { uid: string }): JSX.Element => {
   const router = useRouter();
 
   if (router.isFallback) {
@@ -28,7 +31,7 @@ const AttestationPage = ({ uid }: { uid: string }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params }): Promise<{ props: { uid: string } }> => {
   const uid = params?.uid as string;
 
   // In a real-world scenario, you would fetch the attestation data for this UID

@@ -1,22 +1,22 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { ContractInput } from "./ContractInput";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import ContractInput from "./ContractInput";
 import { getFunctionInputKey, getInitalTupleFormState } from "./utilsContract";
 import { replacer } from "~~/utils/scaffold-eth/common";
 import { AbiParameterTuple } from "~~/utils/scaffold-eth/contract";
 
 type TupleProps = {
   abiTupleParameter: AbiParameterTuple;
-  setParentForm: Dispatch<SetStateAction<Record<string, any>>>;
+  setParentForm: Dispatch<SetStateAction<Record<string, unknown>>>;
   parentStateObjectKey: string;
-  parentForm: Record<string, any> | undefined;
+  parentForm: Record<string, unknown> | undefined;
 };
 
-export const Tuple = ({ abiTupleParameter, setParentForm, parentStateObjectKey }: TupleProps) => {
-  const [form, setForm] = useState<Record<string, any>>(() => getInitalTupleFormState(abiTupleParameter));
+export const Tuple: React.FC<TupleProps> = ({ abiTupleParameter, setParentForm, parentStateObjectKey }): JSX.Element => {
+  const [form, setForm] = useState<Record<string, unknown>>(() => getInitalTupleFormState(abiTupleParameter));
 
-  useEffect(() => {
+  useEffect((): void => {
     const values = Object.values(form);
-    const argsStruct: Record<string, any> = {};
+    const argsStruct: Record<string, unknown> = {};
     abiTupleParameter.components.forEach((component, componentIndex) => {
       argsStruct[component.name || `input_${componentIndex}_`] = values[componentIndex];
     });

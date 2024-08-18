@@ -18,7 +18,7 @@ type ContractUIProps = {
 /**
  * UI component to interface with deployed contracts.
  **/
-export const ContractUI = ({ contractName, className = "" }: ContractUIProps) => {
+export const ContractUI = ({ contractName, className = "" }: ContractUIProps): JSX.Element => {
   const [refreshDisplayVariables, triggerRefreshDisplayVariables] = useReducer(value => !value, false);
   const { targetNetwork } = useTargetNetwork();
   const { data: deployedContractData, isLoading: deployedContractLoading } = useDeployedContractInfo(contractName);

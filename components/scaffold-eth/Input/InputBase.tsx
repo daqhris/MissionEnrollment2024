@@ -18,7 +18,7 @@ export const InputBase = <T extends { toString: () => string } | undefined = str
   prefix,
   suffix,
   reFocus,
-}: InputBaseProps<T>) => {
+}: InputBaseProps<T>): JSX.Element => {
   const inputReft = useRef<HTMLInputElement>(null);
 
   let modifier = "";
@@ -29,7 +29,7 @@ export const InputBase = <T extends { toString: () => string } | undefined = str
   }
 
   const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>): void => {
       onChange(e.target.value as unknown as T);
     },
     [onChange],
@@ -37,12 +37,12 @@ export const InputBase = <T extends { toString: () => string } | undefined = str
 
   // Runs only when reFocus prop is passed, useful for setting the cursor
   // at the end of the input. Example AddressInput
-  const onFocus = (e: FocusEvent<HTMLInputElement, Element>) => {
+  const onFocus = (e: FocusEvent<HTMLInputElement, Element>): void => {
     if (reFocus !== undefined) {
       e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length);
     }
   };
-  useEffect(() => {
+  useEffect((): void => {
     if (reFocus !== undefined && reFocus === true) inputReft.current?.focus();
   }, [reFocus]);
 

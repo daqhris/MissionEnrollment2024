@@ -15,7 +15,7 @@ import { WagmiConfig } from "wagmi";
 
 const queryClient = new QueryClient();
 
-const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
+const ScaffoldEthApp = ({ children }: { children: React.ReactNode }): JSX.Element => {
   useInitializeNativeCurrencyPrice();
 
   return (
@@ -30,7 +30,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const ScaffoldEthAppWithProviders = ({ children }: { children: React.ReactNode }) => {
+export const ScaffoldEthAppWithProviders = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);

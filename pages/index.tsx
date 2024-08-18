@@ -31,7 +31,7 @@ const stageDescriptions: Record<Stage, string> = {
   complete: "Mission enrollment completed successfully",
 };
 
-const Home: FC = () => {
+const Home: FC = (): JSX.Element => {
   const { address } = useAccount();
   const { data: ensName } = useEnsName({ address });
   const [currentStage, setCurrentStage] = useState<Stage>("identity");
@@ -39,15 +39,15 @@ const Home: FC = () => {
   const [poaps, setPoaps] = useState<POAPEvent[]>([]);
   const { theme, setTheme } = useTheme();
 
-  const toggleDarkMode = () => setTheme(theme === "dark" ? "light" : "dark");
+  const toggleDarkMode = (): void => setTheme(theme === "dark" ? "light" : "dark");
 
-  useEffect(() => {
+  useEffect((): void => {
     if (completedStages.length === 0 && currentStage !== "identity") {
       setCurrentStage("identity");
     }
   }, [completedStages, currentStage]);
 
-  const handleStageCompletion = (stage: Stage) => {
+  const handleStageCompletion = (stage: Stage): void => {
     setCompletedStages(prev => {
       const newCompletedStages = [...prev, stage];
       localStorage.setItem("completedStages", JSON.stringify(newCompletedStages));
@@ -62,17 +62,17 @@ const Home: FC = () => {
     }
   };
 
-  const isStageAccessible = (stage: Stage) => {
+  const isStageAccessible = (stage: Stage): boolean => {
     const stageIndex = stages.indexOf(stage);
     return stageIndex <= completedStages.length;
   };
 
-  const renderCurrentStage = () => {
+  const renderCurrentStage = (): JSX.Element | null => {
     switch (currentStage) {
       case "identity":
         return (
           <IdentityVerification
-            onVerified={() => {
+            onVerified={(): void => {
               handleStageCompletion("identity");
               toast.success("Identity verified successfully!");
             }}
@@ -81,7 +81,7 @@ const Home: FC = () => {
       case "attendance":
         return (
           <EventAttendanceProof
-            onVerified={() => {
+            onVerified={(): void => {
               handleStageCompletion("attendance");
               toast.success("Attendance verified successfully!");
             }}
@@ -92,7 +92,7 @@ const Home: FC = () => {
       case "attestation":
         return (
           <OnchainAttestation
-            onAttestationComplete={() => {
+            onAttestationComplete={(): void => {
               handleStageCompletion("attestation");
               toast.success("Attestation completed successfully!");
             }}
@@ -107,7 +107,9 @@ const Home: FC = () => {
             <p>Congratulations! You have successfully completed all stages of the mission enrollment.</p>
             <button
               className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
-              onClick={() => toast.success("Thank you for completing the mission enrollment!")}
+              onClick={(): void => {
+                toast.success("Thank you for completing the mission enrollment!");
+              }}
             >
               Finish
             </button>
@@ -226,7 +228,7 @@ const Home: FC = () => {
                           theme === "dark" ? "gray-500" : "gray-600"
                         } cursor-not-allowed opacity-60`
                   }`}
-                  onClick={() => {
+                  onClick={(): void => {
                     if (isStageAccessible(stage)) {
                       setCurrentStage(stage);
                       toast.info(`Switched to ${stage} stage`);

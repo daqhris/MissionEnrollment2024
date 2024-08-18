@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Tuple } from "./Tuple";
 import { TupleArray } from "./TupleArray";
 import { AbiParameter } from "abitype";
@@ -8,40 +8,84 @@ import {
   AddressInput,
   Bytes32Input,
   BytesInput,
+  CommonInputProps,
   InputBase,
   IntegerInput,
   IntegerVariant,
 } from "~~/components/scaffold-eth";
 import { AbiParameterTuple } from "~~/utils/scaffold-eth/contract";
 
-type ContractInputProps = {
-  setForm: Dispatch<SetStateAction<Record<string, any>>>;
-  form: Record<string, any> | undefined;
+interface ContractInputProps {
+  setForm: Dispatch<SetStateAction<Record<string, unknown>>>;
+  form: Record<string, unknown>;
   stateObjectKey: string;
   paramType: AbiParameter;
-};
+}
+
+type InputValue = string | bigint | undefined;
 
 /**
- * Generic Input component to handle input's based on their function param type
+ * Generic Input component to handle inputs based on their function param type
  */
-export const ContractInput = ({ setForm, form, stateObjectKey, paramType }: ContractInputProps) => {
-  const inputProps = {
+const ContractInput: React.FC<ContractInputProps> = ({ setForm, form, stateObjectKey, paramType }): JSX.Element => {
+  const inputProps: CommonInputProps<InputValue> = {
     name: stateObjectKey,
-    value: form?.[stateObjectKey],
+    value: form[stateObjectKey] as InputValue,
     placeholder: paramType.name ? `${paramType.type} ${paramType.name}` : paramType.type,
-    onChange: (value: any) => {
-      setForm(form => ({ ...form, [stateObjectKey]: value }));
+    onChange: (value: InputValue): void => {
+      setForm((prevForm: Record<string, unknown>): Record<string, unknown> => ({ ...prevForm, [stateObjectKey]: value }));
     },
   };
 
-  const renderInput = () => {
+  const renderDefaultInput = (): JSX.Element => {
+    if (paramType.type.includes("int") && !paramType.type.includes("[")) {
+      return (
+        <IntegerInput
+          {...inputProps}
+          variant={paramType.type as IntegerVariant}
+          value={inputProps.value as string | bigint}
+        />
+      );
+    } else if (paramType.type.startsWith("tuple[")) {
+      return (
+        <TupleArray
+          setParentForm={setForm}
+          parentForm={form}
+          abiTupleParameter={paramType as AbiParameterTuple}
+          parentStateObjectKey={stateObjectKey}
+        />
+      );
+    } else {
+      return <InputBase {...inputProps} />;
+    }
+  };
+
+  const renderInput = (): JSX.Element => {
     switch (paramType.type) {
       case "address":
-        return <AddressInput {...inputProps} />;
+        return (
+          <AddressInput
+            {...inputProps}
+            value={inputProps.value?.toString() ?? ""}
+            onChange={(value: string): void => inputProps.onChange(value)}
+          />
+        );
       case "bytes32":
-        return <Bytes32Input {...inputProps} />;
+        return (
+          <Bytes32Input
+            {...inputProps}
+            value={inputProps.value?.toString() ?? ""}
+            onChange={(value: string): void => inputProps.onChange(value)}
+          />
+        );
       case "bytes":
-        return <BytesInput {...inputProps} />;
+        return (
+          <BytesInput
+            {...inputProps}
+            value={inputProps.value?.toString() ?? ""}
+            onChange={(value: string): void => inputProps.onChange(value)}
+          />
+        );
       case "string":
         return <InputBase {...inputProps} />;
       case "tuple":
@@ -54,21 +98,7 @@ export const ContractInput = ({ setForm, form, stateObjectKey, paramType }: Cont
           />
         );
       default:
-        // Handling 'int' types and 'tuple[]' types
-        if (paramType.type.includes("int") && !paramType.type.includes("[")) {
-          return <IntegerInput {...inputProps} variant={paramType.type as IntegerVariant} />;
-        } else if (paramType.type.startsWith("tuple[")) {
-          return (
-            <TupleArray
-              setParentForm={setForm}
-              parentForm={form}
-              abiTupleParameter={paramType as AbiParameterTuple}
-              parentStateObjectKey={stateObjectKey}
-            />
-          );
-        } else {
-          return <InputBase {...inputProps} />;
-        }
+        return renderDefaultInput();
     }
   };
 
@@ -82,3 +112,5 @@ export const ContractInput = ({ setForm, form, stateObjectKey, paramType }: Cont
     </div>
   );
 };
+
+export default ContractInput;

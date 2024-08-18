@@ -2,26 +2,26 @@ import { Abi, AbiFunction } from "abitype";
 import { ReadOnlyFunctionForm } from "~~/app/debug/_components/contract";
 import { Contract, ContractName, GenericContract, InheritedFunctions } from "~~/utils/scaffold-eth/contract";
 
-export const ContractReadMethods = ({ deployedContractData }: { deployedContractData: Contract<ContractName> }) => {
+export const ContractReadMethods = ({ deployedContractData }: { deployedContractData: Contract<ContractName> }): JSX.Element | null => {
   if (!deployedContractData) {
     return null;
   }
 
   const functionsToDisplay = (
-    ((deployedContractData.abi || []) as Abi).filter(part => part.type === "function") as AbiFunction[]
+    ((deployedContractData.abi || []) as Abi).filter((part): part is AbiFunction => part.type === "function")
   )
-    .filter(fn => {
+    .filter((fn: AbiFunction): boolean => {
       const isQueryableWithParams =
         (fn.stateMutability === "view" || fn.stateMutability === "pure") && fn.inputs.length > 0;
       return isQueryableWithParams;
     })
-    .map(fn => {
+    .map((fn: AbiFunction) => {
       return {
         fn,
         inheritedFrom: ((deployedContractData as GenericContract)?.inheritedFunctions as InheritedFunctions)?.[fn.name],
       };
     })
-    .sort((a, b) => (b.inheritedFrom ? b.inheritedFrom.localeCompare(a.inheritedFrom) : 1));
+    .sort((a, b): number => (b.inheritedFrom ? b.inheritedFrom.localeCompare(a.inheritedFrom) : 1));
 
   if (!functionsToDisplay.length) {
     return <>No read methods</>;

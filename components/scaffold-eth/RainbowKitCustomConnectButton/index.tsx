@@ -14,13 +14,13 @@ import { getBlockExplorerAddressLink } from "~~/utils/scaffold-eth";
 /**
  * Custom Wagmi Connect Button (watch balance + custom design)
  */
-export const RainbowKitCustomConnectButton = () => {
+export const RainbowKitCustomConnectButton = (): JSX.Element => {
   const networkColor = useNetworkColor();
   const { targetNetwork } = useTargetNetwork();
 
   return (
     <ConnectButton.Custom>
-      {({ account, chain, openConnectModal, mounted }) => {
+      {({ account, chain, openConnectModal, mounted }): JSX.Element => {
         const connected = mounted && account && chain;
         const blockExplorerAddressLink = account
           ? getBlockExplorerAddressLink(targetNetwork, account.address)
@@ -28,7 +28,7 @@ export const RainbowKitCustomConnectButton = () => {
 
         return (
           <>
-            {(() => {
+            {((): JSX.Element => {
               if (!connected) {
                 return (
                   <button className="btn btn-primary btn-sm" onClick={openConnectModal} type="button">

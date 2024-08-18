@@ -36,7 +36,7 @@ const apolloClient = new ApolloClient({
 // Create a client
 const queryClient = new QueryClient();
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps): React.ReactElement {
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiConfig config={wagmiConfig}>

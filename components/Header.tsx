@@ -43,10 +43,10 @@ const DropdownContainer = tw.div`
 `;
 
 const BurgerMenuButton = tw.label<{ $isOpen: boolean }>`
-  ml-1 
-  btn 
-  btn-ghost 
-  ${p => (p.$isOpen ? "hover:bg-secondary" : "hover:bg-transparent")}
+  ml-1
+  btn
+  btn-ghost
+  ${(p): string => (p.$isOpen ? "hover:bg-secondary" : "hover:bg-transparent")}
 `;
 
 const DropdownMenu = tw.ul`
@@ -105,17 +105,17 @@ const NavbarEnd = tw.div`
 `;
 
 const MenuLink = tw(Link)<{ $isActive: boolean }>`
-  ${p => (p.$isActive ? "bg-secondary shadow-md" : "")}
-  hover:bg-secondary 
-  hover:shadow-md 
-  focus:!bg-secondary 
-  active:!text-neutral 
-  py-1.5 
-  px-3 
-  text-sm 
-  rounded-full 
-  gap-2 
-  grid 
+  ${(p): string => (p.$isActive ? "bg-secondary shadow-md" : "")}
+  hover:bg-secondary
+  hover:shadow-md
+  focus:!bg-secondary
+  active:!text-neutral
+  py-1.5
+  px-3
+  text-sm
+  rounded-full
+  gap-2
+  grid
   grid-flow-col
 `;
 
@@ -134,12 +134,12 @@ export const menuLinks: HeaderMenuLink[] = [
   },
 ];
 
-export const HeaderMenuLinks = () => {
+export const HeaderMenuLinks = (): JSX.Element => {
   const pathname = usePathname();
 
   return (
     <>
-      {menuLinks.map(({ label, href, icon }) => {
+      {menuLinks.map(({ label, href, icon }): JSX.Element => {
         const isActive = pathname === href;
         return (
           <li key={href}>
@@ -154,12 +154,12 @@ export const HeaderMenuLinks = () => {
   );
 };
 
-export const Header = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+export const Header = (): JSX.Element => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const burgerMenuRef = useRef<HTMLDivElement>(null);
   useOutsideClick(
     burgerMenuRef,
-    useCallback(() => setIsDrawerOpen(false), []),
+    useCallback((): void => setIsDrawerOpen(false), []),
   );
 
   return (
@@ -169,8 +169,8 @@ export const Header = () => {
           <BurgerMenuButton
             tabIndex={0}
             $isOpen={isDrawerOpen}
-            onClick={() => {
-              setIsDrawerOpen(prevIsOpenState => !prevIsOpenState);
+            onClick={(): void => {
+              setIsDrawerOpen((prevIsOpenState: boolean): boolean => !prevIsOpenState);
             }}
           >
             <Bars3Icon className="h-1/2" />
@@ -178,7 +178,7 @@ export const Header = () => {
           {isDrawerOpen && (
             <DropdownMenu
               tabIndex={0}
-              onClick={() => {
+              onClick={(): void => {
                 setIsDrawerOpen(false);
               }}
             >

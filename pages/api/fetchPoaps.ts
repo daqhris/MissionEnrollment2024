@@ -27,7 +27,24 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+interface PoapEvent {
+  id: string;
+  name: string;
+  start_date: string;
+  image_url: string;
+}
+
+interface Poap {
+  event: PoapEvent;
+  token_id: string;
+}
+
+interface ErrorResponse {
+  error: string;
+  details?: string;
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse<{ poaps: Poap[] } | ErrorResponse>): Promise<void> {
   const clientIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
   if (typeof clientIp !== "string") {
@@ -86,8 +103,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: "Server configuration error" });
   }
 
-  // Removed check for INFURA_PROJECT_ID as we're now using Alchemy
-
   console.log(`Attempting to fetch POAPs for address: ${encodedAddress}`);
 
   try {
@@ -97,7 +112,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       `POAP API Key (masked): ${process.env.POAP_API_KEY?.slice(0, 4)}...${process.env.POAP_API_KEY?.slice(-4)}`,
     );
 
-    const response = await axios.get(`${POAP_API_URL}/${encodedAddress}`, {
+    const response = await axios.get<Poap[]>(`${POAP_API_URL}/${encodedAddress}`, {
       headers: {
         "X-API-Key": process.env.POAP_API_KEY,
       },
@@ -123,7 +138,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const allPoaps = response.data;
 
     // Filter POAPs for ETHGlobal Brussels 2024
-    const filteredPoaps = allPoaps.filter((poap: any) => {
+    const filteredPoaps = allPoaps.filter((poap: Poap) => {
       const eventDate = new Date(poap.event.start_date);
       const eventStartDate = new Date("2024-07-11T00:00:00Z");
       const eventEndDate = new Date("2024-07-14T23:59:59Z");

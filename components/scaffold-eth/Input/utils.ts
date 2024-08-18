@@ -4,6 +4,9 @@ export type CommonInputProps<T = string> = {
   name?: string;
   placeholder?: string;
   disabled?: boolean;
+  error?: boolean;
+  prefix?: React.ReactNode;
+  suffix?: React.ReactNode;
 };
 
 export enum IntegerVariant {
@@ -76,14 +79,16 @@ export enum IntegerVariant {
 export const SIGNED_NUMBER_REGEX = /^-?\d+\.?\d*$/;
 export const UNSIGNED_NUMBER_REGEX = /^\.?\d+\.?\d*$/;
 
-export const isValidInteger = (dataType: IntegerVariant, value: bigint | string, strict = true) => {
+export const isValidInteger = (dataType: IntegerVariant, value: bigint | string, strict = true): boolean => {
   const isSigned = dataType.startsWith("i");
   const bitcount = Number(dataType.substring(isSigned ? 3 : 4));
 
-  let valueAsBigInt;
+  let valueAsBigInt: bigint | undefined;
   try {
     valueAsBigInt = BigInt(value);
-  } catch (e) {}
+  } catch (e) {
+    // Ignore error, valueAsBigInt will remain undefined
+  }
   if (typeof valueAsBigInt !== "bigint") {
     if (strict) {
       return false;
@@ -108,4 +113,4 @@ export const isValidInteger = (dataType: IntegerVariant, value: bigint | string,
 
 // Treat any dot-separated string as a potential ENS name
 const ensRegex = /.+\..+/;
-export const isENS = (address = "") => ensRegex.test(address);
+export const isENS = (address = ""): boolean => ensRegex.test(address);

@@ -4,7 +4,7 @@ import { GET_ATTESTATIONS } from "../graphql/queries";
 import { Attestation } from "../types/attestation";
 import { useQuery } from "@apollo/client";
 
-const BlockExplorer: React.FC = () => {
+const BlockExplorer: React.FC = (): JSX.Element => {
   const [attestations, setAttestations] = useState<Attestation[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,18 +14,18 @@ const BlockExplorer: React.FC = () => {
     variables: { first: pageSize, skip: (currentPage - 1) * pageSize, searchTerm },
   });
 
-  useEffect(() => {
+  useEffect((): void => {
     if (data && data.attestations) {
       setAttestations(data.attestations);
     }
   }, [data]);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchTerm(event.target.value);
     setCurrentPage(1);
   };
 
-  const handlePageChange = (newPage: number) => {
+  const handlePageChange = (newPage: number): void => {
     setCurrentPage(newPage);
   };
 
@@ -55,7 +55,7 @@ const BlockExplorer: React.FC = () => {
       )}
       <div className="mt-8 flex justify-center">
         <button
-          onClick={() => handlePageChange(currentPage - 1)}
+          onClick={(): void => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className="px-4 py-2 bg-blue-500 text-white rounded mr-2 disabled:bg-gray-300"
         >
@@ -63,7 +63,7 @@ const BlockExplorer: React.FC = () => {
         </button>
         <span className="px-4 py-2">Page {currentPage}</span>
         <button
-          onClick={() => handlePageChange(currentPage + 1)}
+          onClick={(): void => handlePageChange(currentPage + 1)}
           disabled={attestations.length < pageSize}
           className="px-4 py-2 bg-blue-500 text-white rounded ml-2 disabled:bg-gray-300"
         >

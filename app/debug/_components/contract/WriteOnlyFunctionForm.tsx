@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { FC, SetStateAction, useEffect, useState } from "react";
+import ContractInput from "./ContractInput";
 import { InheritanceTooltip } from "./InheritanceTooltip";
 import { Abi, AbiFunction } from "abitype";
 import { Address, TransactionReceipt } from "viem";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import {
-  ContractInput,
   TxReceipt,
   getFunctionInputKey,
   getInitialFormState,
@@ -25,14 +25,16 @@ type WriteOnlyFunctionFormProps = {
   inheritedFrom?: string;
 };
 
-export const WriteOnlyFunctionForm = ({
+type FormState = Record<string, string | bigint>;
+
+export const WriteOnlyFunctionForm: FC<WriteOnlyFunctionFormProps> = ({
   abi,
   abiFunction,
   onChange,
   contractAddress,
   inheritedFrom,
-}: WriteOnlyFunctionFormProps) => {
-  const [form, setForm] = useState<Record<string, any>>(() => getInitialFormState(abiFunction));
+}): JSX.Element => {
+  const [form, setForm] = useState<FormState>(() => getInitialFormState(abiFunction));
   const [txValue, setTxValue] = useState<string | bigint>("");
   const { chain } = useAccount();
   const writeTxn = useTransactor();
@@ -41,10 +43,10 @@ export const WriteOnlyFunctionForm = ({
 
   const { data: result, isPending, writeContractAsync } = useWriteContract();
 
-  const handleWrite = async () => {
+  const handleWrite = async (): Promise<void> => {
     if (writeContractAsync) {
       try {
-        const makeWriteWithParams = () =>
+        const makeWriteWithParams = (): ReturnType<typeof writeContractAsync> =>
           writeContractAsync({
             address: contractAddress,
             functionName: abiFunction.name,
@@ -54,17 +56,17 @@ export const WriteOnlyFunctionForm = ({
           });
         await writeTxn(makeWriteWithParams);
         onChange();
-      } catch (e: any) {
+      } catch (e) {
         console.error("⚡️ ~ file: WriteOnlyFunctionForm.tsx:handleWrite ~ error", e);
       }
     }
   };
 
-  const [displayedTxResult, setDisplayedTxResult] = useState<TransactionReceipt>();
+  const [displayedTxResult, setDisplayedTxResult] = useState<TransactionReceipt | undefined>();
   const { data: txResult } = useWaitForTransactionReceipt({
     hash: result,
   });
-  useEffect(() => {
+  useEffect((): void => {
     setDisplayedTxResult(txResult);
   }, [txResult]);
 
@@ -75,9 +77,12 @@ export const WriteOnlyFunctionForm = ({
     return (
       <ContractInput
         key={key}
-        setForm={updatedFormValue => {
+        setForm={(updatedForm: SetStateAction<Record<string, unknown>>): void => {
+          setForm((prevForm): FormState => {
+            const newForm = typeof updatedForm === 'function' ? updatedForm(prevForm) : updatedForm;
+            return { ...prevForm, ...newForm } as FormState;
+          });
           setDisplayedTxResult(undefined);
-          setForm(updatedFormValue);
         }}
         form={form}
         stateObjectKey={key}
@@ -103,7 +108,7 @@ export const WriteOnlyFunctionForm = ({
             </div>
             <IntegerInput
               value={txValue}
-              onChange={updatedTxValue => {
+              onChange={(updatedTxValue: string | bigint): void => {
                 setDisplayedTxResult(undefined);
                 setTxValue(updatedTxValue);
               }}
@@ -122,9 +127,15 @@ export const WriteOnlyFunctionForm = ({
               writeDisabled &&
               "tooltip before:content-[attr(data-tip)] before:right-[-10px] before:left-auto before:transform-none"
             }`}
-            data-tip={`${writeDisabled && "Wallet not connected or in the wrong network"}`}
+            data-tip={`${writeDisabled ? "Wallet not connected or in the wrong network" : ""}`}
           >
-            <button className="btn btn-secondary btn-sm" disabled={writeDisabled || isPending} onClick={handleWrite}>
+            <button
+              className="btn btn-secondary btn-sm"
+              disabled={writeDisabled || isPending}
+              onClick={async (): Promise<void> => {
+                await handleWrite();
+              }}
+            >
               {isPending && <span className="loading loading-spinner loading-xs"></span>}
               Send 💸
             </button>

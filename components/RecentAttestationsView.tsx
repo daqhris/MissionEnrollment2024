@@ -83,7 +83,7 @@ interface RecentAttestationsViewProps {
   title: string;
 }
 
-export function RecentAttestationsView({ title }: RecentAttestationsViewProps) {
+export function RecentAttestationsView({ title }: RecentAttestationsViewProps): JSX.Element {
   const [attestations, setAttestations] = useState<ExtendedAttestation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -96,7 +96,7 @@ export function RecentAttestationsView({ title }: RecentAttestationsViewProps) {
   };
 
   useEffect(() => {
-    const fetchAttestations = async () => {
+    const fetchAttestations = async (): Promise<void> => {
       try {
         const response = await fetch("https://sepolia.easscan.org/graphql", {
           method: "POST",

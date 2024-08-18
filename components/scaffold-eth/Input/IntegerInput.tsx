@@ -14,19 +14,20 @@ export const IntegerInput = ({
   disabled,
   variant = IntegerVariant.UINT256,
   disableMultiplyBy1e18 = false,
-}: IntegerInputProps) => {
+}: IntegerInputProps): JSX.Element => {
   const [inputError, setInputError] = useState(false);
-  const multiplyBy1e18 = useCallback(() => {
+  const multiplyBy1e18 = useCallback((): void => {
     if (!value) {
       return;
     }
     if (typeof value === "bigint") {
-      return onChange(value * 10n ** 18n);
+      onChange(value * 10n ** 18n);
+      return;
     }
-    return onChange(BigInt(Math.round(Number(value) * 10 ** 18)));
+    onChange(BigInt(Math.round(Number(value) * 10 ** 18)));
   }, [onChange, value]);
 
-  useEffect(() => {
+  useEffect((): void => {
     if (isValidInteger(variant, value, false)) {
       setInputError(false);
     } else {

@@ -9,7 +9,7 @@ const getFunctionInputKey = (functionName: string, input: AbiParameter, inputInd
   return functionName + "_" + name + "_" + input.internalType + "_" + input.type;
 };
 
-const isJsonString = (str: string) => {
+const isJsonString = (str: string): boolean => {
   try {
     JSON.parse(str);
     return true;
@@ -19,7 +19,7 @@ const isJsonString = (str: string) => {
 };
 
 // Recursive function to deeply parse JSON strings, correctly handling nested arrays and encoded JSON strings
-const deepParseValues = (value: any): any => {
+const deepParseValues = (value: unknown): unknown => {
   if (typeof value === "string") {
     if (isJsonString(value)) {
       const parsed = JSON.parse(value);
@@ -33,7 +33,7 @@ const deepParseValues = (value: any): any => {
     return value.map(element => deepParseValues(element));
   } else if (typeof value === "object" && value !== null) {
     // If it's an object, recursively parse each value
-    return Object.entries(value).reduce((acc: any, [key, val]) => {
+    return Object.entries(value).reduce((acc: Record<string, unknown>, [key, val]) => {
       acc[key] = deepParseValues(val);
       return acc;
     }, {});
@@ -52,7 +52,7 @@ const deepParseValues = (value: any): any => {
 /**
  * parses form input with array support
  */
-const getParsedContractFunctionArgs = (form: Record<string, any>) => {
+const getParsedContractFunctionArgs = (form: Record<string, unknown>): unknown[] => {
   return Object.keys(form).map(key => {
     const valueOfArg = form[key];
 
@@ -61,8 +61,8 @@ const getParsedContractFunctionArgs = (form: Record<string, any>) => {
   });
 };
 
-const getInitialFormState = (abiFunction: AbiFunction) => {
-  const initialForm: Record<string, any> = {};
+const getInitialFormState = (abiFunction: AbiFunction): Record<string, string> => {
+  const initialForm: Record<string, string> = {};
   if (!abiFunction.inputs) return initialForm;
   abiFunction.inputs.forEach((input, inputIndex) => {
     const key = getFunctionInputKey(abiFunction.name, input, inputIndex);
@@ -71,8 +71,8 @@ const getInitialFormState = (abiFunction: AbiFunction) => {
   return initialForm;
 };
 
-const getInitalTupleFormState = (abiTupleParameter: AbiParameterTuple) => {
-  const initialForm: Record<string, any> = {};
+const getInitalTupleFormState = (abiTupleParameter: AbiParameterTuple): Record<string, string> => {
+  const initialForm: Record<string, string> = {};
   if (abiTupleParameter.components.length === 0) return initialForm;
 
   abiTupleParameter.components.forEach((component, componentIndex) => {
@@ -82,11 +82,11 @@ const getInitalTupleFormState = (abiTupleParameter: AbiParameterTuple) => {
   return initialForm;
 };
 
-const getInitalTupleArrayFormState = (abiTupleParameter: AbiParameterTuple) => {
-  const initialForm: Record<string, any> = {};
+const getInitalTupleArrayFormState = (abiTupleParameter: AbiParameterTuple): Record<string, string> => {
+  const initialForm: Record<string, string> = {};
   if (abiTupleParameter.components.length === 0) return initialForm;
   abiTupleParameter.components.forEach((component, componentIndex) => {
-    const key = getFunctionInputKey("0_" + abiTupleParameter.name || "tuple", component, componentIndex);
+    const key = getFunctionInputKey("0_" + (abiTupleParameter.name || "tuple"), component, componentIndex);
     initialForm[key] = "";
   });
   return initialForm;

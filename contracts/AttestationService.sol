@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@ethereum-attestation-service/eas-contracts/contracts/IEAS.sol";
 import "@ethereum-attestation-service/eas-contracts/contracts/ISchemaRegistry.sol";
 import "@ethereum-attestation-service/eas-contracts/contracts/resolver/ISchemaResolver.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import {Attestation} from "@ethereum-attestation-service/eas-contracts/contracts/Common.sol";
 
 contract AttestationService is AccessControl {
@@ -13,16 +14,17 @@ contract AttestationService is AccessControl {
 
   bytes32 public missionEnrollmentSchema;
   bytes32 public constant ATTESTATION_CREATOR_ROLE = keccak256("ATTESTATION_CREATOR_ROLE");
-  address public constant DAQHRIS_ETH_ADDRESS = 0x1234567890123456789012345678901234567890; // Replace with actual address of daqhris.eth
+  address private constant DAQHRIS_ETH_ADDRESS = 0xF0bC5CC2B4866dAAeCb069430c60b24520077037;
 
   event SchemaCreated(bytes32 indexed schemaId);
   event AttestationCreated(bytes32 indexed attestationId, address indexed recipient, address indexed attester);
 
   constructor(address _eas, address _schemaRegistry) {
+    require(_eas != address(0) && _schemaRegistry != address(0), "Invalid address");
     eas = IEAS(_eas);
     schemaRegistry = ISchemaRegistry(_schemaRegistry);
-    _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-    _setupRole(ATTESTATION_CREATOR_ROLE, DAQHRIS_ETH_ADDRESS);
+    _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    _grantRole(ATTESTATION_CREATOR_ROLE, DAQHRIS_ETH_ADDRESS);
   }
 
   function createMissionEnrollmentSchema() external onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -35,9 +37,8 @@ contract AttestationService is AccessControl {
 
   function createMissionEnrollmentAttestation(address recipient, uint256 tokenId) external onlyRole(ATTESTATION_CREATOR_ROLE) returns (bytes32) {
     require(missionEnrollmentSchema != bytes32(0), "Schema not created");
-    require(recipient != address(0), "Invalid recipient address");
-    require(tokenId > 0, "Invalid token ID");
-    require(msg.sender == DAQHRIS_ETH_ADDRESS, "Only daqhris.eth can create attestations");
+    require(recipient != address(0), "Invalid recipient");
+    require(tokenId != 0, "Invalid token ID");
 
     bytes memory data = abi.encode(recipient, tokenId, block.timestamp, msg.sender);
 
@@ -45,11 +46,11 @@ contract AttestationService is AccessControl {
       schema: missionEnrollmentSchema,
       data: AttestationRequestData({
         recipient: recipient,
-        expirationTime: 0, // No expiration
+        expirationTime: 0,
         revocable: true,
-        refUID: bytes32(0), // No reference UID
+        refUID: bytes32(0),
         data: data,
-        value: 0 // No value transfer
+        value: 0
       })
     });
 
@@ -65,11 +66,12 @@ contract AttestationService is AccessControl {
   }
 
   function grantAttestationCreatorRole(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
-    require(account == DAQHRIS_ETH_ADDRESS, "Only daqhris.eth can be granted this role");
+    require(account == DAQHRIS_ETH_ADDRESS, "Only DAQHRIS_ETH_ADDRESS can be granted this role");
     grantRole(ATTESTATION_CREATOR_ROLE, account);
   }
 
   function revokeAttestationCreatorRole(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    require(account != DAQHRIS_ETH_ADDRESS, "Cannot revoke role from main attestation creator");
     revokeRole(ATTESTATION_CREATOR_ROLE, account);
   }
 }

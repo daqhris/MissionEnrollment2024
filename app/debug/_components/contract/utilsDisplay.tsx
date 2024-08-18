@@ -1,25 +1,27 @@
-import { ReactElement, useState } from "react";
-import { TransactionBase, TransactionReceipt, formatEther, isAddress, isHex } from "viem";
+import React, { ReactElement, useState } from "react";
+import PropTypes from "prop-types";
+import { Log, TransactionBase, TransactionReceipt, formatEther, isAddress, isHex } from "viem";
 import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
 import { Address } from "~~/components/scaffold-eth";
 import { replacer } from "~~/utils/scaffold-eth/common";
 
-type DisplayContent =
+export type DisplayContent =
   | string
   | number
   | bigint
-  | Record<string, any>
+  | Record<string, unknown>
   | TransactionBase
   | TransactionReceipt
-  | undefined
-  | unknown;
+  | Log[]
+  | null
+  | undefined;
 
 type ResultFontSize = "sm" | "base" | "xs" | "lg" | "xl" | "2xl" | "3xl";
 
 export const displayTxResult = (
   displayContent: DisplayContent | DisplayContent[],
   fontSize: ResultFontSize = "base",
-): string | ReactElement | number => {
+): string | ReactElement | number | JSX.Element => {
   if (displayContent == null) {
     return "";
   }
@@ -42,19 +44,19 @@ export const displayTxResult = (
     return <ArrayDisplay values={displayContent} size={fontSize} />;
   }
 
-  if (typeof displayContent === "object") {
-    return <StructDisplay struct={displayContent} size={fontSize} />;
+  if (typeof displayContent === "object" && displayContent !== null) {
+    return <StructDisplay struct={displayContent as Record<string, unknown>} size={fontSize} />;
   }
 
   return JSON.stringify(displayContent, replacer, 2);
 };
 
-const NumberDisplay = ({ value }: { value: bigint }) => {
+const NumberDisplay: React.FC<{ value: bigint }> = ({ value }): JSX.Element => {
   const [isEther, setIsEther] = useState(false);
 
   const asNumber = Number(value);
   if (asNumber <= Number.MAX_SAFE_INTEGER && asNumber >= Number.MIN_SAFE_INTEGER) {
-    return String(value);
+    return <>{String(value)}</>;
   }
 
   return (
@@ -64,7 +66,7 @@ const NumberDisplay = ({ value }: { value: bigint }) => {
         className="tooltip tooltip-secondary font-sans ml-2"
         data-tip={isEther ? "Multiply by 1e18" : "Divide by 1e18"}
       >
-        <button className="btn btn-ghost btn-circle btn-xs" onClick={() => setIsEther(!isEther)}>
+        <button className="btn btn-ghost btn-circle btn-xs" onClick={(): void => setIsEther(!isEther)}>
           <ArrowsRightLeftIcon className="h-3 w-3 opacity-65" />
         </button>
       </span>
@@ -72,17 +74,12 @@ const NumberDisplay = ({ value }: { value: bigint }) => {
   );
 };
 
-export const ObjectFieldDisplay = ({
-  name,
-  value,
-  size,
-  leftPad = true,
-}: {
+export const ObjectFieldDisplay: React.FC<{
   name: string;
   value: DisplayContent;
   size: ResultFontSize;
   leftPad?: boolean;
-}) => {
+}> = ({ name, value, size, leftPad = true }) => {
   return (
     <div className={`flex flex-row items-baseline ${leftPad ? "ml-4" : ""}`}>
       <span className="text-gray-500 dark:text-gray-400 mr-2">{name}:</span>
@@ -91,7 +88,21 @@ export const ObjectFieldDisplay = ({
   );
 };
 
-const ArrayDisplay = ({ values, size }: { values: DisplayContent[]; size: ResultFontSize }) => {
+ObjectFieldDisplay.propTypes = {
+  name: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // Handle BigInt
+    PropTypes.oneOf([null, undefined]),
+  ] as PropTypes.Validator<DisplayContent>[]).isRequired,
+  size: PropTypes.oneOf(["sm", "base", "xs", "lg", "xl", "2xl", "3xl"] as const).isRequired,
+  leftPad: PropTypes.bool,
+};
+
+const ArrayDisplay: React.FC<{ values: DisplayContent[]; size: ResultFontSize }> = ({ values, size }): JSX.Element => {
   return (
     <div className="flex flex-col gap-y-1">
       {values.length ? "array" : "[]"}
@@ -102,13 +113,23 @@ const ArrayDisplay = ({ values, size }: { values: DisplayContent[]; size: Result
   );
 };
 
-const StructDisplay = ({ struct, size }: { struct: Record<string, any>; size: ResultFontSize }) => {
+ArrayDisplay.propTypes = {
+  values: PropTypes.arrayOf(PropTypes.any).isRequired,
+  size: PropTypes.oneOf<ResultFontSize>(["sm", "base", "xs", "lg", "xl", "2xl", "3xl"]).isRequired,
+};
+
+const StructDisplay: React.FC<{ struct: Record<string, unknown>; size: ResultFontSize }> = ({ struct, size }): JSX.Element => {
   return (
     <div className="flex flex-col gap-y-1">
       struct
       {Object.entries(struct).map(([k, v]) => (
-        <ObjectFieldDisplay key={k} name={k} value={v} size={size} />
+        <ObjectFieldDisplay key={k} name={k} value={v as DisplayContent} size={size} />
       ))}
     </div>
   );
+};
+
+StructDisplay.propTypes = {
+  struct: PropTypes.objectOf(PropTypes.any).isRequired,
+  size: PropTypes.oneOf(["sm", "base", "xs", "lg", "xl", "2xl", "3xl"] as const).isRequired,
 };

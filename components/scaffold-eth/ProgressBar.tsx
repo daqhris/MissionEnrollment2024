@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import NProgress from "nprogress";
 
-type PushStateInput = [data: any, unused: string, url?: string | URL | null | undefined];
+type PushStateInput = [data: unknown, unused: string, url?: string | URL | null | undefined];
 
-export function ProgressBar() {
+export const ProgressBar: React.FC = () => {
   const height = "3px";
   const color = "#2299dd";
 
@@ -44,7 +44,7 @@ export function ProgressBar() {
   useEffect(() => {
     NProgress.configure({ showSpinner: false });
 
-    const handleAnchorClick = (event: MouseEvent) => {
+    const handleAnchorClick = (event: MouseEvent): void => {
       const targetUrl = (event.currentTarget as HTMLAnchorElement).href;
       const currentUrl = location.href;
       if (targetUrl !== currentUrl) {
@@ -52,7 +52,7 @@ export function ProgressBar() {
       }
     };
 
-    const handleMutation: MutationCallback = () => {
+    const handleMutation: MutationCallback = (): void => {
       const anchorElements = document.querySelectorAll("a");
       anchorElements.forEach(anchor => anchor.addEventListener("click", handleAnchorClick));
     };
@@ -61,12 +61,16 @@ export function ProgressBar() {
     mutationObserver.observe(document, { childList: true, subtree: true });
 
     window.history.pushState = new Proxy(window.history.pushState, {
-      apply: (target, thisArg, argArray: PushStateInput) => {
+      apply: (target, thisArg, argArray: PushStateInput): ReturnType<typeof window.history.pushState> => {
         NProgress.done();
         return target.apply(thisArg, argArray);
       },
     });
-  });
+
+    return () => {
+      mutationObserver.disconnect();
+    };
+  }, []);
 
   return styles;
-}
+};

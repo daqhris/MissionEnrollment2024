@@ -1,25 +1,25 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { ContractInput } from "./ContractInput";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import ContractInput from "./ContractInput";
 import { getFunctionInputKey, getInitalTupleArrayFormState } from "./utilsContract";
 import { replacer } from "~~/utils/scaffold-eth/common";
 import { AbiParameterTuple } from "~~/utils/scaffold-eth/contract";
 
 type TupleArrayProps = {
   abiTupleParameter: AbiParameterTuple & { isVirtual?: true };
-  setParentForm: Dispatch<SetStateAction<Record<string, any>>>;
+  setParentForm: Dispatch<SetStateAction<Record<string, unknown>>>;
   parentStateObjectKey: string;
-  parentForm: Record<string, any> | undefined;
+  parentForm: Record<string, unknown> | undefined;
 };
 
-export const TupleArray = ({ abiTupleParameter, setParentForm, parentStateObjectKey }: TupleArrayProps) => {
-  const [form, setForm] = useState<Record<string, any>>(() => getInitalTupleArrayFormState(abiTupleParameter));
+export const TupleArray: React.FC<TupleArrayProps> = ({ abiTupleParameter, setParentForm, parentStateObjectKey }): JSX.Element => {
+  const [form, setForm] = useState<Record<string, unknown>>(() => getInitalTupleArrayFormState(abiTupleParameter));
   const [additionalInputs, setAdditionalInputs] = useState<Array<typeof abiTupleParameter.components>>([
     abiTupleParameter.components,
   ]);
 
   const depth = (abiTupleParameter.type.match(/\[\]/g) || []).length;
 
-  useEffect(() => {
+  useEffect((): void => {
     // Extract and group fields based on index prefix
     const groupedFields = Object.keys(form).reduce((acc, key) => {
       const [indexPrefix, ...restArray] = key.split("_");
@@ -29,14 +29,14 @@ export const TupleArray = ({ abiTupleParameter, setParentForm, parentStateObject
       }
       acc[indexPrefix][componentName] = form[key];
       return acc;
-    }, {} as Record<string, Record<string, any>>);
+    }, {} as Record<string, Record<string, unknown>>);
 
-    let argsArray: Array<Record<string, any>> = [];
+    let argsArray: Array<Record<string, unknown>> = [];
 
     Object.keys(groupedFields).forEach(key => {
       const currentKeyValues = Object.values(groupedFields[key]);
 
-      const argsStruct: Record<string, any> = {};
+      const argsStruct: Record<string, unknown> = {};
       abiTupleParameter.components.forEach((component, componentIndex) => {
         argsStruct[component.name || `input_${componentIndex}_`] = currentKeyValues[componentIndex];
       });
@@ -46,7 +46,7 @@ export const TupleArray = ({ abiTupleParameter, setParentForm, parentStateObject
 
     if (depth > 1) {
       argsArray = argsArray.map(args => {
-        return args[abiTupleParameter.components[0].name || "tuple"];
+        return args[abiTupleParameter.components[0].name || "tuple"] as Record<string, unknown>;
       });
     }
 
@@ -56,7 +56,7 @@ export const TupleArray = ({ abiTupleParameter, setParentForm, parentStateObject
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(form, replacer)]);
 
-  const addInput = () => {
+  const addInput = (): void => {
     setAdditionalInputs(previousValue => {
       const newAdditionalInputs = [...previousValue, abiTupleParameter.components];
 
@@ -78,7 +78,7 @@ export const TupleArray = ({ abiTupleParameter, setParentForm, parentStateObject
     });
   };
 
-  const removeInput = () => {
+  const removeInput = (): void => {
     // Remove the last inputs from the form
     setForm(form => {
       const newForm = { ...form };
