@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { InheritanceTooltip } from "./InheritanceTooltip";
-import { displayTxResult } from "./utilsDisplay";
+import { DisplayContent, displayTxResult } from "./utilsDisplay";
 import { Abi, AbiFunction } from "abitype";
 import { Address } from "viem";
 import { useReadContract } from "wagmi";
@@ -25,7 +25,7 @@ export const DisplayVariable = ({
   refreshDisplayVariables,
   abi,
   inheritedFrom,
-}: DisplayVariableProps) => {
+}: DisplayVariableProps): JSX.Element => {
   const { targetNetwork } = useTargetNetwork();
 
   const {
@@ -42,11 +42,11 @@ export const DisplayVariable = ({
 
   const { showAnimation } = useAnimationConfig(result);
 
-  useEffect(() => {
+  useEffect((): void => {
     refetch();
   }, [refetch, refreshDisplayVariables]);
 
-  useEffect(() => {
+  useEffect((): void => {
     if (error) {
       const parsedError = getParsedError(error);
       notification.error(parsedError);
@@ -57,7 +57,7 @@ export const DisplayVariable = ({
     <div className="space-y-1 pb-2">
       <div className="flex items-center">
         <h3 className="font-medium text-lg mb-0 break-all">{abiFunction.name}</h3>
-        <button className="btn btn-ghost btn-xs" onClick={async () => await refetch()}>
+        <button className="btn btn-ghost btn-xs" onClick={async (): Promise<void> => { await refetch(); }}>
           {isFetching ? (
             <span className="loading loading-spinner loading-xs"></span>
           ) : (
@@ -73,7 +73,7 @@ export const DisplayVariable = ({
               showAnimation ? "bg-warning rounded-sm animate-pulse-fast" : ""
             }`}
           >
-            {displayTxResult(result)}
+            {displayTxResult(result as DisplayContent | DisplayContent[])}
           </div>
         </div>
       </div>
