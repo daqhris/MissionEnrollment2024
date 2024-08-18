@@ -1,6 +1,6 @@
 "use client";
 
-import React, { SetStateAction, useEffect, useState } from "react";
+import { FC, SetStateAction, useEffect, useState } from "react";
 import ContractInput from "./ContractInput";
 import { InheritanceTooltip } from "./InheritanceTooltip";
 import { Abi, AbiFunction } from "abitype";
@@ -27,7 +27,7 @@ type WriteOnlyFunctionFormProps = {
 
 type FormState = Record<string, string | bigint>;
 
-export const WriteOnlyFunctionForm: React.FC<WriteOnlyFunctionFormProps> = ({
+export const WriteOnlyFunctionForm: FC<WriteOnlyFunctionFormProps> = ({
   abi,
   abiFunction,
   onChange,
@@ -78,7 +78,7 @@ export const WriteOnlyFunctionForm: React.FC<WriteOnlyFunctionFormProps> = ({
       <ContractInput
         key={key}
         setForm={(updatedForm: SetStateAction<Record<string, unknown>>): void => {
-          setForm(prevForm => {
+          setForm((prevForm): FormState => {
             const newForm = typeof updatedForm === 'function' ? updatedForm(prevForm) : updatedForm;
             return { ...prevForm, ...newForm } as FormState;
           });
