@@ -1,38 +1,43 @@
 import React, { useState } from "react";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { ethers } from "ethers";
-import { useAccount } from "wagmi";
+import { useAccount, usePublicClient } from "wagmi";
 
 // This component uses the Ethereum Attestation Service (EAS) protocol
 // to create attestations on both Base and Optimism rollups
 
 const EAS_CONTRACT_ADDRESS = "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"; // Sepolia testnet
-const SCHEMA_UID = "0x0000000000000000000000000000000000000000000000000000000000000000"; // Replace with actual schema UID
-const ATTESTER_ADDRESS = "0x1234567890123456789012345678901234567890"; // Replace with actual address of daqhris.eth
-const ATTESTER_NAME = "daqhris.eth";
+const SCHEMA_UID = "0x40e5abe23a3378a9a43b7e874c5cb8dfd4d6b0823501d317acee41e08d3af4dd"; // Actual schema UID for mission enrollment
+const ATTESTER_ADDRESS = "0xF0bC5CC2B4866dAAeCb069430c60b24520077037"; // Actual address of daqhris.eth
+const ATTESTER_NAME = "mission-enrollment.daqhris.eth";
+
+interface PoapEvent {
+  id: string;
+  name: string;
+  image_url: string;
+  start_date: string;
+}
+
+interface Poap {
+  event: PoapEvent;
+  token_id: string;
+}
 
 interface OnchainAttestationProps {
   onAttestationComplete: () => void;
-  poaps: Array<{
-    event: {
-      id: string;
-      name: string;
-      image_url: string;
-      start_date: string;
-    };
-    token_id: string;
-  }>;
+  poaps: Poap[];
   ensName: string | null;
 }
 
-const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationComplete, poaps, ensName }) => {
+const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationComplete, poaps, ensName }): JSX.Element => {
   const { address } = useAccount();
-  const [isAttesting, setIsAttesting] = useState(false);
+  const publicClient = usePublicClient();
+  const [isAttesting, setIsAttesting] = useState<boolean>(false);
   const [attestationStatus, setAttestationStatus] = useState<string | null>(null);
   const [selectedRollup, setSelectedRollup] = useState<"base" | "optimism">("base");
 
-  const handleAttestation = async () => {
-    if (!address) {
+  const handleAttestation = async (): Promise<void> => {
+    if (!address || !publicClient) {
       setAttestationStatus("Error: Wallet not connected");
       return;
     }
@@ -42,16 +47,16 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
 
     try {
       const eas = new EAS(EAS_CONTRACT_ADDRESS);
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      eas.connect(signer);
+      const provider = new ethers.BrowserProvider(publicClient.transport);
+      const signer = await provider.getSigner();
+      await eas.connect(signer);
 
       const schemaEncoder = new SchemaEncoder("address userAddress,uint256 tokenId,uint256 timestamp,address attester");
       const poapData = poaps[0]; // Assuming we're using the first POAP for simplicity
       const encodedData = schemaEncoder.encodeData([
         { name: "userAddress", value: address, type: "address" },
-        { name: "tokenId", value: poapData?.token_id ?? "0", type: "uint256" },
-        { name: "timestamp", value: Math.floor(Date.now() / 1000), type: "uint256" },
+        { name: "tokenId", value: poapData?.token_id ? BigInt(poapData.token_id) : BigInt(0), type: "uint256" },
+        { name: "timestamp", value: BigInt(Math.floor(Date.now() / 1000)), type: "uint256" },
         { name: "attester", value: ATTESTER_ADDRESS, type: "address" },
       ]);
 
@@ -90,7 +95,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
         <select
           id="rollup"
           value={selectedRollup}
-          onChange={e => setSelectedRollup(e.target.value as "base" | "optimism")}
+          onChange={(e): void => setSelectedRollup(e.target.value as "base" | "optimism")}
           className="w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
         >
           <option value="base">Base (Ethereum L2 Rollup)</option>
@@ -139,9 +144,18 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
       >
         {isAttesting ? (
           <span className="flex items-center justify-center">
-            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg
+              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              />
             </svg>
             Creating Attestation...
           </span>
@@ -159,7 +173,13 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
       {attestationStatus && (
         <div className="mt-6 p-4 bg-green-100 border border-green-400 rounded-lg">
           <p className="text-green-700 flex items-center">
-            <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              className="w-6 h-6 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
             {attestationStatus}
