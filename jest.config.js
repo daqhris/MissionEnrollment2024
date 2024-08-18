@@ -8,7 +8,11 @@ module.exports = {
         tsconfig: "tsconfig.jest.json",
         useESM: true,
         babelConfig: {
-          presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"],
+          presets: [
+            "@babel/preset-env",
+            ["@babel/preset-react", { "runtime": "automatic" }],
+            "@babel/preset-typescript"
+          ],
           plugins: ["@babel/plugin-transform-runtime"],
         },
       },
@@ -16,7 +20,10 @@ module.exports = {
     "^.+\\.(js|jsx)$": [
       "babel-jest",
       {
-        presets: ["@babel/preset-env", "@babel/preset-react"],
+        presets: [
+          "@babel/preset-env",
+          ["@babel/preset-react", { "runtime": "automatic" }]
+        ],
         plugins: ["@babel/plugin-transform-runtime"],
       },
     ],
@@ -40,4 +47,5 @@ module.exports = {
       jsx: 'react-jsx',
     },
   },
+  testEnvironment: 'jsdom',
 };
