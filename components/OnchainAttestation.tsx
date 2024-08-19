@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { ethers } from "ethers";
-import { useAccount, usePublicClient } from "wagmi";
+import { BrowserProvider, JsonRpcSigner } from "ethers";
+import { useAccount, useWalletClient } from "wagmi";
 
 // This component uses the Ethereum Attestation Service (EAS) protocol
 // to create attestations on both Base and Optimism rollups
@@ -29,15 +29,19 @@ interface OnchainAttestationProps {
   ensName: string | null;
 }
 
-const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationComplete, poaps, ensName }): JSX.Element => {
+const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
+  onAttestationComplete,
+  poaps,
+  ensName
+}) => {
   const { address } = useAccount();
-  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
   const [isAttesting, setIsAttesting] = useState<boolean>(false);
   const [attestationStatus, setAttestationStatus] = useState<string | null>(null);
   const [selectedRollup, setSelectedRollup] = useState<"base" | "optimism">("base");
 
   const handleAttestation = async (): Promise<void> => {
-    if (!address || !publicClient) {
+    if (!address || !walletClient) {
       setAttestationStatus("Error: Wallet not connected");
       return;
     }
@@ -47,9 +51,12 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({ onAttestationCo
 
     try {
       const eas = new EAS(EAS_CONTRACT_ADDRESS);
-      const provider = new ethers.BrowserProvider(publicClient.transport);
+      if (!walletClient) {
+        throw new Error("Wallet client is not available");
+      }
+      const provider = new BrowserProvider(walletClient.transport);
       const signer = await provider.getSigner();
-      await eas.connect(signer);
+      eas.connect(signer as unknown as JsonRpcSigner);
 
       const schemaEncoder = new SchemaEncoder("address userAddress,uint256 tokenId,uint256 timestamp,address attester");
       const poapData = poaps[0]; // Assuming we're using the first POAP for simplicity

@@ -1,11 +1,11 @@
 import React from "react";
-import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
+import { RainbowKitCustomConnectButton } from "../components/scaffold-eth";
 
 interface WalletConnectionGuideProps {
   theme: string;
 }
 
-const WalletConnectionGuide: React.FC<WalletConnectionGuideProps> = ({ theme }) => {
+const WalletConnectionGuide: React.FC<WalletConnectionGuideProps> = ({ theme }: WalletConnectionGuideProps) => {
   return (
     <div className={`p-6 ${theme === "dark" ? "bg-gray-800" : "bg-white"} rounded-lg shadow-lg`}>
       <div className="mt-6">

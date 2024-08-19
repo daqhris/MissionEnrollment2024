@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useEnsAddress, useEnsName } from "wagmi";
+import { isAddress, getAddress } from "ethers";
 
-const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> = ({ onVerified }): JSX.Element => {
+const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> = ({ onVerified }) => {
   const [inputAddress, setInputAddress] = useState<string>("");
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  const { data: ensName, isLoading: isEnsNameLoading } = useEnsName({ address: inputAddress as `0x${string}` });
-  const { data: ensAddress, isLoading: isEnsAddressLoading } = useEnsAddress({ name: inputAddress });
+  const { data: ensName, isLoading: isEnsNameLoading } = useEnsName({
+    address: isAddress(inputAddress) ? inputAddress as `0x${string}` : undefined,
+    chainId: 1 // Assuming mainnet, adjust if needed
+  });
+  const { data: ensAddress, isLoading: isEnsAddressLoading } = useEnsAddress({
+    name: inputAddress.includes('.') ? inputAddress : undefined,
+    chainId: 1 // Assuming mainnet, adjust if needed
+  });
 
   const isLoading = isEnsNameLoading || isEnsAddressLoading;
 
@@ -22,31 +29,35 @@ const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> 
     setError("");
 
     try {
-      let verifiedAddress = inputAddress;
+      let verifiedAddress = inputAddress.trim();
 
-      if (inputAddress.endsWith(".eth")) {
+      if (verifiedAddress.includes('.')) {
+        // Potential ENS name
         if (isLoading) {
           // Wait for ENS resolution to complete
           await new Promise(resolve => setTimeout(resolve, 2000));
         }
         if (!ensAddress) {
-          // Check if the input is a valid Ethereum address despite ENS resolution failure
-          if (inputAddress.startsWith("0x") && inputAddress.length === 42) {
-            verifiedAddress = inputAddress;
-          } else {
-            throw new Error("Invalid ENS name or ENS resolution failed");
-          }
-        } else {
-          verifiedAddress = ensAddress;
+          throw new Error("Invalid ENS name or ENS resolution failed");
         }
-      } else if (!inputAddress.startsWith("0x") || inputAddress.length !== 42) {
-        throw new Error("Invalid Ethereum address format");
+        verifiedAddress = ensAddress;
+      } else {
+        // Check if it's a valid Ethereum address
+        if (!isAddress(verifiedAddress)) {
+          throw new Error("Invalid Ethereum address format");
+        }
+        // Normalize the address to checksum format
+        verifiedAddress = getAddress(verifiedAddress);
       }
 
-      // Additional checks can be added here (e.g., checksum validation)
+      // Ensure the address is valid after all checks
+      if (!isAddress(verifiedAddress)) {
+        throw new Error("Invalid address after verification");
+      }
 
       onVerified(verifiedAddress);
     } catch (err) {
+      console.error("Verification error:", err);
       setError(err instanceof Error ? err.message : "Verification failed");
     } finally {
       setIsVerifying(false);
