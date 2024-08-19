@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useEnsAddress, useEnsName } from "wagmi";
-import { isAddress, getAddress } from "ethers";
+import { useEnsAddress, useEnsName } from "@wagmi/core";
+import { isAddress, getAddress } from "viem";
 
 const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> = ({ onVerified }) => {
   const [inputAddress, setInputAddress] = useState<string>("");
@@ -8,11 +8,11 @@ const IdentityVerification: React.FC<{ onVerified: (address: string) => void }> 
   const [error, setError] = useState<string>("");
 
   const { data: ensName, isLoading: isEnsNameLoading } = useEnsName({
-    address: isAddress(inputAddress) ? inputAddress as `0x${string}` : undefined,
+    name: inputAddress.includes('.') ? inputAddress : undefined,
     chainId: 1 // Assuming mainnet, adjust if needed
   });
   const { data: ensAddress, isLoading: isEnsAddressLoading } = useEnsAddress({
-    name: inputAddress.includes('.') ? inputAddress : undefined,
+    address: isAddress(inputAddress) ? inputAddress as `0x${string}` : undefined,
     chainId: 1 // Assuming mainnet, adjust if needed
   });
 
