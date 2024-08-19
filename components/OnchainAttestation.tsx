@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { useAccount, useWalletClient } from "wagmi";
-import { getAddress, type Address } from "viem";
+import { useAccount, useWalletClient, usePublicClient } from "wagmi";
+import { Address, getAddress } from "viem";
+import type { WalletClient } from "viem";
 
 // This component uses the Ethereum Attestation Service (EAS) protocol
 // to create attestations on both Base and Optimism rollups
@@ -36,6 +37,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
 }) => {
   const { address } = useAccount();
   const { data: walletClient } = useWalletClient();
+  const publicClient = usePublicClient();
   const [isAttesting, setIsAttesting] = useState<boolean>(false);
   const [attestationStatus, setAttestationStatus] = useState<string | null>(null);
   const [selectedRollup, setSelectedRollup] = useState<"base" | "optimism">("base");
@@ -51,10 +53,8 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
 
     try {
       const eas = new EAS(EAS_CONTRACT_ADDRESS);
-      if (!walletClient) {
-        throw new Error("Wallet client not available");
-      }
-      await eas.connect(walletClient);
+      const viemWalletClient = walletClient as unknown as WalletClient;
+      await eas.connect(viemWalletClient);
 
       const schemaEncoder = new SchemaEncoder("address userAddress,uint256 tokenId,uint256 timestamp,address attester");
       const poapData = poaps[0]; // Assuming we're using the first POAP for simplicity

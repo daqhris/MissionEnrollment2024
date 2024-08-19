@@ -36,7 +36,18 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "useUnknownInCatchVariables": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitThis": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "next-env.d.ts",
