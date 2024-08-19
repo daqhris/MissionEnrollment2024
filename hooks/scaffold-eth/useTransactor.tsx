@@ -1,7 +1,6 @@
-import { getPublicClient } from "@wagmi/core";
+import { getPublicClient, SendTransactionMutate } from "@wagmi/core";
 import { Hash, SendTransactionParameters, WalletClient } from "viem";
 import { Config, useWalletClient } from "wagmi";
-import { SendTransactionMutate } from "wagmi/query";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { getBlockExplorerTxLink, getParsedError, notification } from "~~/utils/scaffold-eth";
 import { TransactorFuncOptions } from "~~/utils/scaffold-eth/contract";
@@ -65,7 +64,7 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       }
       notification.remove(notificationId);
 
-      const blockExplorerTxURL = network ? getBlockExplorerTxLink(network, transactionHash) : "";
+      const blockExplorerTxURL = network && transactionHash ? getBlockExplorerTxLink(network, transactionHash as `0x${string}`) : "";
 
       notificationId = notification.loading(
         <TxnNotification message="Waiting for transaction to complete." blockExplorerLink={blockExplorerTxURL} />,
