@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { useAccount, useWalletClient, usePublicClient } from "wagmi";
 import { Address, getAddress } from "viem";
-import type { WalletClient } from "viem";
+import type { WalletClient } from "wagmi";
 
 // This component uses the Ethereum Attestation Service (EAS) protocol
 // to create attestations on both Base and Optimism rollups
@@ -34,7 +34,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
   onAttestationComplete,
   poaps,
   ensName
-}) => {
+}: OnchainAttestationProps) => {
   const { address } = useAccount();
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
