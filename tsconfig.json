@@ -29,7 +29,8 @@
     "baseUrl": ".",
     "types": [
       "jest",
-      "node"
+      "node",
+      "react"
     ],
     "plugins": [
       {
