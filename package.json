@@ -34,7 +34,7 @@
     "axios": "^1.7.3",
     "blo": "^1.0.1",
     "daisyui": "4.5.0",
-    "ethereumjs-abi": "https://github.com/ethereumjs/ethereumjs-abi.git#master",
+    "ethereumjs-abi": "https://github.com/ethereumjs/ethereumjs-abi.git",
     "ethers": "^6.13.2",
     "express": "^4.19.2",
     "graphql": "^16.9.0",
