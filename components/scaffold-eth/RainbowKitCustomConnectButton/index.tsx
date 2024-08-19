@@ -7,8 +7,7 @@ import { AddressQRCodeModal } from "./AddressQRCodeModal";
 import { WrongNetworkDropdown } from "./WrongNetworkDropdown";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Address } from "viem";
-import { useNetworkColor } from "~~/hooks/scaffold-eth";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+import { useNetworkColor, useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { getBlockExplorerAddressLink } from "~~/utils/scaffold-eth";
 
 /**
@@ -20,7 +19,12 @@ export const RainbowKitCustomConnectButton = (): JSX.Element => {
 
   return (
     <ConnectButton.Custom>
-      {({ account, chain, openConnectModal, mounted }): JSX.Element => {
+      {({ account, chain, openConnectModal, mounted }: {
+        account: { address: string; displayName: string; ensAvatar?: string } | undefined;
+        chain: { id: number; name: string; unsupported?: boolean } | undefined;
+        openConnectModal: () => void;
+        mounted: boolean;
+      }): JSX.Element => {
         const connected = mounted && account && chain;
         const blockExplorerAddressLink = account
           ? getBlockExplorerAddressLink(targetNetwork, account.address)

@@ -1,8 +1,7 @@
-import { useTheme } from "next-themes";
 import { useNetwork, useSwitchNetwork } from "wagmi";
 import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
-import { getNetworkColor } from "../../hooks/scaffold-eth";
-import { getTargetNetworks } from "../../utils/scaffold-eth";
+import { useNetworkColor } from "../../../hooks/scaffold-eth";
+import { getTargetNetworks, ChainWithAttributes } from "../../../utils/scaffold-eth";
 
 const allowedNetworks = getTargetNetworks();
 
@@ -10,17 +9,16 @@ type NetworkOptionsProps = {
   hidden?: boolean;
 };
 
-export const NetworkOptions = ({ hidden = false }: NetworkOptionsProps) => {
+export const NetworkOptions = ({ hidden = false }: NetworkOptionsProps): JSX.Element => {
   const { switchNetwork } = useSwitchNetwork();
   const { chain } = useNetwork();
-  const { resolvedTheme } = useTheme();
-  const isDarkMode = resolvedTheme === "dark";
+  const getNetworkColor = useNetworkColor();
 
   return (
     <>
       {allowedNetworks
-        .filter(allowedNetwork => allowedNetwork.id !== chain?.id)
-        .map(allowedNetwork => (
+        .filter((allowedNetwork: ChainWithAttributes) => allowedNetwork.id !== chain?.id)
+        .map((allowedNetwork: ChainWithAttributes) => (
           <li key={allowedNetwork.id} className={hidden ? "hidden" : ""}>
             <button
               className="menu-item btn-sm !rounded-xl flex gap-3 py-3 whitespace-nowrap"
@@ -34,7 +32,7 @@ export const NetworkOptions = ({ hidden = false }: NetworkOptionsProps) => {
                 Switch to{" "}
                 <span
                   style={{
-                    color: getNetworkColor(allowedNetwork, isDarkMode),
+                    color: getNetworkColor(allowedNetwork),
                   }}
                 >
                   {allowedNetwork.name}

@@ -19,12 +19,11 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "~~/*": [
-        "./*"
-      ],
-      "@/*": [
-        "./*"
-      ]
+      "~~/*": ["./*"],
+      "@/*": ["./*"],
+      "components/*": ["./components/*"],
+      "hooks/*": ["./hooks/*"],
+      "utils/*": ["./utils/*"]
     },
     "baseUrl": ".",
     "types": [

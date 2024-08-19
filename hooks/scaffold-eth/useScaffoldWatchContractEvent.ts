@@ -1,7 +1,7 @@
 import { useTargetNetwork } from "./useTargetNetwork";
-import { Abi, ExtractAbiEventNames } from "abitype";
+import type { Abi, ExtractAbiEventNames } from "abitype";
 import { Log } from "viem";
-import { useWatchContractEvent } from "wagmi";
+import { useContractEvent } from "wagmi";
 import { addIndexedArgsToEvent, useDeployedContractInfo } from "~~/hooks/scaffold-eth";
 import { ContractAbi, ContractName, UseScaffoldEventConfig } from "~~/utils/scaffold-eth/contract";
 
@@ -35,11 +35,11 @@ export const useScaffoldWatchContractEvent = <
   // - If it's a POAP event, fetch additional data from POAP API
   // - Combine POAP data with blockchain event data
 
-  return useWatchContractEvent({
+  return useContractEvent({
     address: deployedContractData?.address,
     abi: deployedContractData?.abi as Abi,
     chainId: targetNetwork.id,
     eventName,
-    onLogs: listenerWithIndexedArgs,
+    listener: listenerWithIndexedArgs,
   });
 };

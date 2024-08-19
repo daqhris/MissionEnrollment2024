@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { isAddress, getAddress } from "viem";
 
 interface IdentityVerificationProps {
   onVerified: (address: string) => void;
 }
 
-const IdentityVerification: React.FC<IdentityVerificationProps> = ({ onVerified }) => {
+const IdentityVerification: React.FC<IdentityVerificationProps> = ({ onVerified }: IdentityVerificationProps) => {
   const [inputAddress, setInputAddress] = useState<string>("");
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [error, setError] = useState<string>("");

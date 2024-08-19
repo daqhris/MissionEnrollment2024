@@ -2,9 +2,8 @@ import { useState } from "react";
 import { useTargetNetwork } from "./useTargetNetwork";
 import { MutateOptions } from "@tanstack/react-query";
 import { Abi, ExtractAbiFunctionNames } from "abitype";
-import { Config, UseWriteContractParameters, useAccount, useWriteContract } from "wagmi";
-import { WriteContractErrorType, WriteContractReturnType } from "wagmi/actions";
-import { WriteContractVariables } from "wagmi/query";
+import { useAccount, useContractWrite, Address } from "wagmi";
+import { UseContractWriteConfig, WriteContractResult } from "wagmi";
 import { useDeployedContractInfo, useTransactor } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 import {
@@ -15,23 +14,27 @@ import {
 } from "~~/utils/scaffold-eth/contract";
 
 /**
- * Wrapper around wagmi's useWriteContract hook which automatically loads (by name) the contract ABI and address from
+ * Wrapper around wagmi's useContractWrite hook which automatically loads (by name) the contract ABI and address from
  * the contracts present in deployedContracts.ts & externalContracts.ts corresponding to targetNetworks configured in scaffold.config.ts
  * @param contractName - name of the contract to be written to
- * @param writeContractParams - wagmi's useWriteContract parameters
+ * @param writeContractConfig - wagmi's useContractWrite configuration
  */
 export const useScaffoldWriteContract = <TContractName extends ContractName>(
   contractName: TContractName,
-  writeContractParams?: UseWriteContractParameters,
+  writeContractConfig?: UseContractWriteConfig
 ) => {
   const { chain } = useAccount();
   const writeTx = useTransactor();
   const [isMining, setIsMining] = useState(false);
   const { targetNetwork } = useTargetNetwork();
 
-  const wagmiContractWrite = useWriteContract(writeContractParams);
-
   const { data: deployedContractData } = useDeployedContractInfo(contractName);
+
+  const wagmiContractWrite = useContractWrite({
+    address: deployedContractData?.address,
+    abi: deployedContractData?.abi,
+    ...writeContractConfig,
+  });
 
   const sendContractWriteAsyncTx = async <
     TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, "nonpayable" | "payable">,
@@ -57,21 +60,11 @@ export const useScaffoldWriteContract = <TContractName extends ContractName>(
       setIsMining(true);
       const { blockConfirmations, onBlockConfirmation, ...mutateOptions } = options || {};
       const makeWriteWithParams = () =>
-        wagmiContractWrite.writeContractAsync(
-          {
-            abi: deployedContractData.abi as Abi,
-            address: deployedContractData.address,
-            ...variables,
-          } as WriteContractVariables<Abi, string, any[], Config, number>,
-          mutateOptions as
-            | MutateOptions<
-                WriteContractReturnType,
-                WriteContractErrorType,
-                WriteContractVariables<Abi, string, any[], Config, number>,
-                unknown
-              >
-            | undefined,
-        );
+        wagmiContractWrite.writeAsync({
+          abi: deployedContractData.abi as Abi,
+          address: deployedContractData.address as `0x${string}`,
+          ...variables,
+        });
       const writeTxResult = await writeTx(makeWriteWithParams, { blockConfirmations, onBlockConfirmation });
 
       return writeTxResult;
@@ -107,15 +100,13 @@ export const useScaffoldWriteContract = <TContractName extends ContractName>(
         abi: deployedContractData.abi as Abi,
         address: deployedContractData.address,
         ...variables,
-      } as WriteContractVariables<Abi, string, any[], Config, number>,
-      options as
-        | MutateOptions<
-            WriteContractReturnType,
-            WriteContractErrorType,
-            WriteContractVariables<Abi, string, any[], Config, number>,
-            unknown
-          >
-        | undefined,
+      } as UseContractWriteConfig,
+      options as MutateOptions<
+        ReturnType<typeof useContractWrite>,
+        Error,
+        Parameters<typeof useContractWrite>[0],
+        unknown
+      > | undefined
     );
   };
 
