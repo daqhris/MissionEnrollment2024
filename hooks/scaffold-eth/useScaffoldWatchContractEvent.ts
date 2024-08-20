@@ -1,7 +1,6 @@
 import { useTargetNetwork } from "./useTargetNetwork";
 import type { Abi, Log } from "viem";
-import { useWatchContractEvent } from "wagmi";
-import type { UseWatchContractEventConfig } from "wagmi";
+import { useContractEvent } from "wagmi";
 import { addIndexedArgsToEvent, useDeployedContractInfo } from "~~/hooks/scaffold-eth";
 import type { ContractName, UseScaffoldEventConfig } from "~~/utils/scaffold-eth/contract";
 
@@ -9,7 +8,7 @@ import type { ContractName, UseScaffoldEventConfig } from "~~/utils/scaffold-eth
 // import { POAPClient } from '@poap/poap-eth-sdk';
 
 /**
- * Wrapper around wagmi's useWatchContractEvent hook which automatically loads (by name) the contract ABI and
+ * Wrapper around wagmi's useContractEvent hook which automatically loads (by name) the contract ABI and
  * address from the contracts present in deployedContracts.ts & externalContracts.ts
  * @param config - The config settings
  * @param config.contractName - deployed contract name
@@ -23,7 +22,7 @@ export const useScaffoldWatchContractEvent = <
   contractName,
   eventName,
   listener,
-}: UseScaffoldEventConfig<TContractName, TEventName>): ReturnType<typeof useWatchContractEvent> => {
+}: UseScaffoldEventConfig<TContractName, TEventName>): ReturnType<typeof useContractEvent> => {
   const { data: deployedContractData } = useDeployedContractInfo(contractName);
   const { targetNetwork } = useTargetNetwork();
 
@@ -35,11 +34,11 @@ export const useScaffoldWatchContractEvent = <
   // - If it's a POAP event, fetch additional data from POAP API
   // - Combine POAP data with blockchain event data
 
-  return useWatchContractEvent({
+  return useContractEvent({
     address: deployedContractData?.address,
     abi: deployedContractData?.abi as Abi,
     chainId: targetNetwork.id,
     eventName,
     listener: listenerWithIndexedArgs,
-  } as UseWatchContractEventConfig);
+  });
 };
