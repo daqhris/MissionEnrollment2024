@@ -1,9 +1,9 @@
 import { useTargetNetwork } from "./useTargetNetwork";
-import type { Abi, ExtractAbiEventNames } from "abitype";
-import { Log } from "viem";
+import type { Abi, Log } from "viem";
 import { useContractEvent } from "wagmi";
+import type { UseContractEventConfig } from "wagmi";
 import { addIndexedArgsToEvent, useDeployedContractInfo } from "~~/hooks/scaffold-eth";
-import { ContractAbi, ContractName, UseScaffoldEventConfig } from "~~/utils/scaffold-eth/contract";
+import type { ContractName, UseScaffoldEventConfig } from "~~/utils/scaffold-eth/contract";
 
 // TODO: Import POAP API client and necessary types
 // import { POAPClient } from '@poap/poap-eth-sdk';
@@ -14,21 +14,21 @@ import { ContractAbi, ContractName, UseScaffoldEventConfig } from "~~/utils/scaf
  * @param config - The config settings
  * @param config.contractName - deployed contract name
  * @param config.eventName - name of the event to listen for
- * @param config.onLogs - the callback that receives events.
+ * @param config.listener - the callback that receives events.
  */
 export const useScaffoldWatchContractEvent = <
   TContractName extends ContractName,
-  TEventName extends ExtractAbiEventNames<ContractAbi<TContractName>>,
+  TEventName extends string
 >({
   contractName,
   eventName,
-  onLogs,
-}: UseScaffoldEventConfig<TContractName, TEventName>) => {
+  listener,
+}: UseScaffoldEventConfig<TContractName, TEventName>): ReturnType<typeof useContractEvent> => {
   const { data: deployedContractData } = useDeployedContractInfo(contractName);
   const { targetNetwork } = useTargetNetwork();
 
-  const addIndexedArgsToLogs = (logs: Log[]) => logs.map(addIndexedArgsToEvent);
-  const listenerWithIndexedArgs = (logs: Log[]) => onLogs(addIndexedArgsToLogs(logs) as Parameters<typeof onLogs>[0]);
+  const addIndexedArgsToLogs = (logs: Log[]): Log[] => logs.map(addIndexedArgsToEvent);
+  const listenerWithIndexedArgs = (logs: Log[]): void => listener(addIndexedArgsToLogs(logs) as Parameters<typeof listener>[0]);
 
   // TODO: Integrate POAP protocol
   // - Check if the event is related to POAP (e.g., POAP minting or transfer)
@@ -41,5 +41,5 @@ export const useScaffoldWatchContractEvent = <
     chainId: targetNetwork.id,
     eventName,
     listener: listenerWithIndexedArgs,
-  });
+  } as UseContractEventConfig);
 };
