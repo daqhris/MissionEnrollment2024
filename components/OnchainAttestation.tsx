@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import type { PublicClient, WalletClient } from "viem";
-import type { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 
 type Address = `0x${string}`;
 
@@ -12,19 +11,25 @@ type WagmiHooks = {
 
 // Dynamic imports
 const importDependencies = async (): Promise<{
-  EAS: typeof EAS;
-  SchemaEncoder: typeof SchemaEncoder;
+  EAS: any;
+  SchemaEncoder: any;
   wagmiHooks: WagmiHooks;
 }> => {
   try {
-    const [easModule, { useAccount, useWalletClient, usePublicClient }] = await Promise.all([
+    const [{ EAS, SchemaEncoder }, wagmiModule] = await Promise.all([
       import('@ethereum-attestation-service/eas-sdk'),
       import('wagmi')
     ]);
 
-    if (!easModule.EAS || typeof easModule.EAS !== 'function') {
+    if (typeof EAS !== 'function') {
       throw new Error("EAS not found or is not a function in the imported module");
     }
+
+    if (typeof SchemaEncoder !== 'function') {
+      throw new Error("SchemaEncoder not found or is not a function in the imported module");
+    }
+
+    const { useAccount, useWalletClient, usePublicClient } = wagmiModule;
 
     if (typeof useAccount !== 'function' ||
         typeof useWalletClient !== 'function' ||
@@ -33,8 +38,8 @@ const importDependencies = async (): Promise<{
     }
 
     return {
-      EAS: easModule.EAS,
-      SchemaEncoder: easModule.SchemaEncoder,
+      EAS,
+      SchemaEncoder,
       wagmiHooks: {
         useAccount,
         useWalletClient,
@@ -103,6 +108,9 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
     const loadWagmiHooks = async (): Promise<void> => {
       try {
         const { wagmiHooks } = await importDependencies();
+        if (!wagmiHooks) {
+          throw new Error('Failed to load Wagmi hooks');
+        }
         const accountResult = wagmiHooks.useAccount();
         const walletClientResult = wagmiHooks.useWalletClient();
         const publicClientResult = wagmiHooks.usePublicClient();
@@ -173,6 +181,9 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
 
     try {
       const { SchemaEncoder } = await importDependencies();
+      if (!SchemaEncoder) {
+        throw new Error("Failed to import SchemaEncoder");
+      }
       const schemaEncoder = new SchemaEncoder("address userAddress,uint256 tokenId,uint256 timestamp,address attester");
       const poapData = poaps[0]; // Assuming we're using the first POAP for simplicity
 
