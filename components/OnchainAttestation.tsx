@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from "react";
-import type { Address, PublicClient, WalletClient } from "viem";
-import { isAddress } from "viem";
+import { useState, useEffect } from "react";
 import type { TypedDataSigner } from "@ethersproject/abstract-signer";
-import type { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import type { UseAccountResult, UseWalletClientResult, UsePublicClientResult } from "wagmi";
 
 // Types for dynamic imports
-type DynamicEAS = typeof import("@ethereum-attestation-service/eas-sdk")["EAS"];
-type DynamicSchemaEncoder = typeof import("@ethereum-attestation-service/eas-sdk")["SchemaEncoder"];
+type Address = `0x${string}`;
+type PublicClient = any; // Replace with more specific type if available
+type WalletClient = any; // Replace with more specific type if available
+type EAS = any; // Replace with more specific type if available
+
+// Types for dynamic imports
+type DynamicEAS = any; // Will be properly typed when imported
+type Address = `0x${string}`; // Ethereum address type
+type WalletClient = any; // Will be properly typed when imported
+type PublicClient = any; // Will be properly typed when imported
+
 type WagmiHooks = {
   useAccount: () => { address?: Address; isConnecting: boolean; isDisconnected: boolean };
   useWalletClient: () => { data?: WalletClient };
@@ -16,22 +21,25 @@ type WagmiHooks = {
 
 // Dynamic imports
 const importDependencies = async (): Promise<{
-  EAS: DynamicEAS;
-  SchemaEncoder: DynamicSchemaEncoder;
-  wagmiHooks: WagmiHooks;
+  React: typeof import('react');
+  viem: typeof import('viem');
+  EAS: typeof import('@ethereum-attestation-service/eas-sdk').EAS;
+  wagmiHooks: {
+    useAccount: () => any;
+    useWalletClient: () => any;
+    usePublicClient: () => any;
+  };
 }> => {
   try {
-    const [easModule, wagmi] = await Promise.all([
-      import("@ethereum-attestation-service/eas-sdk"),
-      import("wagmi")
+    const [React, viem, easModule, wagmi] = await Promise.all([
+      import('react'),
+      import('viem'),
+      import('@ethereum-attestation-service/eas-sdk'),
+      import('wagmi')
     ]);
 
-    if (!easModule.EAS || !easModule.SchemaEncoder) {
-      throw new Error("EAS or SchemaEncoder not found in the imported module");
-    }
-
-    if (typeof easModule.EAS !== 'function' || typeof easModule.SchemaEncoder !== 'function') {
-      throw new Error("EAS or SchemaEncoder not found in the imported module");
+    if (!easModule.EAS || typeof easModule.EAS !== 'function') {
+      throw new Error("EAS not found or is not a function in the imported module");
     }
 
     const { useAccount, useWalletClient, usePublicClient } = wagmi;
@@ -42,8 +50,9 @@ const importDependencies = async (): Promise<{
     }
 
     return {
+      React,
+      viem,
       EAS: easModule.EAS,
-      SchemaEncoder: easModule.SchemaEncoder,
       wagmiHooks: {
         useAccount,
         useWalletClient,
@@ -58,11 +67,7 @@ const importDependencies = async (): Promise<{
   }
 };
 
-type EncodableData = {
-  name: string;
-  value: string | bigint;
-  type: string;
-};
+// Removed unused EncodableData type
 
 // This component uses the Ethereum Attestation Service (EAS) protocol
 // to create attestations on both Base and Optimism rollups
