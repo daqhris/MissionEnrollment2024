@@ -1,17 +1,9 @@
 import { useState, useEffect } from "react";
 import type { TypedDataSigner } from "@ethersproject/abstract-signer";
+import type { PublicClient, WalletClient } from "viem";
+import type { EAS } from "@ethereum-attestation-service/eas-sdk";
 
-// Types for dynamic imports
 type Address = `0x${string}`;
-type PublicClient = any; // Replace with more specific type if available
-type WalletClient = any; // Replace with more specific type if available
-type EAS = any; // Replace with more specific type if available
-
-// Types for dynamic imports
-type DynamicEAS = any; // Will be properly typed when imported
-type Address = `0x${string}`; // Ethereum address type
-type WalletClient = any; // Will be properly typed when imported
-type PublicClient = any; // Will be properly typed when imported
 
 type WagmiHooks = {
   useAccount: () => { address?: Address; isConnecting: boolean; isDisconnected: boolean };
@@ -21,22 +13,17 @@ type WagmiHooks = {
 
 // Dynamic imports
 const importDependencies = async (): Promise<{
-  React: typeof import('react');
-  viem: typeof import('viem');
   EAS: typeof import('@ethereum-attestation-service/eas-sdk').EAS;
-  wagmiHooks: {
-    useAccount: () => any;
-    useWalletClient: () => any;
-    usePublicClient: () => any;
-  };
+  SchemaEncoder: typeof import('@ethereum-attestation-service/eas-sdk').SchemaEncoder;
+  wagmiHooks: WagmiHooks;
 }> => {
   try {
-    const [React, viem, easModule, wagmi] = await Promise.all([
-      import('react'),
-      import('viem'),
+    const [easModule, wagmi] = await Promise.all([
       import('@ethereum-attestation-service/eas-sdk'),
       import('wagmi')
     ]);
+
+    const { useAccount, useWalletClient, usePublicClient } = wagmi;
 
     if (!easModule.EAS || typeof easModule.EAS !== 'function') {
       throw new Error("EAS not found or is not a function in the imported module");
@@ -91,7 +78,15 @@ interface Poap {
 
 interface OnchainAttestationProps {
   onAttestationComplete: () => void;
-  poaps: Poap[];
+  poaps: Array<{
+    event: {
+      id: string;
+      name: string;
+      image_url: string;
+      start_date: string;
+    };
+    token_id: string;
+  }>;
   ensName: string | null;
 }
 
