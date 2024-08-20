@@ -1,22 +1,24 @@
 import { useState, useEffect } from "react";
 import type { PublicClient, WalletClient } from "viem";
+import type { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import type { useAccount, useWalletClient, usePublicClient } from "wagmi";
 
 type Address = `0x${string}`;
 
 type WagmiHooks = {
-  useAccount: () => { address?: Address; isConnecting: boolean; isDisconnected: boolean };
-  useWalletClient: () => { data?: WalletClient };
-  usePublicClient: () => PublicClient;
+  useAccount: typeof useAccount;
+  useWalletClient: typeof useWalletClient;
+  usePublicClient: typeof usePublicClient;
 };
 
 // Dynamic imports
 const importDependencies = async (): Promise<{
-  EAS: any;
-  SchemaEncoder: any;
+  EAS: typeof EAS;
+  SchemaEncoder: typeof SchemaEncoder;
   wagmiHooks: WagmiHooks;
 }> => {
   try {
-    const [{ EAS, SchemaEncoder }, wagmiModule] = await Promise.all([
+    const [easModule, wagmiModule] = await Promise.all([
       import('@ethereum-attestation-service/eas-sdk'),
       import('wagmi')
     ]);
@@ -90,6 +92,22 @@ interface OnchainAttestationProps {
   ensName: string | null;
 }
 
+OnchainAttestationProps.propTypes = {
+  onAttestationComplete: PropTypes.func.isRequired,
+  poaps: PropTypes.arrayOf(
+    PropTypes.shape({
+      event: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        image_url: PropTypes.string.isRequired,
+        start_date: PropTypes.string.isRequired,
+      }).isRequired,
+      token_id: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  ensName: PropTypes.string,
+};
+
 const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
   onAttestationComplete,
   poaps,
@@ -101,7 +119,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
   const [isAttesting, setIsAttesting] = useState<boolean>(false);
   const [attestationStatus, setAttestationStatus] = useState<string | null>(null);
   const [selectedRollup, setSelectedRollup] = useState<"base" | "optimism">("base");
-  const [eas, setEAS] = useState<any | null>(null);
+  const [eas, setEAS] = useState<EAS | null>(null);
 
   useEffect(() => {
     let isMounted = true;
