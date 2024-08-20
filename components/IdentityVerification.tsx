@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import type { ChangeEvent } from "react";
 import { isAddress, getAddress } from "viem";
 
 interface IdentityVerificationProps {
   onVerified: (address: string) => void;
 }
 
-const IdentityVerification: React.FC<IdentityVerificationProps> = ({ onVerified }: IdentityVerificationProps) => {
+const IdentityVerification: React.FC<IdentityVerificationProps> = ({ onVerified }): JSX.Element => {
   const [inputAddress, setInputAddress] = useState<string>("");
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  useEffect(() => {
+  useEffect((): void => {
     if (inputAddress) {
       setError("");
     }
@@ -41,12 +42,16 @@ const IdentityVerification: React.FC<IdentityVerificationProps> = ({ onVerified 
       }
 
       onVerified(verifiedAddress);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Verification error:", err);
       setError(err instanceof Error ? err.message : "Verification failed");
     } finally {
       setIsVerifying(false);
     }
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setInputAddress(e.target.value);
   };
 
   return (
@@ -57,7 +62,7 @@ const IdentityVerification: React.FC<IdentityVerificationProps> = ({ onVerified 
         <input
           type="text"
           value={inputAddress}
-          onChange={(e) => setInputAddress(e.target.value)}
+          onChange={handleInputChange}
           className="w-full max-w-md p-2 border rounded mb-4"
           placeholder="0x..."
           disabled={isVerifying}

@@ -1,14 +1,75 @@
-import { useState } from "react";
-import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { useAccount, useWalletClient, usePublicClient, WalletClient } from "wagmi";
-import { Address } from "viem";
+import React, { useState, useEffect } from "react";
+import type { Address, PublicClient, WalletClient } from "viem";
+import { isAddress } from "viem";
+import type { TypedDataSigner } from "@ethersproject/abstract-signer";
+import type { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import type { UseAccountResult, UseWalletClientResult, UsePublicClientResult } from "wagmi";
+
+// Types for dynamic imports
+type DynamicEAS = typeof import("@ethereum-attestation-service/eas-sdk")["EAS"];
+type DynamicSchemaEncoder = typeof import("@ethereum-attestation-service/eas-sdk")["SchemaEncoder"];
+type WagmiHooks = {
+  useAccount: () => { address?: Address; isConnecting: boolean; isDisconnected: boolean };
+  useWalletClient: () => { data?: WalletClient };
+  usePublicClient: () => PublicClient;
+};
+
+// Dynamic imports
+const importDependencies = async (): Promise<{
+  EAS: DynamicEAS;
+  SchemaEncoder: DynamicSchemaEncoder;
+  wagmiHooks: WagmiHooks;
+}> => {
+  try {
+    const [easModule, wagmi] = await Promise.all([
+      import("@ethereum-attestation-service/eas-sdk"),
+      import("wagmi")
+    ]);
+
+    if (!easModule.EAS || !easModule.SchemaEncoder) {
+      throw new Error("EAS or SchemaEncoder not found in the imported module");
+    }
+
+    if (typeof easModule.EAS !== 'function' || typeof easModule.SchemaEncoder !== 'function') {
+      throw new Error("EAS or SchemaEncoder not found in the imported module");
+    }
+
+    const { useAccount, useWalletClient, usePublicClient } = wagmi;
+    if (typeof useAccount !== 'function' ||
+        typeof useWalletClient !== 'function' ||
+        typeof usePublicClient !== 'function') {
+      throw new Error("Required Wagmi hooks not found in the imported module");
+    }
+
+    return {
+      EAS: easModule.EAS,
+      SchemaEncoder: easModule.SchemaEncoder,
+      wagmiHooks: {
+        useAccount,
+        useWalletClient,
+        usePublicClient
+      }
+    };
+  } catch (error) {
+    console.error("Error importing dependencies:", error);
+    throw new Error(
+      `Failed to import required dependencies: ${error instanceof Error ? error.message : String(error)}`
+    );
+  }
+};
+
+type EncodableData = {
+  name: string;
+  value: string | bigint;
+  type: string;
+};
 
 // This component uses the Ethereum Attestation Service (EAS) protocol
 // to create attestations on both Base and Optimism rollups
 
-const EAS_CONTRACT_ADDRESS = "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"; // Sepolia testnet
-const SCHEMA_UID = "0x40e5abe23a3378a9a43b7e874c5cb8dfd4d6b0823501d317acee41e08d3af4dd"; // Actual schema UID for mission enrollment
-const ATTESTER_ADDRESS = "0xF0bC5CC2B4866dAAeCb069430c60b24520077037"; // Actual address of daqhris.eth
+const EAS_CONTRACT_ADDRESS: `0x${string}` = "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"; // Sepolia testnet
+const SCHEMA_UID: `0x${string}` = "0x40e5abe23a3378a9a43b7e874c5cb8dfd4d6b0823501d317acee41e08d3af4dd"; // Actual schema UID for mission enrollment
+const ATTESTER_ADDRESS: `0x${string}` = "0xF0bC5CC2B4866dAAeCb069430c60b24520077037"; // Actual address of daqhris.eth
 const ATTESTER_NAME = "mission-enrollment.daqhris.eth";
 
 interface PoapEvent {
@@ -33,17 +94,84 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
   onAttestationComplete,
   poaps,
   ensName
-}: OnchainAttestationProps): JSX.Element => {
-  const { address } = useAccount();
-  const { data: walletClient } = useWalletClient();
-  const publicClient = usePublicClient();
+}): JSX.Element => {
+  const [address, setAddress] = useState<Address | undefined>(undefined);
+  const [walletClient, setWalletClient] = useState<WalletClient | undefined>(undefined);
+  const [publicClient, setPublicClient] = useState<PublicClient | undefined>(undefined);
   const [isAttesting, setIsAttesting] = useState<boolean>(false);
   const [attestationStatus, setAttestationStatus] = useState<string | null>(null);
   const [selectedRollup, setSelectedRollup] = useState<"base" | "optimism">("base");
+  const [eas, setEAS] = useState<EAS | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadWagmiHooks = async (): Promise<void> => {
+      try {
+        const { wagmiHooks } = await importDependencies();
+        const { useAccount, useWalletClient, usePublicClient } = wagmiHooks;
+
+        const accountResult = useAccount();
+        const walletClientResult = useWalletClient();
+        const publicClientResult = usePublicClient();
+
+        if (isMounted) {
+          if (accountResult.address) setAddress(accountResult.address);
+          if (walletClientResult.data) setWalletClient(walletClientResult.data);
+          if (publicClientResult) setPublicClient(publicClientResult);
+        }
+      } catch (error) {
+        console.error('Error loading Wagmi hooks:', error instanceof Error ? error.message : String(error));
+        if (isMounted) {
+          setAttestationStatus('Failed to load wallet connection. Please refresh and try again.');
+        }
+      }
+    };
+    void loadWagmiHooks();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!address || !walletClient || !publicClient) {
+      setAttestationStatus('Please connect your wallet to continue.');
+    } else {
+      setAttestationStatus(null);
+    }
+  }, [address, walletClient, publicClient]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const initializeEAS = async (): Promise<void> => {
+      if (!walletClient) return;
+      try {
+        const { EAS } = await importDependencies();
+        const easInstance = new EAS(EAS_CONTRACT_ADDRESS);
+        if ('signTypedData' in walletClient) {
+          await easInstance.connect(walletClient as unknown as TypedDataSigner);
+          if (isMounted) {
+            setEAS(easInstance);
+          }
+        } else {
+          throw new Error("Wallet client does not support signing typed data");
+        }
+      } catch (error: unknown) {
+        console.error('Error initializing EAS:', error);
+        if (isMounted) {
+          setAttestationStatus(error instanceof Error ? error.message : 'Failed to initialize attestation service. Please try again.');
+        }
+      }
+    };
+
+    void initializeEAS();
+    return () => {
+      isMounted = false;
+    };
+  }, [walletClient]);
 
   const handleAttestation = async (): Promise<void> => {
-    if (!address || !walletClient) {
-      setAttestationStatus("Error: Wallet not connected");
+    if (!address || !walletClient || !publicClient || !eas) {
+      setAttestationStatus("Error: Wallet not connected or EAS not initialized");
       return;
     }
 
@@ -51,19 +179,22 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
     setAttestationStatus("Initiating attestation...");
 
     try {
-      const eas = new EAS(EAS_CONTRACT_ADDRESS);
-      await eas.connect(walletClient);
-
+      const { SchemaEncoder } = await importDependencies();
       const schemaEncoder = new SchemaEncoder("address userAddress,uint256 tokenId,uint256 timestamp,address attester");
       const poapData = poaps[0]; // Assuming we're using the first POAP for simplicity
+
+      if (!poapData) {
+        throw new Error("No POAP data available");
+      }
+
       const encodedData = schemaEncoder.encodeData([
         { name: "userAddress", value: address, type: "address" },
-        { name: "tokenId", value: poapData?.token_id ? BigInt(poapData.token_id) : BigInt(0), type: "uint256" },
+        { name: "tokenId", value: BigInt(poapData.token_id || 0), type: "uint256" },
         { name: "timestamp", value: BigInt(Math.floor(Date.now() / 1000)), type: "uint256" },
-        { name: "attester", value: ATTESTER_ADDRESS as `0x${string}`, type: "address" },
-      ]);
+        { name: "attester", value: ATTESTER_ADDRESS, type: "address" },
+      ] as const);
 
-      const tx = await eas.attest({
+      const attestation = await eas.attest({
         schema: SCHEMA_UID,
         data: {
           recipient: address,
@@ -73,16 +204,26 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
         },
       });
 
-      const newAttestationUID = await tx.wait();
+      setAttestationStatus(`Attestation initiated. Waiting for confirmation...`);
 
-      setAttestationStatus(`Attestation created successfully on ${selectedRollup}. UID: ${newAttestationUID}`);
+      const receipt = await publicClient.waitForTransactionReceipt({ hash: attestation.tx.hash });
+
+      if (!receipt.transactionHash) {
+        throw new Error("Failed to get valid transaction hash");
+      }
+
+      setAttestationStatus(`Attestation created successfully on ${selectedRollup}. Transaction Hash: ${receipt.transactionHash}`);
       onAttestationComplete();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Attestation error:", error);
-      setAttestationStatus(`Attestation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      setAttestationStatus(`Attestation failed: ${error instanceof Error ? error.message : 'Unknown error occurred'}`);
     } finally {
       setIsAttesting(false);
     }
+  };
+
+  const handleRollupChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    setSelectedRollup(e.target.value as "base" | "optimism");
   };
 
   return (
@@ -98,7 +239,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
         <select
           id="rollup"
           value={selectedRollup}
-          onChange={(e): void => setSelectedRollup(e.target.value as "base" | "optimism")}
+          onChange={handleRollupChange}
           className="w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
         >
           <option value="base">Base (Ethereum L2 Rollup)</option>
