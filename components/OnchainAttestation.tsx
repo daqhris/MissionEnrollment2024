@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import type { TypedDataSigner } from "@ethersproject/abstract-signer";
 import type { PublicClient, WalletClient } from "viem";
-import type { EAS } from "@ethereum-attestation-service/eas-sdk";
+import type { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 
 type Address = `0x${string}`;
 
@@ -13,23 +12,20 @@ type WagmiHooks = {
 
 // Dynamic imports
 const importDependencies = async (): Promise<{
-  EAS: typeof import('@ethereum-attestation-service/eas-sdk').EAS;
-  SchemaEncoder: typeof import('@ethereum-attestation-service/eas-sdk').SchemaEncoder;
+  EAS: typeof EAS;
+  SchemaEncoder: typeof SchemaEncoder;
   wagmiHooks: WagmiHooks;
 }> => {
   try {
-    const [easModule, wagmi] = await Promise.all([
+    const [easModule, { useAccount, useWalletClient, usePublicClient }] = await Promise.all([
       import('@ethereum-attestation-service/eas-sdk'),
       import('wagmi')
     ]);
-
-    const { useAccount, useWalletClient, usePublicClient } = wagmi;
 
     if (!easModule.EAS || typeof easModule.EAS !== 'function') {
       throw new Error("EAS not found or is not a function in the imported module");
     }
 
-    const { useAccount, useWalletClient, usePublicClient } = wagmi;
     if (typeof useAccount !== 'function' ||
         typeof useWalletClient !== 'function' ||
         typeof usePublicClient !== 'function') {
@@ -37,9 +33,8 @@ const importDependencies = async (): Promise<{
     }
 
     return {
-      React,
-      viem,
       EAS: easModule.EAS,
+      SchemaEncoder: easModule.SchemaEncoder,
       wagmiHooks: {
         useAccount,
         useWalletClient,
@@ -101,23 +96,21 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
   const [isAttesting, setIsAttesting] = useState<boolean>(false);
   const [attestationStatus, setAttestationStatus] = useState<string | null>(null);
   const [selectedRollup, setSelectedRollup] = useState<"base" | "optimism">("base");
-  const [eas, setEAS] = useState<EAS | null>(null);
+  const [eas, setEAS] = useState<any | null>(null);
 
   useEffect(() => {
     let isMounted = true;
     const loadWagmiHooks = async (): Promise<void> => {
       try {
         const { wagmiHooks } = await importDependencies();
-        const { useAccount, useWalletClient, usePublicClient } = wagmiHooks;
-
-        const accountResult = useAccount();
-        const walletClientResult = useWalletClient();
-        const publicClientResult = usePublicClient();
+        const accountResult = wagmiHooks.useAccount();
+        const walletClientResult = wagmiHooks.useWalletClient();
+        const publicClientResult = wagmiHooks.usePublicClient();
 
         if (isMounted) {
           if (accountResult.address) setAddress(accountResult.address);
           if (walletClientResult.data) setWalletClient(walletClientResult.data);
-          if (publicClientResult) setPublicClient(publicClientResult);
+          setPublicClient(publicClientResult);
         }
       } catch (error) {
         console.error('Error loading Wagmi hooks:', error instanceof Error ? error.message : String(error));
@@ -148,7 +141,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
         const { EAS } = await importDependencies();
         const easInstance = new EAS(EAS_CONTRACT_ADDRESS);
         if ('signTypedData' in walletClient) {
-          await easInstance.connect(walletClient as unknown as TypedDataSigner);
+          await easInstance.connect(walletClient as any);
           if (isMounted) {
             setEAS(easInstance);
           }
