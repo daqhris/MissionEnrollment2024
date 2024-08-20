@@ -1,9 +1,7 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { NetworkOptions } from "./NetworkOptions";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { getAddress } from "viem";
-import { Address } from "viem";
-import { useDisconnect } from "wagmi";
+import { getAddress, Address } from "viem";
 import {
   ArrowLeftOnRectangleIcon,
   ArrowTopRightOnSquareIcon,
@@ -19,6 +17,12 @@ import { getTargetNetworks } from "~~/utils/scaffold-eth";
 
 const allowedNetworks = getTargetNetworks();
 
+// Dynamic import for wagmi
+const useDisconnect = async () => {
+  const wagmi = await import('wagmi');
+  return wagmi.useDisconnect();
+};
+
 type AddressInfoDropdownProps = {
   address: Address;
   blockExplorerAddressLink: string | undefined;
@@ -32,7 +36,16 @@ export const AddressInfoDropdown = ({
   displayName,
   blockExplorerAddressLink,
 }: AddressInfoDropdownProps): JSX.Element => {
-  const { disconnect } = useDisconnect();
+  const [disconnect, setDisconnect] = useState<(() => void) | undefined>(undefined);
+
+  useEffect(() => {
+    const loadDisconnect = async () => {
+      const disconnectHook = await useDisconnect();
+      setDisconnect(() => disconnectHook);
+    };
+    void loadDisconnect();
+  }, []);
+
   const checkSumAddress = getAddress(address);
 
   const [addressCopied, setAddressCopied] = useState<boolean>(false);

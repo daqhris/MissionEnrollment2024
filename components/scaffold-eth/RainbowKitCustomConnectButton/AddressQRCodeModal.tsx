@@ -1,6 +1,16 @@
-import { QRCodeSVG } from "qrcode.react";
+import dynamic from 'next/dynamic';
 import { Address as AddressType } from "viem";
 import { Address } from "~~/components/scaffold-eth";
+
+const QRCodeSVG = dynamic<{ value: string; size: number }>(() =>
+  import('qrcode.react').then(mod => mod.QRCodeSVG).catch(err => {
+    console.error('Failed to load QRCodeSVG:', err);
+    return () => <div>QR Code unavailable</div>;
+  }),
+  { ssr: false, loading: () => <div>Loading QR Code...</div> }
+);
+
+type QRCodeSVGProps = { value: string; size: number };
 
 type AddressQRCodeModalProps = {
   address: AddressType;

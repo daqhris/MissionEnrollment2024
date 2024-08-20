@@ -29,7 +29,7 @@ export const Balance = ({ address, className = "", usdMode }: BalanceProps): JSX
     address,
   });
 
-  const { displayUsdMode, toggleDisplayUsdMode } = useDisplayUsdMode({ defaultUsdMode: usdMode });
+  const { displayUsdMode, toggleDisplayUsdMode } = useDisplayUsdMode({ defaultUsdMode: usdMode ?? false });
 
   if (!address || isLoading || balance === null || (isNativeCurrencyPriceFetching && nativeCurrencyPrice === 0)) {
     return (

@@ -5,7 +5,7 @@ import NProgress from "nprogress";
 
 type PushStateInput = [data: unknown, unused: string, url?: string | URL | null | undefined];
 
-export const ProgressBar: React.FC = () => {
+export const ProgressBar: React.FC = (): JSX.Element => {
   const height = "3px";
   const color = "#2299dd";
 
@@ -52,7 +52,7 @@ export const ProgressBar: React.FC = () => {
       }
     };
 
-    const handleMutation: MutationCallback = (): void => {
+    const handleMutation: MutationCallback = (mutations: MutationRecord[]): void => {
       const anchorElements = document.querySelectorAll("a");
       anchorElements.forEach(anchor => anchor.addEventListener("click", handleAnchorClick));
     };
