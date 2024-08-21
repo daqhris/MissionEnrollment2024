@@ -1,8 +1,9 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import ContractInput from "./ContractInput";
 import { getFunctionInputKey, getInitalTupleArrayFormState } from "./utilsContract";
 import { replacer } from "~~/utils/scaffold-eth/common";
-import { AbiParameterTuple } from "~~/utils/scaffold-eth/contract";
+import type { AbiParameterTuple } from "~~/utils/scaffold-eth/contract";
 
 type TupleArrayProps = {
   abiTupleParameter: AbiParameterTuple & { isVirtual?: true };
@@ -21,32 +22,38 @@ export const TupleArray: React.FC<TupleArrayProps> = ({ abiTupleParameter, setPa
 
   useEffect((): void => {
     // Extract and group fields based on index prefix
-    const groupedFields = Object.keys(form).reduce((acc, key) => {
+    const groupedFields = Object.keys(form).reduce<Record<string, Record<string, unknown>>>((acc, key) => {
       const [indexPrefix, ...restArray] = key.split("_");
       const componentName = restArray.join("_");
-      if (!acc[indexPrefix]) {
-        acc[indexPrefix] = {};
+      if (indexPrefix) {
+        if (!acc[indexPrefix]) {
+          acc[indexPrefix] = {};
+        }
+        acc[indexPrefix][componentName] = form[key];
       }
-      acc[indexPrefix][componentName] = form[key];
       return acc;
-    }, {} as Record<string, Record<string, unknown>>);
+    }, {});
 
     let argsArray: Array<Record<string, unknown>> = [];
 
     Object.keys(groupedFields).forEach(key => {
-      const currentKeyValues = Object.values(groupedFields[key]);
+      const group = groupedFields[key];
+      if (group) {
+        const currentKeyValues = Object.values(group);
 
-      const argsStruct: Record<string, unknown> = {};
-      abiTupleParameter.components.forEach((component, componentIndex) => {
-        argsStruct[component.name || `input_${componentIndex}_`] = currentKeyValues[componentIndex];
-      });
+        const argsStruct: Record<string, unknown> = {};
+        abiTupleParameter.components.forEach((component, componentIndex) => {
+          argsStruct[component.name || `input_${componentIndex}_`] = currentKeyValues[componentIndex];
+        });
 
-      argsArray.push(argsStruct);
+        argsArray.push(argsStruct);
+      }
     });
 
     if (depth > 1) {
       argsArray = argsArray.map(args => {
-        return args[abiTupleParameter.components[0].name || "tuple"] as Record<string, unknown>;
+        const key = abiTupleParameter.components[0]?.name || "tuple";
+        return (args[key] as Record<string, unknown>) || {};
       });
     }
 
