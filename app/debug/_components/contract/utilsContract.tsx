@@ -98,14 +98,14 @@ const adjustInput = (input: AbiParameterTuple): AbiParameter => {
     return {
       ...input,
       components: transformComponents(input.components, depth, {
-        internalType: input.internalType || "struct",
+        internalType: input.internalType,
         name: input.name,
-      }),
+      } as { internalType?: string; name?: string }),
     };
   } else if (input.components) {
     return {
       ...input,
-      components: input.components.map((value: AbiParameterTuple) => adjustInput(value)),
+      components: input.components.map((value) => adjustInput(value as AbiParameterTuple)),
     };
   }
   return input;
@@ -135,7 +135,7 @@ const transformComponents = (
 const transformAbiFunction = (abiFunction: AbiFunction): AbiFunction => {
   return {
     ...abiFunction,
-    inputs: abiFunction.inputs.map((value: AbiParameterTuple) => adjustInput(value)),
+    inputs: abiFunction.inputs.map((value: AbiParameter) => adjustInput(value as AbiParameterTuple)),
   };
 };
 

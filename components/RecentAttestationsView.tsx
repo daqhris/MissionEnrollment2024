@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Attestation } from "../types/attestation";
+import type { Attestation } from "../types/attestation";
 import { AttestationCard } from "./AttestationCard";
 import { Spinner } from "./assets/Spinner";
 import tw from "tailwind-styled-components";
