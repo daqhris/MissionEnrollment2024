@@ -1,24 +1,27 @@
 "use client";
 
-import React, { SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import type { SetStateAction } from "react";
 import ContractInput from "./ContractInput";
 import { InheritanceTooltip } from "./InheritanceTooltip";
-import { Abi, AbiFunction } from "abitype";
-import { Address } from "viem";
+import type { Abi, AbiFunction, AbiParameter } from "abitype";
+import type { Address } from "viem";
 import { useReadContract } from "wagmi";
 import {
   getFunctionInputKey,
   getInitialFormState,
   getParsedContractFunctionArgs,
-  transformAbiFunction,
 } from "~~/app/debug/_components/contract";
-import { DisplayContent, displayTxResult } from "~~/app/debug/_components/contract/utilsDisplay";
+import { displayTxResult } from "~~/app/debug/_components/contract/utilsDisplay";
+import type { DisplayContent } from "~~/app/debug/_components/contract/utilsDisplay";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
+import type { ContractAbi } from "~~/utils/scaffold-eth/contract";
 
 type ReadOnlyFunctionFormProps = {
   contractAddress: Address;
-  abiFunction: AbiFunction;
+  functionName: string;
+  functionArgs: readonly AbiParameter[];
   inheritedFrom?: string;
   abi: Abi;
 };
@@ -27,18 +30,25 @@ type FormState = Record<string, unknown>;
 
 export const ReadOnlyFunctionForm: React.FC<ReadOnlyFunctionFormProps> = ({
   contractAddress,
-  abiFunction,
+  functionName,
+  functionArgs,
   inheritedFrom,
   abi,
 }): JSX.Element => {
-  const [form, setForm] = useState<FormState>(() => getInitialFormState(abiFunction));
+  const [form, setForm] = useState<FormState>(() => getInitialFormState({
+    name: functionName,
+    type: "function",
+    inputs: functionArgs,
+    outputs: [],
+    stateMutability: "view"
+  } as AbiFunction));
   const [result, setResult] = useState<unknown>();
   const { targetNetwork } = useTargetNetwork();
 
   const { isFetching, refetch, error } = useReadContract({
     address: contractAddress,
-    functionName: abiFunction.name,
-    abi: abi,
+    functionName,
+    abi,
     args: getParsedContractFunctionArgs(form),
     chainId: targetNetwork.id,
     query: {
@@ -54,9 +64,8 @@ export const ReadOnlyFunctionForm: React.FC<ReadOnlyFunctionFormProps> = ({
     }
   }, [error]);
 
-  const transformedFunction = transformAbiFunction(abiFunction);
-  const inputElements = transformedFunction.inputs.map((input, inputIndex): JSX.Element => {
-    const key = getFunctionInputKey(abiFunction.name, input, inputIndex);
+  const inputElements = functionArgs.map((input, inputIndex): JSX.Element => {
+    const key = getFunctionInputKey(functionName, input, inputIndex);
     return (
       <ContractInput
         key={key}
@@ -82,8 +91,8 @@ export const ReadOnlyFunctionForm: React.FC<ReadOnlyFunctionFormProps> = ({
   return (
     <div className="flex flex-col gap-3 py-5 first:pt-0 last:pb-1">
       <p className="font-medium my-0 break-words">
-        {abiFunction.name}
-        <InheritanceTooltip inheritedFrom={inheritedFrom} />
+        {functionName}
+        {inheritedFrom && <InheritanceTooltip inheritedFrom={inheritedFrom} />}
       </p>
       {inputElements}
       <div className="flex flex-col md:flex-row justify-between gap-2 flex-wrap">

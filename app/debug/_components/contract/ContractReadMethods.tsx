@@ -32,7 +32,6 @@ export const ContractReadMethods = ({ deployedContractData }: { deployedContract
       {functionsToDisplay.map(({ fn, inheritedFrom }) => (
         <ReadOnlyFunctionForm
           key={fn.name}
-          contractName={deployedContractData.name}
           functionName={fn.name}
           functionArgs={fn.inputs}
           contractAddress={deployedContractData.address}
