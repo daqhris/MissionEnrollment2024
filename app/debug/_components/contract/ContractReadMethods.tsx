@@ -36,7 +36,7 @@ export const ContractReadMethods = ({ deployedContractData }: { deployedContract
           functionArgs={fn.inputs}
           contractAddress={deployedContractData.address}
           abi={deployedContractData.abi as Abi}
-          inheritedFrom={inheritedFrom}
+          inheritedFrom={inheritedFrom || undefined}
         />
       ))}
     </>

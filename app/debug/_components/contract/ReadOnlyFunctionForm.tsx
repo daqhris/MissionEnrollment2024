@@ -21,7 +21,7 @@ type ReadOnlyFunctionFormProps = {
   contractAddress: Address;
   functionName: string;
   functionArgs: readonly AbiParameter[];
-  inheritedFrom?: string;
+  inheritedFrom?: string | undefined;
   abi: Abi;
 };
 
