@@ -8,22 +8,47 @@ Its use requires an onchain name, a non-fungible token from an in-person event, 
 This project provides a transparent process that requires 3 phases of control and validation: identity verification, event participation, and public attestation on the Superchain.  
 It is built as a web application with **Next.js** and **React**, and runs on top of smart contracts integrating blockchain protocols: Ethereum Name Service (**ENS**), Ethereum Attestation Service (**EAS**) and Proof of Attendance Protocol (**POAP**).
 
-## Features
+## Key Features
 
-### UX
+### 1. Identity Check
 
-- **ENS Integration**: Supports Ethereum Name Service for user-friendly addressing and identity verification.
-- **POAP Verification**: Integrates with POAP to verify attendance at an in-person event: ETHGlobal Brussels 2024.
-- **Onchain Attestations**: Creates immutable records of mission enrollment using the Ethereum Attestation Service (EAS).
+- Supports both Ethereum addresses and ENS names
+- Real-time ENS resolution
+- Robust error handling for invalid inputs
 
-### UI
+### 2. POAP Ownership Verification
 
-- **Interactive Single-Page Application**: Offers a streamlined user experience with stage-based components.
-- **Recent Attestations**: Displays a list of recent attestations for public viewing.
-- **Wallet Connection**: Seamless integration with Ethereum wallets.
-- **Responsive Design**: Optimized for various screen sizes and devices.
+- Fetches and verifies Proof of Attendance Protocol (POAP) tokens
+- Filters POAPs specific to ETHGlobal Brussels 2024
+- Displays POAP data including event name, date, and image
 
-## Other Dev Tools
+### 3. On-chain Attestation
+
+- Utilizes Ethereum Attestation Service (EAS) for creating verifiable on-chain records
+- Supports attestations on both Base and Optimism L2 rollups
+- Includes ENS name (if available) in the attestation data
+
+### 4. Smart Contract
+
+- Implements role-based access control for attestation creation
+- Provides functions for schema creation, attestation, and verification
+
+### 5. UI/UX Improvements
+
+- Responsive design with clear user feedback
+- Loading indicators and error messages for better user experience
+- Step-by-step guided process from identity verification to attestation
+
+## Technical Stack
+
+- Frontend: React with Next.js
+- Blockchain Interaction: ethers.js, wagmi
+- ENS Integration: ENS resolution via ethers.js
+- POAP API: Custom API route with caching and rate limiting
+- Smart Contracts: Solidity with OpenZeppelin libraries
+- Attestation: Ethereum Attestation Service (EAS) SDK
+
+### Other Dev Tools
 
 - **State Management**: React Query (with singleton QueryClient instance)
 - **Wallet Login**: Wagmi
@@ -71,29 +96,25 @@ It is built as a web application with **Next.js** and **React**, and runs on top
 
 **Mission Enrollment** provides a streamlined, one-page application for people to enroll in advance of the _Zinneke Rescue Mission_.
 
-1. Connect your Ethereum wallet to the application.
+1. User connects their Ethereum wallet
+2. User verifies their identity using Ethereum address or ENS name
+3. Application fetches and displays relevant POAPs
+4. User selects desired L2 network for attestation (Base or Optimism)
+5. On-chain attestation is created using EAS
 
-2. Navigate through the mission enrollment stages:
-   a. Enter your ENS name or Ethereum address for identity verification.  
-   b. The application will verify your onchain identity using ENS.  
-   c. If applicable, the app will check for ETHGlobal Brussels 2024 POAP ownership.  
-   d. Review the details of your mission participation.
+## API Routes
 
-3. Create an onchain attestation for your mission enrollment:  
-   a. Click the "Create Attestation" button to initiate the process.  
-   b. Sign the attestation transaction using your connected wallet.  
-   c. Wait for the transaction to be confirmed on either Base or Optimism rollups.
+- `/api/fetchPoaps`: Fetches POAPs for a given Ethereum address or ENS name
 
-4. Once confirmed, view your attestation details, which are now immutably recorded on the chosen public blockchain.
-
-5. Explore the "Recent Attestations" section to see other verified mission enrollments.
-
-## Smart Contracts
+## Smart Contract Functions
 
 The app utilizes the following smart contracts:
 
 1. `POAPVerification.sol`: Integrates with the POAP protocol for verifying real-life event attendance.
 2. `AttestationService.sol`: Handles the creation of attestation schemas and the issuance of attestations using the Ethereum Attestation Service.
+3. `createMissionEnrollmentSchema()`: Creates the schema for mission enrollment attestations
+4. `createMissionEnrollmentAttestation(address recipient, uint256 tokenId)`: Creates an attestation for a user
+5. `verifyAttestation(bytes32 attestationId)`: Verifies the validity of an attestation
 
 ## ETHGlobal Brussels 2024
 
