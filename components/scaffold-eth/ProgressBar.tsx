@@ -41,7 +41,7 @@ export const ProgressBar: React.FC = (): JSX.Element => {
     </style>
   );
 
-  useEffect(() => {
+  useEffect((): () => void => {
     NProgress.configure({ showSpinner: false });
 
     const handleAnchorClick = (event: MouseEvent): void => {
@@ -52,7 +52,7 @@ export const ProgressBar: React.FC = (): JSX.Element => {
       }
     };
 
-    const handleMutation: MutationCallback = (mutations: MutationRecord[]): void => {
+    const handleMutation: MutationCallback = (): void => {
       const anchorElements = document.querySelectorAll("a");
       anchorElements.forEach(anchor => anchor.addEventListener("click", handleAnchorClick));
     };

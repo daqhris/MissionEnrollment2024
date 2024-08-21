@@ -1,16 +1,48 @@
-import dynamic from 'next/dynamic';
-import { Address as AddressType } from "viem";
+import React from 'react';
+import type { Address as AddressType } from "viem";
 import { Address } from "~~/components/scaffold-eth";
+import dynamic from 'next/dynamic';
 
-const QRCodeSVG = dynamic<{ value: string; size: number }>(() =>
-  import('qrcode.react').then(mod => mod.QRCodeSVG).catch(err => {
-    console.error('Failed to load QRCodeSVG:', err);
-    return () => <div>QR Code unavailable</div>;
-  }),
-  { ssr: false, loading: () => <div>Loading QR Code...</div> }
-);
+const QRCodeSVG = dynamic(() => import('qrcode.react').then(mod => mod.QRCodeSVG), { ssr: false });
 
-type QRCodeSVGProps = { value: string; size: number };
+const QRCodeComponent: React.FC<{ value: string; size: number }> = ({ value, size }) => {
+  if (typeof window === 'undefined') {
+    return null; // Return null during SSR
+  }
+  return (
+    <ErrorBoundary fallback={<div>Error rendering QR Code</div>}>
+      {QRCodeSVG && React.createElement(QRCodeSVG, { value, size })}
+    </ErrorBoundary>
+  );
+};
+
+interface ErrorBoundaryProps {
+  fallback: React.ReactNode;
+  children: React.ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  override render(): React.ReactNode {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+
+    return this.props.children;
+  }
+}
 
 type AddressQRCodeModalProps = {
   address: AddressType;
@@ -31,7 +63,7 @@ export const AddressQRCodeModal = ({ address, modalId }: AddressQRCodeModalProps
             </label>
             <div className="space-y-3 py-6">
               <div className="flex flex-col items-center gap-6">
-                <QRCodeSVG value={address} size={256} />
+                <QRCodeComponent value={address} size={256} />
                 <Address address={address} format="long" disableAddressLink />
               </div>
             </div>

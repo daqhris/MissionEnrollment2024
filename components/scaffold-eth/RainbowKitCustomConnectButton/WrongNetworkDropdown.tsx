@@ -1,46 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeftOnRectangleIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { NetworkOptions } from "./NetworkOptions";
-import type { Chain } from 'viem';
+import { getTargetNetworks } from "~~/utils/scaffold-eth";
 
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string }) => Promise<string>;
-    };
-  }
-}
+// Remove global declaration to avoid conflicts with existing types
 
 export const WrongNetworkDropdown: React.FC = (): JSX.Element => {
-  const [chain, setChain] = useState<Chain | undefined>(undefined);
-  const [chains, setChains] = useState<Chain[]>([]);
-  const [disconnect, setDisconnect] = useState<(() => void) | undefined>(undefined);
   const [isWrongNetwork, setIsWrongNetwork] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const loadWagmiHooks = async () => {
-      try {
-        const { useNetwork, useDisconnect } = await import('wagmi');
-        const { chain, chains } = useNetwork();
-        setChain(chain);
-        setChains(chains);
-        setDisconnect(() => useDisconnect().disconnect);
-      } catch (error) {
-        console.error('Failed to load wagmi hooks:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    void loadWagmiHooks();
-  }, []);
 
   useEffect(() => {
     const checkNetwork = async (): Promise<void> => {
       try {
         if (typeof window !== 'undefined' && window.ethereum) {
           const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-          setIsWrongNetwork(!chains.some((c: Chain) => c.id === parseInt(chainId, 16)));
+          const currentChainId = parseInt(chainId, 16);
+          const targetNetworks = getTargetNetworks();
+          setIsWrongNetwork(!targetNetworks.some((network) => network.id === currentChainId));
         } else {
           setIsWrongNetwork(false);
         }
@@ -53,11 +29,22 @@ export const WrongNetworkDropdown: React.FC = (): JSX.Element => {
     };
 
     void checkNetwork();
-  }, [chains]);
+  }, []);
 
-  const handleDisconnect = (event: React.MouseEvent<HTMLButtonElement>): void => {
-    event.preventDefault();
-    disconnect();
+  const handleDisconnect = async (): Promise<void> => {
+    try {
+      if (typeof window.ethereum !== 'undefined') {
+        await window.ethereum.request({
+          method: 'wallet_requestPermissions',
+          params: [{ eth_accounts: {} }],
+        });
+        console.log('Wallet disconnected');
+      } else {
+        throw new Error('No Ethereum provider detected');
+      }
+    } catch (error) {
+      console.error('Failed to disconnect:', error);
+    }
   };
 
   if (isLoading) {

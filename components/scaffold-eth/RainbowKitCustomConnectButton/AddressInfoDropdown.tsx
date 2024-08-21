@@ -1,7 +1,8 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { NetworkOptions } from "./NetworkOptions";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { getAddress, Address } from "viem";
+import { getAddress } from "viem";
+import type { Address } from "viem";
 import {
   ArrowLeftOnRectangleIcon,
   ArrowTopRightOnSquareIcon,
@@ -14,14 +15,9 @@ import {
 import { BlockieAvatar, isENS } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 import { getTargetNetworks } from "~~/utils/scaffold-eth";
+import { useDisconnect } from 'wagmi';
 
 const allowedNetworks = getTargetNetworks();
-
-// Dynamic import for wagmi
-const useDisconnect = async () => {
-  const wagmi = await import('wagmi');
-  return wagmi.useDisconnect();
-};
 
 type AddressInfoDropdownProps = {
   address: Address;
@@ -36,15 +32,7 @@ export const AddressInfoDropdown = ({
   displayName,
   blockExplorerAddressLink,
 }: AddressInfoDropdownProps): JSX.Element => {
-  const [disconnect, setDisconnect] = useState<(() => void) | undefined>(undefined);
-
-  useEffect(() => {
-    const loadDisconnect = async () => {
-      const disconnectHook = await useDisconnect();
-      setDisconnect(() => disconnectHook);
-    };
-    void loadDisconnect();
-  }, []);
+  const { disconnect } = useDisconnect();
 
   const checkSumAddress = getAddress(address);
 
@@ -57,6 +45,19 @@ export const AddressInfoDropdown = ({
     dropdownRef.current?.removeAttribute("open");
   };
   useOutsideClick(dropdownRef, closeDropdown);
+
+  const handleDisconnect = async (): Promise<void> => {
+    if (disconnect) {
+      try {
+        await disconnect();
+        console.log('Wallet disconnected');
+      } catch (error) {
+        console.error("Failed to disconnect:", error);
+      }
+    } else {
+      console.error("Disconnect function is not available");
+    }
+  };
 
   return (
     <>
@@ -138,9 +139,11 @@ export const AddressInfoDropdown = ({
             <button
               className="menu-item text-error btn-sm !rounded-xl flex gap-3 py-3"
               type="button"
-              onClick={(): void => disconnect()}
+              onClick={handleDisconnect}
+              disabled={isDisconnectLoading}
             >
-              <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" /> <span>Disconnect</span>
+              <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" />
+              <span>{isDisconnectLoading ? "Loading..." : "Disconnect"}</span>
             </button>
           </li>
         </ul>

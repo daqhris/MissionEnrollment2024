@@ -1,8 +1,9 @@
+import { useEffect, useCallback } from 'react';
 import { useTargetNetwork } from "./useTargetNetwork";
 import type { Abi, Log } from "viem";
-import { useContractEvent } from "wagmi";
 import { addIndexedArgsToEvent, useDeployedContractInfo } from "~~/hooks/scaffold-eth";
 import type { ContractName, UseScaffoldEventConfig } from "~~/utils/scaffold-eth/contract";
+import { watchContractEvent } from 'viem/actions';
 
 // TODO: Import POAP API client and necessary types
 // import { POAPClient } from '@poap/poap-eth-sdk';
@@ -22,23 +23,39 @@ export const useScaffoldWatchContractEvent = <
   contractName,
   eventName,
   listener,
-}: UseScaffoldEventConfig<TContractName, TEventName>): ReturnType<typeof useContractEvent> => {
+}: UseScaffoldEventConfig<TContractName, TEventName>): void => {
   const { data: deployedContractData } = useDeployedContractInfo(contractName);
   const { targetNetwork } = useTargetNetwork();
 
-  const addIndexedArgsToLogs = (logs: Log[]): Log[] => logs.map(addIndexedArgsToEvent);
-  const listenerWithIndexedArgs = (logs: Log[]): void => listener(addIndexedArgsToLogs(logs) as Parameters<typeof listener>[0]);
+  const addIndexedArgsToLogs = useCallback((logs: Log[]): Log[] => logs.map(addIndexedArgsToEvent), []);
+  const listenerWithIndexedArgs = useCallback((logs: Log[]): void => {
+    listener(addIndexedArgsToLogs(logs) as Parameters<typeof listener>[0]);
+  }, [listener, addIndexedArgsToLogs]);
 
   // TODO: Integrate POAP protocol
   // - Check if the event is related to POAP (e.g., POAP minting or transfer)
   // - If it's a POAP event, fetch additional data from POAP API
   // - Combine POAP data with blockchain event data
 
-  return useContractEvent({
-    address: deployedContractData?.address,
-    abi: deployedContractData?.abi as Abi,
-    chainId: targetNetwork.id,
-    eventName,
-    listener: listenerWithIndexedArgs,
-  });
+  useEffect(() => {
+    if (!deployedContractData?.address || !deployedContractData?.abi) {
+      return;
+    }
+
+    const provider = new ethers.providers.JsonRpcProvider(targetNetwork.rpcUrl);
+    const contract = new ethers.Contract(deployedContractData.address, deployedContractData.abi, provider);
+
+    const filter = contract.filters[eventName]();
+    const listener = (...args: any[]) => {
+      const event = args[args.length - 1];
+      const logsWithIndexedArgs = addIndexedArgsToLogs([event]);
+      listenerWithIndexedArgs(logsWithIndexedArgs);
+    };
+
+    contract.on(filter, listener);
+
+    return () => {
+      contract.off(filter, listener);
+    };
+  }, [deployedContractData, targetNetwork.rpcUrl, eventName, listenerWithIndexedArgs]);
 };

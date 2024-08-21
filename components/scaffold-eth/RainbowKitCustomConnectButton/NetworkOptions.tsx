@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
 import { useNetworkColor } from "~~/hooks/scaffold-eth";
 import { getTargetNetworks } from "~~/utils/scaffold-eth";
 import type { ChainWithAttributes } from "~~/utils/scaffold-eth/networks";
-import type { Chain } from 'viem';
-import type { UseNetworkResult, UseSwitchNetworkResult } from 'wagmi';
 
 const allowedNetworks: ChainWithAttributes[] = getTargetNetworks();
 
@@ -14,82 +12,47 @@ type NetworkOptionsProps = {
 
 export const NetworkOptions: React.FC<NetworkOptionsProps> = ({ hidden = false }): JSX.Element => {
   const [switchError, setSwitchError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentChainId, setCurrentChainId] = useState<number | null>(null);
+  const [currentChain, setCurrentChain] = useState<ChainWithAttributes | null>(null);
+  const [isSwitchNetworkLoading, setIsSwitchNetworkLoading] = useState<boolean>(false);
   const networkColor = useNetworkColor();
-  const [wagmiHooks, setWagmiHooks] = useState<{
-    useNetwork: () => { chain: Chain | undefined };
-    useSwitchNetwork: () => {
-      switchNetwork: ((chainId: number) => Promise<Chain>) | undefined;
-      error: Error | null;
-      isLoading: boolean;
-    };
-  } | null>(null);
 
-  useEffect(() => {
-    const loadWagmiHooks = async () => {
-      try {
-        const wagmi = await import('wagmi');
-        if (typeof wagmi.useNetwork !== 'function' || typeof wagmi.useSwitchNetwork !== 'function') {
-          throw new Error('Required wagmi hooks not found');
-        }
-        setWagmiHooks({
-          useNetwork: wagmi.useNetwork,
-          useSwitchNetwork: wagmi.useSwitchNetwork
-        });
-      } catch (error) {
-        console.error('Failed to load wagmi hooks:', error instanceof Error ? error.message : String(error));
-        setSwitchError('Failed to load network switching functionality. Please try again.');
-      }
-    };
-    void loadWagmiHooks();
-  }, []);
-
-  useEffect(() => {
-    if (wagmiHooks) {
-      const { chain } = wagmiHooks.useNetwork();
-      setCurrentChainId(chain?.id ?? null);
-    }
-  }, [wagmiHooks]);
-
-  const handleNetworkSwitch = async (networkId: number): Promise<void> => {
-    if (!wagmiHooks) return;
-    const { switchNetwork } = wagmiHooks.useSwitchNetwork();
-    if (!switchNetwork) {
-      setSwitchError('Network switching is not available.');
-      return;
-    }
-    setIsLoading(true);
+  const handleNetworkSwitch = async (chainId: number): Promise<void> => {
     setSwitchError(null);
+    setIsSwitchNetworkLoading(true);
     try {
-      await switchNetwork(networkId);
+      if (typeof window.ethereum !== 'undefined') {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: `0x${chainId.toString(16)}` }],
+        });
+        const newChain = allowedNetworks.find(network => network.id === chainId);
+        setCurrentChain(newChain || null);
+      } else {
+        throw new Error('No Ethereum provider detected');
+      }
     } catch (error: unknown) {
       console.error('Failed to switch network:', error instanceof Error ? error.message : String(error));
       setSwitchError('Failed to switch network. Please try again.');
     } finally {
-      setIsLoading(false);
+      setIsSwitchNetworkLoading(false);
     }
   };
-
-  if (!wagmiHooks || currentChainId === null) {
-    return <div>Loading network options...</div>;
-  }
 
   return (
     <>
       {allowedNetworks
-        .filter((allowedNetwork) => allowedNetwork.id !== currentChainId)
+        .filter((allowedNetwork) => allowedNetwork.id !== currentChain?.id)
         .map((allowedNetwork) => (
           <li key={allowedNetwork.id} className={hidden ? "hidden" : ""}>
             <button
               className="menu-item btn-sm !rounded-xl flex gap-3 py-3 whitespace-nowrap"
               type="button"
               onClick={(): Promise<void> => handleNetworkSwitch(allowedNetwork.id)}
-              disabled={isLoading}
+              disabled={isSwitchNetworkLoading}
             >
               <ArrowsRightLeftIcon className="h-6 w-4 ml-2 sm:ml-0" />
               <span>
-                {isLoading ? "Switching..." : `Switch to `}
+                {isSwitchNetworkLoading ? "Switching..." : `Switch to `}
                 <span
                   style={{
                     color: networkColor(allowedNetwork),
