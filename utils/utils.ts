@@ -1,7 +1,7 @@
-import { Attestation } from "../types/attestation";
+import type { Attestation } from "../types/attestation";
 
 // @ts-ignore
-BigInt.prototype.toJSON = function () {
+BigInt.prototype.toJSON = function (): string {
   return this.toString();
 };
 
@@ -21,7 +21,7 @@ export async function submitSignedAttestation(pkg: Attestation): Promise<StoreIP
     body: JSON.stringify(data),
   });
 
-  return await response.json();
+  return await response.json() as StoreIPFSActionReturn;
 }
 
 export type StoreAttestationRequest = { filename: string; textJson: string };

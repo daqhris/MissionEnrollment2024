@@ -23,7 +23,7 @@ type AddressInfoDropdownProps = {
   address: Address;
   blockExplorerAddressLink: string | undefined;
   displayName: string;
-  ensAvatar?: string;
+  ensAvatar?: string | null;
 };
 
 export const AddressInfoDropdown = ({
@@ -33,6 +33,7 @@ export const AddressInfoDropdown = ({
   blockExplorerAddressLink,
 }: AddressInfoDropdownProps): JSX.Element => {
   const { disconnect } = useDisconnect();
+  const [isDisconnectLoading, setIsDisconnectLoading] = useState(false);
 
   const checkSumAddress = getAddress(address);
 
@@ -49,10 +50,13 @@ export const AddressInfoDropdown = ({
   const handleDisconnect = async (): Promise<void> => {
     if (disconnect) {
       try {
+        setIsDisconnectLoading(true);
         await disconnect();
         console.log('Wallet disconnected');
       } catch (error) {
         console.error("Failed to disconnect:", error);
+      } finally {
+        setIsDisconnectLoading(false);
       }
     } else {
       console.error("Disconnect function is not available");
@@ -63,7 +67,7 @@ export const AddressInfoDropdown = ({
     <>
       <details ref={dropdownRef} className="dropdown dropdown-end leading-3">
         <summary tabIndex={0} className="btn btn-secondary btn-sm pl-0 pr-2 shadow-md dropdown-toggle gap-0 !h-auto">
-          <BlockieAvatar address={checkSumAddress} size={30} ensImage={ensAvatar} />
+          <BlockieAvatar address={checkSumAddress} size={30} ensImage={ensAvatar || null} />
           <span className="ml-2 mr-1">
             {isENS(displayName) ? displayName : checkSumAddress?.slice(0, 6) + "..." + checkSumAddress?.slice(-4)}
           </span>
@@ -143,7 +147,7 @@ export const AddressInfoDropdown = ({
               disabled={isDisconnectLoading}
             >
               <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" />
-              <span>{isDisconnectLoading ? "Loading..." : "Disconnect"}</span>
+              <span>{isDisconnectLoading ? "Disconnecting..." : "Disconnect"}</span>
             </button>
           </li>
         </ul>

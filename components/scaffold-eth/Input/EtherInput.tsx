@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ArrowsRightLeftIcon } from "@heroicons/react/24/outline";
-import { CommonInputProps, InputBase, SIGNED_NUMBER_REGEX } from "~~/components/scaffold-eth";
+import type { CommonInputProps } from "~~/components/scaffold-eth";
+import { InputBase, SIGNED_NUMBER_REGEX } from "~~/components/scaffold-eth";
 import { useDisplayUsdMode } from "~~/hooks/scaffold-eth/useDisplayUsdMode";
 import { useGlobalState } from "~~/services/store/store";
 
@@ -51,12 +52,12 @@ export const EtherInput = ({
   onChange,
   disabled,
   usdMode,
-}: CommonInputProps & { usdMode?: boolean }): JSX.Element => {
-  const [transitoryDisplayValue, setTransitoryDisplayValue] = useState<string>();
+}: CommonInputProps<string> & { usdMode?: boolean | undefined }): JSX.Element => {
+  const [transitoryDisplayValue, setTransitoryDisplayValue] = useState<string | undefined>();
   const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
   const isNativeCurrencyPriceFetching = useGlobalState(state => state.nativeCurrency.isFetching);
 
-  const { displayUsdMode, toggleDisplayUsdMode } = useDisplayUsdMode({ defaultUsdMode: usdMode });
+  const { displayUsdMode, toggleDisplayUsdMode } = useDisplayUsdMode({ defaultUsdMode: usdMode ?? false });
 
   // The displayValue is derived from the ether value that is controlled outside of the component
   // In usdMode, it is converted to its usd value, in regular mode it is unaltered
@@ -97,12 +98,12 @@ export const EtherInput = ({
   };
 
   return (
-    <InputBase
-      name={name}
+    <InputBase<string>
+      name={name || ''}
       value={displayValue}
-      placeholder={placeholder}
+      placeholder={placeholder || ''}
       onChange={handleChangeNumber}
-      disabled={disabled}
+      disabled={disabled || false}
       prefix={<span className="pl-4 -mr-2 text-accent self-center">{displayUsdMode ? "$" : "Ξ"}</span>}
       suffix={
         <div

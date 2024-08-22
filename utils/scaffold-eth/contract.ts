@@ -19,11 +19,10 @@ import type {
   GetTransactionReturnType,
   Log,
   TransactionReceipt,
-  WriteContractErrorType
+  WriteContractParameters
 } from "viem";
-import type { Config } from "wagmi";
-import type { UseContractReadConfig, UseContractEventConfig } from "wagmi/hooks";
-import type { WriteContractArgs, WriteContractResult } from "wagmi/actions";
+import { useContractRead } from "wagmi";
+import type { UseContractReadConfig, UseContractEventConfig } from 'wagmi';
 import deployedContractsData from "~~/contracts/deployedContracts";
 import externalContractsData from "~~/contracts/externalContracts";
 import scaffoldConfig from "~~/scaffold.config";
@@ -34,24 +33,27 @@ type AddExternalFlag<T> = {
   };
 };
 
-const deepMergeContracts = <L extends Record<PropertyKey, any>, E extends Record<PropertyKey, any>>(
+const deepMergeContracts = <
+  L extends Record<PropertyKey, Record<string, unknown>>,
+  E extends Record<PropertyKey, Record<string, unknown>>
+>(
   local: L,
   external: E,
 ) => {
-  const result: Record<PropertyKey, any> = {};
+  const result: Record<PropertyKey, Record<string, unknown>> = {};
   const allKeys = Array.from(new Set([...Object.keys(external), ...Object.keys(local)]));
   for (const key of allKeys) {
     if (!external[key]) {
-      result[key] = local[key];
+      result[key] = local[key] || {};
       continue;
     }
     const amendedExternal = Object.fromEntries(
-      Object.entries(external[key] as Record<string, Record<string, unknown>>).map(([contractName, declaration]) => [
+      Object.entries(external[key] || {}).map(([contractName, declaration]) => [
         contractName,
-        { ...declaration, external: true },
+        { ...(declaration as Record<string, unknown>), external: true },
       ]),
     );
-    result[key] = { ...local[key], ...amendedExternal };
+    result[key] = { ...(local[key] || {}), ...amendedExternal };
   }
   return result as MergeDeepRecord<AddExternalFlag<L>, AddExternalFlag<E>, { arrayMergeMode: "replace" }>;
 };
@@ -77,7 +79,7 @@ export const contracts = contractsData as GenericContractsDeclaration | null;
 
 type ConfiguredChainId = (typeof scaffoldConfig)["targetNetworks"][0]["id"];
 
-type IsContractDeclarationMissing<TYes, TNo> = typeof contractsData extends { [key in ConfiguredChainId]: any }
+type IsContractDeclarationMissing<TYes, TNo> = typeof contractsData extends { [key in ConfiguredChainId]: Record<string, GenericContract> }
   ? TNo
   : TYes;
 
@@ -108,8 +110,8 @@ export type AbiFunctionOutputs<TAbi extends Abi, TFunctionName extends string> =
 >["outputs"];
 
 export type AbiFunctionReturnType<TAbi extends Abi, TFunctionName extends string> = IsContractDeclarationMissing<
-  any,
-  AbiParametersToPrimitiveTypes<AbiFunctionOutputs<TAbi, TFunctionName>> extends readonly [any]
+  unknown,
+  AbiParametersToPrimitiveTypes<AbiFunctionOutputs<TAbi, TFunctionName>> extends readonly [unknown]
     ? AbiParametersToPrimitiveTypes<AbiFunctionOutputs<TAbi, TFunctionName>>[0]
     : AbiParametersToPrimitiveTypes<AbiFunctionOutputs<TAbi, TFunctionName>>
 >;
@@ -147,7 +149,7 @@ export type FunctionNamesWithInputs<
 
 type Expand<T> = T extends object ? (T extends infer O ? { [K in keyof O]: O[K] } : never) : T;
 
-type UnionToIntersection<U> = Expand<(U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never>;
+type UnionToIntersection<U> = Expand<(U extends unknown ? (k: U) => void : never) extends (k: infer I) => void ? I : never>;
 
 type OptionalTupple<T> = T extends readonly [infer H, ...infer R] ? readonly [H | undefined, ...OptionalTupple<R>] : T;
 
@@ -183,14 +185,14 @@ export type ScaffoldWriteContractVariables<
   TContractName extends ContractName,
   TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, WriteAbiStateMutability>,
 > = IsContractDeclarationMissing<
-  Partial<WriteContractArgs>,
+  Partial<WriteContractParameters>,
   {
     functionName: TFunctionName;
   } & UseScaffoldArgsParam<TContractName, TFunctionName> &
-    Omit<WriteContractArgs, "chainId" | "abi" | "address" | "functionName" | "args">
+    Omit<WriteContractParameters, "chainId" | "abi" | "address" | "functionName" | "args">
 >;
 
-type WriteVariables = WriteContractArgs<Abi, string>;
+type WriteVariables = WriteContractParameters;
 
 export type TransactorFuncOptions = {
   onBlockConfirmation?: (txnReceipt: TransactionReceipt) => void;
@@ -198,9 +200,9 @@ export type TransactorFuncOptions = {
 };
 
 export type ScaffoldWriteContractOptions = MutateOptions<
-  WriteContractResult,
+  { hash: `0x${string}` },
   Error,
-  WriteContractArgs<Abi, string>,
+  WriteContractParameters,
   unknown
 > &
   TransactorFuncOptions;
@@ -216,7 +218,7 @@ export type UseScaffoldEventConfig<
   contractName: TContractName;
   eventName: TEventName;
 } & IsContractDeclarationMissing<
-  Omit<UseContractEventConfig, "listener" | "address" | "abi" | "eventName"> & {
+  Omit<UseContractEventConfig<ContractAbi<TContractName>, TEventName>, "listener" | "address" | "abi" | "eventName"> & {
     listener: (
       logs: Simplify<
         Omit<Log<bigint, number, boolean>, "args" | "eventName"> & {
@@ -253,12 +255,12 @@ export type EventFilters<
   TContractName extends ContractName,
   TEventName extends ExtractAbiEventNames<ContractAbi<TContractName>>,
 > = IsContractDeclarationMissing<
-  any,
+  Record<string, unknown>,
   IndexedEventInputs<TContractName, TEventName> extends never
     ? never
     : {
         [Key in IsContractDeclarationMissing<
-          any,
+          string,
           IndexedEventInputs<TContractName, TEventName>["name"]
         >]?: AbiParameterToPrimitiveType<Extract<IndexedEventInputs<TContractName, TEventName>, { name: Key }>>;
       }
@@ -294,7 +296,7 @@ export type UseScaffoldEventHistoryData<
   >,
 > =
   | IsContractDeclarationMissing<
-      any[],
+      unknown[],
       {
         log: Log<bigint, number, false, TEvent, false, [TEvent], TEventName>;
         args: AbiParametersToPrimitiveTypes<TEvent["inputs"]> &

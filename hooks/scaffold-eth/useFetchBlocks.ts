@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import {
+import type {
   Block,
   Hash,
   Transaction,
   TransactionReceipt,
+} from "viem";
+import {
   createTestClient,
   publicActions,
   walletActions,
@@ -22,16 +24,24 @@ export const testClient = createTestClient({
   .extend(publicActions)
   .extend(walletActions);
 
-export const useFetchBlocks = () => {
+// Define the return type of the hook for better type inference
+type UseFetchBlocksReturn = {
+  blocks: Block[];
+  transactionReceipts: Record<string, TransactionReceipt>;
+  currentPage: number;
+  totalBlocks: bigint;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  error: Error | null;
+};
+
+export const useFetchBlocks = (): UseFetchBlocksReturn => {
   const [blocks, setBlocks] = useState<Block[]>([]);
-  const [transactionReceipts, setTransactionReceipts] = useState<{
-    [key: string]: TransactionReceipt;
-  }>({});
+  const [transactionReceipts, setTransactionReceipts] = useState<Record<string, TransactionReceipt>>({});
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalBlocks, setTotalBlocks] = useState(0n);
+  const [totalBlocks, setTotalBlocks] = useState<bigint>(0n);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchBlocks = useCallback(async () => {
+  const fetchBlocks = useCallback(async (): Promise<void> => {
     setError(null);
 
     try {
@@ -44,81 +54,104 @@ export const useFetchBlocks = () => {
         (_, i) => startingBlock - BigInt(i),
       );
 
-      const blocksWithTransactions = blockNumbersToFetch.map(async blockNumber => {
-        try {
-          return testClient.getBlock({ blockNumber, includeTransactions: true });
-        } catch (err) {
-          setError(err instanceof Error ? err : new Error("An error occurred."));
-          throw err;
+      const blocksWithTransactions = await Promise.all(blockNumbersToFetch.map(async (blockNumber): Promise<Block> => {
+        const block = await testClient.getBlock({ blockNumber, includeTransactions: true });
+        if (!block) {
+          throw new Error(`Failed to fetch block ${blockNumber}`);
         }
-      });
-      const fetchedBlocks = await Promise.all(blocksWithTransactions);
+        return block;
+      }));
 
-      fetchedBlocks.forEach(block => {
-        block.transactions.forEach(tx => decodeTransactionData(tx as Transaction));
+      // Decode transaction data for each block
+      blocksWithTransactions.forEach(block => {
+        block.transactions.forEach(tx => {
+          if (typeof tx !== 'string') {
+            decodeTransactionData(tx);
+          }
+        });
       });
 
       const txReceipts = await Promise.all(
-        fetchedBlocks.flatMap(block =>
-          block.transactions.map(async tx => {
-            try {
-              const receipt = await testClient.getTransactionReceipt({ hash: (tx as Transaction).hash });
-              return { [(tx as Transaction).hash]: receipt };
-            } catch (err) {
-              setError(err instanceof Error ? err : new Error("An error occurred."));
-              throw err;
+        blocksWithTransactions.flatMap(block =>
+          block.transactions.map(async (tx): Promise<Record<string, TransactionReceipt>> => {
+            if (typeof tx === 'string') {
+              throw new Error(`Unexpected string transaction hash: ${tx}`);
             }
+            const receipt = await testClient.getTransactionReceipt({ hash: tx.hash });
+            if (!receipt) {
+              throw new Error(`Failed to fetch receipt for transaction ${tx.hash}`);
+            }
+            return { [tx.hash]: receipt };
           }),
         ),
       );
 
-      setBlocks(fetchedBlocks);
+      setBlocks(blocksWithTransactions);
       setTransactionReceipts(prevReceipts => ({ ...prevReceipts, ...Object.assign({}, ...txReceipts) }));
     } catch (err) {
-      setError(err instanceof Error ? err : new Error("An error occurred."));
+      setError(err instanceof Error ? err : new Error(`An error occurred: ${String(err)}`));
     }
   }, [currentPage]);
 
   useEffect(() => {
-    fetchBlocks();
+    void fetchBlocks();
   }, [fetchBlocks]);
 
   useEffect(() => {
-    const handleNewBlock = async (newBlock: any) => {
+    const handleNewBlock = async (newBlock: Block): Promise<void> => {
       try {
         if (currentPage === 0) {
-          if (newBlock.transactions.length > 0) {
-            const transactionsDetails = await Promise.all(
-              newBlock.transactions.map((txHash: string) => testClient.getTransaction({ hash: txHash as Hash })),
-            );
-            newBlock.transactions = transactionsDetails;
-          }
-
-          newBlock.transactions.forEach((tx: Transaction) => decodeTransactionData(tx as Transaction));
-
-          const receipts = await Promise.all(
-            newBlock.transactions.map(async (tx: Transaction) => {
-              try {
-                const receipt = await testClient.getTransactionReceipt({ hash: (tx as Transaction).hash });
-                return { [(tx as Transaction).hash]: receipt };
-              } catch (err) {
-                setError(err instanceof Error ? err : new Error("An error occurred fetching receipt."));
-                throw err;
+          // Fetch full transaction details for the new block
+          const transactionsDetails = await Promise.all(
+            newBlock.transactions.map(async (tx): Promise<Transaction> => {
+              if (typeof tx === 'string') {
+                const transaction = await testClient.getTransaction({ hash: tx });
+                if (!transaction) {
+                  throw new Error(`Failed to fetch transaction ${tx}`);
+                }
+                return transaction;
               }
+              return tx;
+            }),
+          );
+          newBlock.transactions = transactionsDetails;
+
+          // Decode transaction data
+          newBlock.transactions.forEach((tx) => {
+            if (typeof tx !== 'string') {
+              decodeTransactionData(tx);
+            }
+          });
+
+          // Fetch transaction receipts
+          const receipts = await Promise.all(
+            newBlock.transactions.map(async (tx): Promise<Record<string, TransactionReceipt>> => {
+              if (typeof tx === 'string') {
+                throw new Error(`Unexpected string transaction hash: ${tx}`);
+              }
+              const receipt = await testClient.getTransactionReceipt({ hash: tx.hash });
+              if (!receipt) {
+                throw new Error(`Failed to fetch receipt for transaction ${tx.hash}`);
+              }
+              return { [tx.hash]: receipt };
             }),
           );
 
+          // Update state with new block and receipts
           setBlocks(prevBlocks => [newBlock, ...prevBlocks.slice(0, BLOCKS_PER_PAGE - 1)]);
           setTransactionReceipts(prevReceipts => ({ ...prevReceipts, ...Object.assign({}, ...receipts) }));
         }
+
+        // Update total blocks count
         if (newBlock.number) {
           setTotalBlocks(newBlock.number);
         }
       } catch (err) {
-        setError(err instanceof Error ? err : new Error("An error occurred."));
+        setError(err instanceof Error ? err : new Error(`An error occurred: ${String(err)}`));
       }
     };
 
+    // Watch for new blocks
     return testClient.watchBlocks({ onBlock: handleNewBlock, includeTransactions: true });
   }, [currentPage]);
 

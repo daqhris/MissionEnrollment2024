@@ -1,6 +1,7 @@
-import { TransactionWithFunction } from "./block";
-import { GenericContractsDeclaration } from "./contract";
-import { Abi, AbiFunction, decodeFunctionData, getAbiItem } from "viem";
+import type { TransactionWithFunction } from "./block";
+import type { GenericContractsDeclaration } from "./contract";
+import { decodeFunctionData, getAbiItem } from "viem";
+import type { Abi, AbiFunction } from "viem";
 import { hardhat } from "viem/chains";
 import contractData from "~~/contracts/deployedContracts";
 
@@ -16,7 +17,7 @@ const interfaces = chainMetaData
     }, {} as ContractsInterfaces)
   : {};
 
-export const decodeTransactionData = (tx: TransactionWithFunction) => {
+export const decodeTransactionData = (tx: TransactionWithFunction): TransactionWithFunction => {
   if (tx.input.length >= 10 && !tx.input.startsWith("0x60e06040")) {
     for (const [, contractAbi] of Object.entries(interfaces)) {
       try {
@@ -25,15 +26,13 @@ export const decodeTransactionData = (tx: TransactionWithFunction) => {
           data: tx.input,
         });
         tx.functionName = functionName;
-        tx.functionArgs = args as any[];
-        tx.functionArgNames = getAbiItem<AbiFunction[], string>({
+        tx.functionArgs = args as unknown[];
+        const abiItem = getAbiItem<AbiFunction[], string>({
           abi: contractAbi as AbiFunction[],
           name: functionName,
-        })?.inputs?.map((input: any) => input.name);
-        tx.functionArgTypes = getAbiItem<AbiFunction[], string>({
-          abi: contractAbi as AbiFunction[],
-          name: functionName,
-        })?.inputs.map((input: any) => input.type);
+        });
+        tx.functionArgNames = abiItem?.inputs?.map((input) => input.name ?? '') ?? [];
+        tx.functionArgTypes = abiItem?.inputs?.map((input) => input.type ?? '') ?? [];
 
         break;
       } catch (e) {
@@ -44,7 +43,7 @@ export const decodeTransactionData = (tx: TransactionWithFunction) => {
   return tx;
 };
 
-export const getFunctionDetails = (transaction: TransactionType) => {
+export const getFunctionDetails = (transaction: TransactionType): string => {
   if (
     transaction &&
     transaction.functionName &&
@@ -53,7 +52,7 @@ export const getFunctionDetails = (transaction: TransactionType) => {
     transaction.functionArgs
   ) {
     const details = transaction.functionArgNames.map(
-      (name, i) => `${transaction.functionArgTypes?.[i] || ""} ${name} = ${transaction.functionArgs?.[i] ?? ""}`,
+      (name, i) => `${transaction.functionArgTypes?.[i] ?? ""} ${name} = ${transaction.functionArgs?.[i] ?? ""}`,
     );
     return `${transaction.functionName}(${details.join(", ")})`;
   }

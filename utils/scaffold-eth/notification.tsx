@@ -1,5 +1,6 @@
 import React from "react";
-import { ToastPosition, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
+import type { ToastPosition } from "react-hot-toast";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import {
   CheckCircleIcon,
@@ -42,7 +43,7 @@ const Notification = ({
   duration = DEFAULT_DURATION,
   icon,
   position = DEFAULT_POSITION,
-}: NotificationProps) => {
+}: NotificationProps): React.ReactNode => {
   return toast.custom(
     t => (
       <div

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useGlobalState } from "~~/services/store/store";
 
-export const useDisplayUsdMode = ({ defaultUsdMode = false }: { defaultUsdMode?: boolean }) => {
+export const useDisplayUsdMode = ({ defaultUsdMode = false }: { defaultUsdMode?: boolean }): { displayUsdMode: boolean; toggleDisplayUsdMode: () => void } => {
   const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
   const isPriceFetched = nativeCurrencyPrice > 0;
   const predefinedUsdMode = isPriceFetched ? Boolean(defaultUsdMode) : false;

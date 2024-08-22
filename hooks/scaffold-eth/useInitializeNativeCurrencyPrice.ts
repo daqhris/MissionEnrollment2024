@@ -10,12 +10,12 @@ const enablePolling = false;
 /**
  * Get the price of Native Currency based on Native Token/DAI trading pair from Uniswap SDK
  */
-export const useInitializeNativeCurrencyPrice = () => {
+export const useInitializeNativeCurrencyPrice = (): void => {
   const setNativeCurrencyPrice = useGlobalState(state => state.setNativeCurrencyPrice);
   const setIsNativeCurrencyFetching = useGlobalState(state => state.setIsNativeCurrencyFetching);
   const { targetNetwork } = useTargetNetwork();
 
-  const fetchPrice = useCallback(async () => {
+  const fetchPrice = useCallback(async (): Promise<void> => {
     setIsNativeCurrencyFetching(true);
     const price = await fetchPriceFromUniswap(targetNetwork);
     setNativeCurrencyPrice(price);
@@ -24,7 +24,7 @@ export const useInitializeNativeCurrencyPrice = () => {
 
   // Get the price of ETH from Uniswap on mount
   useEffect(() => {
-    fetchPrice();
+    void fetchPrice();
   }, [fetchPrice]);
 
   // Get the price of ETH from Uniswap at a given interval

@@ -68,7 +68,7 @@ const ContractInput: React.FC<ContractInputProps> = ({ setForm, form, stateObjec
           <AddressInput
             {...inputProps}
             value={inputProps.value?.toString() ?? ""}
-            onChange={(value: string): void => inputProps.onChange(value)}
+            onChange={(value: string | undefined): void => inputProps.onChange(value)}
           />
         );
       case "bytes32":

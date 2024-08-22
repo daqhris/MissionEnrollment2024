@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useTargetNetwork } from "./useTargetNetwork";
-import type { Abi, Log } from "viem";
+import type { Abi, Log, Address } from "viem";
+import { createPublicClient, http } from 'viem';
 import { addIndexedArgsToEvent, useDeployedContractInfo } from "~~/hooks/scaffold-eth";
 import type { ContractName, UseScaffoldEventConfig } from "~~/utils/scaffold-eth/contract";
 import { watchContractEvent } from 'viem/actions';
@@ -27,7 +28,9 @@ export const useScaffoldWatchContractEvent = <
   const { data: deployedContractData } = useDeployedContractInfo(contractName);
   const { targetNetwork } = useTargetNetwork();
 
-  const addIndexedArgsToLogs = useCallback((logs: Log[]): Log[] => logs.map(addIndexedArgsToEvent), []);
+  const addIndexedArgsToLogs = useCallback((logs: Log[]): Log[] =>
+    logs.map(log => ({ ...log, args: addIndexedArgsToEvent(log as any).args as Log['args'] })),
+  []);
   const listenerWithIndexedArgs = useCallback((logs: Log[]): void => {
     listener(addIndexedArgsToLogs(logs) as Parameters<typeof listener>[0]);
   }, [listener, addIndexedArgsToLogs]);
@@ -42,20 +45,26 @@ export const useScaffoldWatchContractEvent = <
       return;
     }
 
-    const provider = new ethers.providers.JsonRpcProvider(targetNetwork.rpcUrl);
-    const contract = new ethers.Contract(deployedContractData.address, deployedContractData.abi, provider);
+    const client = createPublicClient({
+      chain: targetNetwork,
+      transport: http(),
+    });
 
-    const filter = contract.filters[eventName]();
-    const listener = (...args: any[]) => {
-      const event = args[args.length - 1];
-      const logsWithIndexedArgs = addIndexedArgsToLogs([event]);
-      listenerWithIndexedArgs(logsWithIndexedArgs);
-    };
-
-    contract.on(filter, listener);
+    const unwatch = watchContractEvent(
+      client,
+      {
+        address: deployedContractData.address,
+        abi: deployedContractData.abi,
+        eventName: eventName,
+        onLogs: (logs: Log[]) => {
+          const logsWithIndexedArgs = addIndexedArgsToLogs(logs);
+          listenerWithIndexedArgs(logsWithIndexedArgs);
+        }
+      }
+    );
 
     return () => {
-      contract.off(filter, listener);
+      unwatch();
     };
-  }, [deployedContractData, targetNetwork.rpcUrl, eventName, listenerWithIndexedArgs]);
+  }, [deployedContractData, targetNetwork, eventName, listenerWithIndexedArgs]);
 };

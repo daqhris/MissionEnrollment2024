@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { createWalletClient, http, parseEther } from "viem";
-import type { Address } from "viem";
+import type { Address, SendTransactionParameters } from "viem";
 import { hardhat } from "viem/chains";
 import { useAccount } from "wagmi";
 import { BanknotesIcon } from "@heroicons/react/24/outline";
@@ -26,8 +26,8 @@ const localWalletClient = createWalletClient({
  */
 export const Faucet = (): JSX.Element | null => {
   const [loading, setLoading] = useState(false);
-  const [inputAddress, setInputAddress] = useState<AddressType | undefined>(undefined);
-  const [faucetAddress, setFaucetAddress] = useState<AddressType | undefined>(undefined);
+  const [inputAddress, setInputAddress] = useState<Address | undefined>(undefined);
+  const [faucetAddress, setFaucetAddress] = useState<Address | undefined>(undefined);
   const [sendValue, setSendValue] = useState<string>("");
 
   const { chain: ConnectedChain } = useAccount();
@@ -69,11 +69,13 @@ export const Faucet = (): JSX.Element | null => {
     }
     try {
       setLoading(true);
-      await faucetTxn({
+      const txParams: SendTransactionParameters = {
         to: inputAddress,
         value: parseEther(sendValue as `${number}`),
         account: faucetAddress,
-      });
+        chain: undefined,
+      };
+      await faucetTxn(txParams);
       setLoading(false);
       setInputAddress(undefined);
       setSendValue("");
@@ -107,7 +109,7 @@ export const Faucet = (): JSX.Element | null => {
             <div className="flex space-x-4">
               <div>
                 <span className="text-sm font-bold">From:</span>
-                {faucetAddress && <Address address={faucetAddress} />}
+                {faucetAddress && <AddressComponent address={faucetAddress} format="short" />}
               </div>
               <div>
                 <span className="text-sm font-bold pl-3">Available:</span>
@@ -118,7 +120,7 @@ export const Faucet = (): JSX.Element | null => {
               <AddressInput
                 placeholder="Destination Address"
                 value={inputAddress ?? ""}
-                onChange={(value): void => setInputAddress(value as AddressType | undefined)}
+                onChange={(value): void => setInputAddress(value as Address)}
               />
               <EtherInput placeholder="Amount to send" value={sendValue} onChange={(value): void => setSendValue(value)} />
               <button className="h-10 btn btn-primary btn-sm px-2 rounded-full" onClick={sendETH} disabled={loading}>
