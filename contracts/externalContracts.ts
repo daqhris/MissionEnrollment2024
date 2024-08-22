@@ -1,4 +1,4 @@
-import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
+import type { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 /**
  * @example
