@@ -1,6 +1,7 @@
-import { EAS, Offchain, SchemaEncoder, OffchainAttestationParams, OffchainConfig, OffchainAttestationVersion } from "@ethereum-attestation-service/eas-sdk";
+import { EAS, Offchain, SchemaEncoder, OffchainAttestationVersion } from "@ethereum-attestation-service/eas-sdk";
+import type { OffchainAttestationParams, OffchainConfig } from "@ethereum-attestation-service/eas-sdk";
 import { ethers } from "ethers";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   if (req.method !== "POST") {

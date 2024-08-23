@@ -22,7 +22,7 @@ import type {
   WriteContractParameters
 } from "viem";
 import { useContractRead } from "wagmi";
-import type { UseContractReadConfig, UseContractEventConfig } from 'wagmi';
+import type { UseReadContractParameters, UseWatchContractEventParameters } from 'wagmi';
 import deployedContractsData from "~~/contracts/deployedContracts";
 import externalContractsData from "~~/contracts/externalContracts";
 import scaffoldConfig from "~~/scaffold.config";
@@ -174,11 +174,11 @@ export type UseScaffoldReadConfig<
   contractName: TContractName;
   watch?: boolean;
 } & IsContractDeclarationMissing<
-  Partial<UseContractReadConfig>,
+  Partial<UseReadContractParameters>,
   {
     functionName: TFunctionName;
   } & UseScaffoldArgsParam<TContractName, TFunctionName> &
-    Omit<UseContractReadConfig, "chainId" | "abi" | "address" | "functionName" | "args">
+    Omit<UseReadContractParameters, "chainId" | "abi" | "address" | "functionName" | "args">
 >;
 
 export type ScaffoldWriteContractVariables<
@@ -218,7 +218,7 @@ export type UseScaffoldEventConfig<
   contractName: TContractName;
   eventName: TEventName;
 } & IsContractDeclarationMissing<
-  Omit<UseContractEventConfig<ContractAbi<TContractName>, TEventName>, "listener" | "address" | "abi" | "eventName"> & {
+  Omit<UseWatchContractEventParameters, "onLogs" | "address" | "abi" | "eventName"> & {
     listener: (
       logs: Simplify<
         Omit<Log<bigint, number, boolean>, "args" | "eventName"> & {
@@ -228,7 +228,7 @@ export type UseScaffoldEventConfig<
       >[],
     ) => void;
   },
-  Omit<UseContractEventConfig<ContractAbi<TContractName>, TEventName>, "listener" | "address" | "abi" | "eventName"> & {
+  Omit<UseWatchContractEventParameters, "onLogs" | "address" | "abi" | "eventName"> & {
     listener: (
       logs: Simplify<
         Omit<Log<bigint, number, false, TEvent, false, [TEvent], TEventName>, "args"> & {

@@ -4,7 +4,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import type { ExtractAbiFunctionNames } from "abitype";
 import type { ReadContractErrorType } from "viem";
-import { useBlockNumber, useContractRead, type UseContractReadConfig } from "wagmi";
+import { useBlockNumber, useContractRead } from "wagmi";
+import type { UseReadContractParameters } from "wagmi";
 import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
 import type {
   AbiFunctionReturnType,
@@ -46,7 +47,7 @@ export const useScaffoldReadContract = <
     functionName,
     address: deployedContract?.address,
     abi: deployedContract?.abi,
-    args,
+    args: args as readonly unknown[],
     ...readContractConfig,
     enabled: !Array.isArray(args) || !args.some(arg => arg === undefined),
     ...queryOptions,

@@ -1,8 +1,8 @@
 import React from "react";
-import { NextPageContext } from "next";
+import type { NextPageContext } from "next";
 
 interface ErrorProps {
-  statusCode?: number;
+  statusCode: number;
 }
 
 const Error = ({ statusCode }: ErrorProps): React.ReactElement => {
@@ -16,7 +16,7 @@ const Error = ({ statusCode }: ErrorProps): React.ReactElement => {
 
 Error.getInitialProps = ({ res, err }: NextPageContext): Promise<ErrorProps> => {
   const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
-  return Promise.resolve({ statusCode });
+  return Promise.resolve({ statusCode: statusCode ?? 404 });
 };
 
 export default Error;

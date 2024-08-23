@@ -50,8 +50,7 @@
     "exactOptionalPropertyTypes": true,
     "noImplicitOverride": true,
     "verbatimModuleSyntax": true,
-    "allowImportingTsExtensions": true,
-    "importsNotUsedAsValues": "error"
+    "allowImportingTsExtensions": true
   },
   "include": [
     "next-env.d.ts",

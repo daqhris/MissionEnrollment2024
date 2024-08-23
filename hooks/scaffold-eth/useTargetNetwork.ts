@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useAccount } from "wagmi";
 import scaffoldConfig from "~~/scaffold.config";
 import { useGlobalState } from "~~/services/store/store";
-import { ChainWithAttributes } from "~~/utils/scaffold-eth";
+import type { ChainWithAttributes } from "~~/utils/scaffold-eth";
 import { NETWORKS_EXTRA_DATA } from "~~/utils/scaffold-eth";
 
 /**

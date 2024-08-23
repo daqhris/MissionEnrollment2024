@@ -2,9 +2,9 @@ import { useEffect, useCallback } from 'react';
 import { useTargetNetwork } from "./useTargetNetwork";
 import type { Abi, Log, Address } from "viem";
 import { createPublicClient, http } from 'viem';
+import { watchContractEvent } from 'viem/actions';
 import { addIndexedArgsToEvent, useDeployedContractInfo } from "~~/hooks/scaffold-eth";
 import type { ContractName, UseScaffoldEventConfig } from "~~/utils/scaffold-eth/contract";
-import { watchContractEvent } from 'viem/actions';
 
 // TODO: Import POAP API client and necessary types
 // import { POAPClient } from '@poap/poap-eth-sdk';
@@ -29,7 +29,10 @@ export const useScaffoldWatchContractEvent = <
   const { targetNetwork } = useTargetNetwork();
 
   const addIndexedArgsToLogs = useCallback((logs: Log[]): Log[] =>
-    logs.map(log => ({ ...log, args: addIndexedArgsToEvent(log as any).args as Log['args'] })),
+    logs.map(log => {
+      const indexedLog = addIndexedArgsToEvent(log as any);
+      return { ...log, args: indexedLog.args };
+    }),
   []);
   const listenerWithIndexedArgs = useCallback((logs: Log[]): void => {
     listener(addIndexedArgsToLogs(logs) as Parameters<typeof listener>[0]);

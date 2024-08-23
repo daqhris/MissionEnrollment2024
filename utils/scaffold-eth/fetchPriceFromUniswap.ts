@@ -1,5 +1,7 @@
-import { ChainWithAttributes, getAlchemyHttpUrl } from "./networks";
-import { Address, createPublicClient, http, parseAbi } from "viem";
+import { getAlchemyHttpUrl } from "./networks";
+import type { ChainWithAttributes } from "./networks";
+import { createPublicClient, http, parseAbi } from "viem";
+import type { Address } from "viem";
 import { mainnet } from "viem/chains";
 
 const publicClient = createPublicClient({

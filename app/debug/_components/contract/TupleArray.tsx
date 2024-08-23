@@ -21,47 +21,47 @@ export const TupleArray: React.FC<TupleArrayProps> = ({ abiTupleParameter, setPa
   const depth = (abiTupleParameter.type.match(/\[\]/g) || []).length;
 
   useEffect((): void => {
-    // Extract and group fields based on index prefix
-    const groupedFields = Object.keys(form).reduce<Record<string, Record<string, unknown>>>((acc, key) => {
-      const [indexPrefix, ...restArray] = key.split("_");
-      const componentName = restArray.join("_");
-      if (indexPrefix) {
-        if (!acc[indexPrefix]) {
-          acc[indexPrefix] = {};
+    const groupFields = (form: Record<string, unknown>): Record<string, Record<string, unknown>> => {
+      return Object.entries(form).reduce<Record<string, Record<string, unknown>>>((acc, [key, value]) => {
+        const [indexPrefix, ...restArray] = key.split("_");
+        const componentName = restArray.join("_");
+        if (indexPrefix?.trim()) {
+          acc[indexPrefix] = { ...acc[indexPrefix] ?? {}, [componentName]: value };
         }
-        acc[indexPrefix][componentName] = form[key];
-      }
-      return acc;
-    }, {});
+        return acc;
+      }, {});
+    };
 
-    let argsArray: Array<Record<string, unknown>> = [];
+    const createArgsArray = (groupedFields: Record<string, Record<string, unknown>>): Array<Record<string, unknown>> => {
+      return Object.values(groupedFields).map(group =>
+        abiTupleParameter.components.reduce((argsStruct, component, index) => {
+          const key = component.name || `input_${index}_`;
+          if (group[key] !== undefined) {
+            argsStruct[key] = group[key];
+          }
+          return argsStruct;
+        }, {} as Record<string, unknown>)
+      );
+    };
 
-    Object.keys(groupedFields).forEach(key => {
-      const group = groupedFields[key];
-      if (group) {
-        const currentKeyValues = Object.values(group);
-
-        const argsStruct: Record<string, unknown> = {};
-        abiTupleParameter.components.forEach((component, componentIndex) => {
-          argsStruct[component.name || `input_${componentIndex}_`] = currentKeyValues[componentIndex];
-        });
-
-        argsArray.push(argsStruct);
-      }
-    });
-
-    if (depth > 1) {
-      argsArray = argsArray.map(args => {
-        const key = abiTupleParameter.components[0]?.name || "tuple";
-        return (args[key] as Record<string, unknown>) || {};
+    const processArgsArray = (argsArray: Array<Record<string, unknown>>): Array<Record<string, unknown>> => {
+      if (depth <= 1) return argsArray;
+      const firstComponentName = abiTupleParameter.components[0]?.name || "tuple";
+      return argsArray.map(args => {
+        const firstComponent = args[firstComponentName];
+        return (firstComponent && typeof firstComponent === 'object') ? firstComponent as Record<string, unknown> : {};
       });
-    }
+    };
 
-    setParentForm(parentForm => {
-      return { ...parentForm, [parentStateObjectKey]: JSON.stringify(argsArray, replacer) };
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(form, replacer)]);
+    const groupedFields = groupFields(form);
+    const argsArray = createArgsArray(groupedFields);
+    const processedArgsArray = processArgsArray(argsArray);
+
+    setParentForm(prevForm => ({
+      ...prevForm,
+      [parentStateObjectKey]: JSON.stringify(processedArgsArray, replacer)
+    }));
+  }, [form, abiTupleParameter.components, depth, parentStateObjectKey]);
 
   const addInput = (): void => {
     setAdditionalInputs(previousValue => {

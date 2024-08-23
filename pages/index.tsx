@@ -57,8 +57,10 @@ const Home: FC = (): JSX.Element => {
     const currentIndex = stages.indexOf(stage);
     if (currentIndex < stages.length - 1) {
       const nextStage = stages[currentIndex + 1];
-      setCurrentStage(nextStage);
-      localStorage.setItem("currentStage", nextStage);
+      if (nextStage) {
+        setCurrentStage(nextStage);
+        localStorage.setItem("currentStage", nextStage);
+      }
     }
   };
 
@@ -97,7 +99,6 @@ const Home: FC = (): JSX.Element => {
               toast.success("Attestation completed successfully!");
             }}
             poaps={poaps}
-            ensName={ensName || null}
           />
         );
       case "complete":
