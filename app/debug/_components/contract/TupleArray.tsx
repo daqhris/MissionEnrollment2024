@@ -61,7 +61,7 @@ export const TupleArray: React.FC<TupleArrayProps> = ({ abiTupleParameter, setPa
       ...prevForm,
       [parentStateObjectKey]: JSON.stringify(processedArgsArray, replacer)
     }));
-  }, [form, abiTupleParameter.components, depth, parentStateObjectKey]);
+  }, [form, abiTupleParameter.components, depth, parentStateObjectKey, setParentForm]);
 
   const addInput = (): void => {
     setAdditionalInputs(previousValue => {

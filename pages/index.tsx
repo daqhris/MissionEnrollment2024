@@ -9,7 +9,7 @@ import WalletConnectionGuide from "../components/WalletConnectionGuide";
 import { useTheme } from "next-themes";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAccount, useEnsName } from "wagmi";
+import { useAccount } from "wagmi";
 
 const stages = ["identity", "attendance", "attestation", "complete"] as const;
 type Stage = (typeof stages)[number];
@@ -33,7 +33,6 @@ const stageDescriptions: Record<Stage, string> = {
 
 const Home: FC = (): JSX.Element => {
   const { address } = useAccount();
-  const { data: ensName } = useEnsName({ address });
   const [currentStage, setCurrentStage] = useState<Stage>("identity");
   const [completedStages, setCompletedStages] = useState<Stage[]>([]);
   const [poaps, setPoaps] = useState<POAPEvent[]>([]);
