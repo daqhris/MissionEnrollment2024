@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useTargetNetwork } from "./useTargetNetwork";
-import type { MutateOptions } from "@tanstack/react-query";
 import type { Abi, ExtractAbiFunctionNames } from "abitype";
-import { useAccount, useContractWrite } from "wagmi";
-import type { UseContractWriteConfig, WriteContractResult } from "wagmi";
-import type { Address, Hash } from "viem";
+import { useAccount, useWriteContract, useWalletClient } from "wagmi";
+import { writeContract } from "@wagmi/core";
+import type { WriteContractParameters as WagmiWriteContractParameters, WriteContractReturnType } from "@wagmi/core";
+import type { WriteContractParameters as ViemWriteContractParameters, Account, Chain } from "viem";
+import type { Hash, Address } from "viem";
 import { useDeployedContractInfo, useTransactor } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 import type {
@@ -23,37 +24,29 @@ import type {
  */
 export const useScaffoldWriteContract = <TContractName extends ContractName>(
   contractName: TContractName,
-  writeContractConfig?: UseContractWriteConfig
-): Omit<ReturnType<typeof useContractWrite>, 'writeAsync'> & {
-  isMining: boolean;
-  writeContractAsync: <TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, "nonpayable" | "payable">>(
-    variables: ScaffoldWriteContractVariables<TContractName, TFunctionName>,
-    options?: ScaffoldWriteContractOptions
-  ) => Promise<{ hash: `0x${string}` } | undefined>;
-  writeContract: <TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, "nonpayable" | "payable">>(
-    variables: ScaffoldWriteContractVariables<TContractName, TFunctionName>,
-    options?: Omit<ScaffoldWriteContractOptions, "onBlockConfirmation" | "blockConfirmations">
-  ) => Promise<void>;
-} => {
+  writeContractConfig?: Omit<WagmiWriteContractParameters, 'abi' | 'address' | 'functionName'>
+) => {
   const { chain } = useAccount();
+  const { data: walletClient } = useWalletClient();
   const writeTx = useTransactor();
   const [isMining, setIsMining] = useState(false);
   const { targetNetwork } = useTargetNetwork();
 
+  type WriteContractFunction = <TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, "nonpayable" | "payable">>(
+    variables: ScaffoldWriteContractVariables<TContractName, TFunctionName>,
+    options?: ScaffoldWriteContractOptions
+  ) => Promise<Hash | undefined>;
+
+  type WriteContractPreparedFunction = <TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, "nonpayable" | "payable">>(
+    variables: ScaffoldWriteContractVariables<TContractName, TFunctionName>,
+    options?: Omit<ScaffoldWriteContractOptions, "onBlockConfirmation" | "blockConfirmations">
+  ) => Promise<void>;
+
   const { data: deployedContractData } = useDeployedContractInfo(contractName);
 
-  const wagmiContractWrite = useContractWrite({
-    address: deployedContractData?.address,
-    abi: deployedContractData?.abi,
-    ...writeContractConfig,
-  });
+  const { writeContractAsync } = useWriteContract();
 
-  const sendContractWriteAsyncTx = async <
-    TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, "nonpayable" | "payable">,
-  >(
-    variables: ScaffoldWriteContractVariables<TContractName, TFunctionName>,
-    options?: ScaffoldWriteContractOptions,
-  ): Promise<{ hash: `0x${string}` } | undefined> => {
+  const sendContractWriteAsyncTx: WriteContractFunction = async (variables, options) => {
     if (!deployedContractData) {
       notification.error("Target Contract is not deployed, did you forget to run `yarn deploy`?");
       return undefined;
@@ -70,42 +63,59 @@ export const useScaffoldWriteContract = <TContractName extends ContractName>(
 
     try {
       setIsMining(true);
-      const { blockConfirmations, onBlockConfirmation, ...mutateOptions } = options ?? {};
-      const makeWriteWithParams = async () => {
-        if (!wagmiContractWrite.writeContract) {
-          throw new Error("writeContract function is not available");
-        }
-        const result = await wagmiContractWrite.writeContract({
-          abi: deployedContractData.abi as Abi,
-          address: deployedContractData.address,
-          functionName: variables.functionName as string,
-          args: variables.args,
-        });
-        if (typeof result === 'object' && 'hash' in result) {
-          return result.hash;
-        }
-        throw new Error("Unexpected result from writeContract");
-      };
-      const writeTxResult = await writeTx(makeWriteWithParams, {
-        blockConfirmations,
-        onBlockConfirmation,
-      } as TransactorFuncOptions);
+      const { blockConfirmations, onBlockConfirmation } = options ?? {};
 
-      return { hash: writeTxResult };
+      const config: Required<{
+        abi: Abi;
+        address: `0x${string}`;
+        functionName: string;
+        args: readonly unknown[];
+        account: `0x${string}` | undefined;
+        chain: Chain | undefined;
+        value: bigint | undefined;
+        gas: bigint | undefined;
+        gasPrice: bigint | undefined;
+        maxFeePerGas: bigint | undefined;
+        maxPriorityFeePerGas: bigint | undefined;
+        nonce: number | undefined;
+        __mode?: 'prepared' | undefined;
+      }> = {
+        ...writeContractConfig,
+        abi: deployedContractData.abi,
+        address: deployedContractData.address,
+        functionName: variables.functionName as string,
+        args: variables.args ?? [],
+        account: walletClient?.account?.address,
+        chain: undefined,
+        value: variables.value ?? undefined,
+        gas: variables.gas ?? undefined,
+        gasPrice: variables.gasPrice ?? undefined,
+        maxFeePerGas: variables.maxFeePerGas ?? undefined,
+        maxPriorityFeePerGas: variables.maxPriorityFeePerGas ?? undefined,
+        nonce: variables.nonce ?? undefined,
+        __mode: undefined,
+      };
+
+      const result = await writeContractAsync(config as WagmiWriteContractParameters);
+
+      if (blockConfirmations || onBlockConfirmation) {
+        await writeTx(
+          async () => result,
+          { blockConfirmations, onBlockConfirmation } as TransactorFuncOptions
+        );
+      }
+
+      return result;
     } catch (e) {
       console.error("Error in sendContractWriteAsyncTx:", e);
-      throw e;
+      notification.error(`Failed to send transaction: ${e instanceof Error ? e.message : String(e)}`);
+      return undefined;
     } finally {
       setIsMining(false);
     }
   };
 
-  const sendContractWriteTx = async <
-    TFunctionName extends ExtractAbiFunctionNames<ContractAbi<TContractName>, "nonpayable" | "payable">,
-  >(
-    variables: ScaffoldWriteContractVariables<TContractName, TFunctionName>,
-    options?: Omit<ScaffoldWriteContractOptions, "onBlockConfirmation" | "blockConfirmations">,
-  ): Promise<void> => {
+  const sendContractWriteTx: WriteContractPreparedFunction = async (variables, options) => {
     if (!deployedContractData) {
       notification.error("Target Contract is not deployed, did you forget to run `yarn deploy`?");
       return;
@@ -120,32 +130,77 @@ export const useScaffoldWriteContract = <TContractName extends ContractName>(
     }
 
     try {
-      if (!wagmiContractWrite.writeContract) {
-        throw new Error("writeContract function is not available");
-      }
-      const result = await wagmiContractWrite.writeContract({
-        abi: deployedContractData.abi as Abi,
-        address: deployedContractData.address as `0x${string}`,
+      const config = {
+        abi: deployedContractData.abi,
+        address: deployedContractData.address,
         functionName: variables.functionName as string,
-        args: variables.args,
-      });
+        args: variables.args ?? undefined,
+        ...writeContractConfig,
+        value: variables.value,
+        gas: variables.gas,
+        gasPrice: variables.gasPrice,
+        maxFeePerGas: variables.maxFeePerGas,
+        maxPriorityFeePerGas: variables.maxPriorityFeePerGas,
+        nonce: variables.nonce,
+      } as const;
 
-      if (options?.onSuccess && 'hash' in result) {
-        options.onSuccess({ hash: result.hash }, variables as WriteContractParameters, options);
+      // Remove undefined properties
+      const cleanedConfig = Object.fromEntries(
+        Object.entries(config).filter(([_, value]) => value !== undefined)
+      ) as WagmiWriteContractParameters;
+
+      const result = await writeContractAsync(config as WagmiWriteContractParameters);
+
+      if (options?.onSuccess) {
+        options.onSuccess(
+          { hash: result },
+          variables as ViemWriteContractParameters,
+          config as WagmiWriteContractParameters
+        );
       }
     } catch (error) {
       console.error("Error in sendContractWriteTx:", error);
       notification.error("Failed to send transaction. Please try again.");
       if (options?.onError) {
-        options.onError(error as Error, variables as WriteContractParameters, options);
+        options.onError(
+          error instanceof Error ? error : new Error(String(error)),
+          variables as ViemWriteContractParameters,
+          {
+            ...writeContractConfig,
+            abi: deployedContractData.abi,
+            address: deployedContractData.address,
+            functionName: variables.functionName,
+          } as WagmiWriteContractParameters
+        );
       }
     }
   };
 
   return {
-    ...wagmiContractWrite,
-    isMining,
     writeContractAsync: sendContractWriteAsyncTx,
     writeContract: sendContractWriteTx,
+    isLoading: isMining,
+    config: {
+      ...writeContractConfig,
+      ...(deployedContractData && {
+        address: deployedContractData.address,
+        abi: deployedContractData.abi,
+      }),
+    },
+    write: async (args?: Omit<WagmiWriteContractParameters, 'abi' | 'address'>): Promise<Hash> => {
+      if (!deployedContractData) {
+        throw new Error("Contract data is not available");
+      }
+      if (!args?.functionName) {
+        throw new Error("Function name is required");
+      }
+      const result = await writeContractAsync({
+        ...args,
+        address: deployedContractData.address,
+        abi: deployedContractData.abi,
+        functionName: args.functionName,
+      } as ViemWriteContractParameters);
+      return result;
+    },
   };
 };
