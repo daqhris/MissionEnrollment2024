@@ -2,7 +2,7 @@ import React from "react";
 import { useEnsName } from "wagmi";
 
 interface VerifiedENSNameDisplayProps {
-  address: string;
+  address: `0x${string}`;
   theme: string;
 }
 

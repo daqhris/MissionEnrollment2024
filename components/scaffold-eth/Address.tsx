@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { Address as AddressType, getAddress, isAddress } from "viem";
+import type { Address as AddressType } from "viem";
+import { getAddress, isAddress } from "viem";
 import { hardhat } from "viem/chains";
 import { normalize } from "viem/ens";
 import { useEnsAvatar, useEnsName } from "wagmi";
@@ -94,8 +95,8 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
     <div className="flex items-center flex-shrink-0">
       <div className="flex-shrink-0">
         <BlockieAvatar
-          address={checkSumAddress}
-          ensImage={ensAvatar}
+          address={checkSumAddress ?? ''}
+          ensImage={ensAvatar ?? null}
           size={(blockieSizeMap[size] * 24) / blockieSizeMap["base"]}
         />
       </div>
@@ -122,7 +123,7 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
         />
       ) : (
         <CopyToClipboard
-          text={checkSumAddress}
+          text={checkSumAddress ?? ''}
           onCopy={(): void => {
             setAddressCopied(true);
             setTimeout((): void => {

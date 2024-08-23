@@ -8,6 +8,7 @@ import { Header } from "./Header";
 import { BlockieAvatar } from "./scaffold-eth";
 import { ProgressBar } from "./scaffold-eth/ProgressBar";
 import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowkit";
+import type { AvatarComponent } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useTheme } from "next-themes";
 import { Toaster } from "react-hot-toast";
@@ -44,7 +45,7 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
       <QueryClientProvider client={queryClient}>
         <ProgressBar />
         <RainbowKitProvider
-          avatar={BlockieAvatar}
+          avatar={BlockieAvatar as AvatarComponent}
           theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
         >
           <ScaffoldEthApp>{children}</ScaffoldEthApp>

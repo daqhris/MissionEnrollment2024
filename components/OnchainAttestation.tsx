@@ -1,15 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import type { WalletClient } from "viem";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { BrowserProvider, JsonRpcSigner } from "ethers";
-import { useAccount, useWalletClient } from "wagmi";
-
-// This component uses the Ethereum Attestation Service (EAS) protocol
-// to create attestations on both Base and Optimism rollups
-
-const EAS_CONTRACT_ADDRESS = "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"; // Sepolia testnet
-const SCHEMA_UID = "0x40e5abe23a3378a9a43b7e874c5cb8dfd4d6b0823501d317acee41e08d3af4dd"; // Actual schema UID for mission enrollment
-const ATTESTER_ADDRESS = "0xF0bC5CC2B4866dAAeCb069430c60b24520077037"; // Actual address of daqhris.eth
-const ATTESTER_NAME = "mission-enrollment.daqhris.eth";
+import { useAccount, useWalletClient, usePublicClient } from 'wagmi';
 
 interface PoapEvent {
   id: string;
@@ -23,26 +15,87 @@ interface Poap {
   token_id: string;
 }
 
+// This component uses the Ethereum Attestation Service (EAS) protocol
+// to create attestations on both Base and Optimism rollups
+
+const EAS_CONTRACT_ADDRESS: `0x${string}` = "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"; // Sepolia testnet
+const SCHEMA_UID: `0x${string}` = "0x40e5abe23a3378a9a43b7e874c5cb8dfd4d6b0823501d317acee41e08d3af4dd"; // Actual schema UID for mission enrollment
+const ATTESTER_ADDRESS: `0x${string}` = "0xF0bC5CC2B4866dAAeCb069430c60b24520077037"; // Actual address of daqhris.eth
+const ATTESTER_NAME = "mission-enrollment.daqhris.eth";
+
 interface OnchainAttestationProps {
   onAttestationComplete: () => void;
   poaps: Poap[];
-  ensName: string | null;
 }
 
 const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
   onAttestationComplete,
-  poaps,
-  ensName
-}) => {
-  const { address } = useAccount();
-  const { data: walletClient } = useWalletClient();
+  poaps
+}): JSX.Element => {
   const [isAttesting, setIsAttesting] = useState<boolean>(false);
   const [attestationStatus, setAttestationStatus] = useState<string | null>(null);
   const [selectedRollup, setSelectedRollup] = useState<"base" | "optimism">("base");
+  const [eas, setEAS] = useState<EAS | null>(null);
+
+  const { address } = useAccount();
+  const { data: walletClient } = useWalletClient();
+  const publicClient = usePublicClient();
+
+  useEffect(() => {
+    if (!address || !walletClient || !publicClient) {
+      setAttestationStatus('Please connect your wallet to continue.');
+    } else {
+      setAttestationStatus(null);
+    }
+  }, [address, walletClient, publicClient]);
+
+const initializeEAS = async (
+  walletClient: WalletClient,
+  setEAS: React.Dispatch<React.SetStateAction<EAS | null>>,
+  setAttestationStatus: React.Dispatch<React.SetStateAction<string | null>>
+): Promise<void> => {
+  if (!walletClient) {
+    setAttestationStatus('Wallet client not available. Please connect your wallet.');
+    return;
+  }
+  try {
+    const easInstance = new EAS(EAS_CONTRACT_ADDRESS);
+
+    if (!('signTypedData' in walletClient)) {
+      throw new Error("Wallet client does not support signing typed data");
+    }
+
+    // Create a TransactionSigner from the WalletClient
+    const signer = {
+      signTypedData: walletClient.signTypedData,
+      getAddress: async (): Promise<`0x${string}`> => walletClient.account?.address ?? '0x',
+      signMessage: walletClient.signMessage,
+    };
+
+    await easInstance.connect(signer);
+
+    setEAS(easInstance);
+    setAttestationStatus('EAS initialized successfully');
+  } catch (error: unknown) {
+    console.error('Error initializing EAS:', error);
+    setAttestationStatus(
+      error instanceof Error
+        ? `Failed to initialize EAS: ${error.message}`
+        : 'Failed to initialize attestation service. Please try again.'
+    );
+    setEAS(null);
+  }
+};
+
+useEffect(() => {
+  if (walletClient) {
+    void initializeEAS(walletClient, setEAS, setAttestationStatus);
+  }
+}, [walletClient]);
 
   const handleAttestation = async (): Promise<void> => {
-    if (!address || !walletClient) {
-      setAttestationStatus("Error: Wallet not connected");
+    if (!address || !walletClient || !publicClient || !eas) {
+      setAttestationStatus("Error: Wallet not connected or EAS not initialized");
       return;
     }
 
@@ -50,24 +103,21 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
     setAttestationStatus("Initiating attestation...");
 
     try {
-      const eas = new EAS(EAS_CONTRACT_ADDRESS);
-      if (!walletClient) {
-        throw new Error("Wallet client is not available");
-      }
-      const provider = new BrowserProvider(walletClient.transport);
-      const signer = await provider.getSigner();
-      eas.connect(signer as unknown as JsonRpcSigner);
-
       const schemaEncoder = new SchemaEncoder("address userAddress,uint256 tokenId,uint256 timestamp,address attester");
       const poapData = poaps[0]; // Assuming we're using the first POAP for simplicity
+
+      if (!poapData) {
+        throw new Error("No POAP data available");
+      }
+
       const encodedData = schemaEncoder.encodeData([
         { name: "userAddress", value: address, type: "address" },
-        { name: "tokenId", value: poapData?.token_id ? BigInt(poapData.token_id) : BigInt(0), type: "uint256" },
+        { name: "tokenId", value: BigInt(poapData.token_id || 0), type: "uint256" },
         { name: "timestamp", value: BigInt(Math.floor(Date.now() / 1000)), type: "uint256" },
         { name: "attester", value: ATTESTER_ADDRESS, type: "address" },
       ]);
 
-      const tx = await eas.attest({
+      const attestation = await eas.attest({
         schema: SCHEMA_UID,
         data: {
           recipient: address,
@@ -77,16 +127,28 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
         },
       });
 
-      const newAttestationUID = await tx.wait();
+      setAttestationStatus(`Attestation initiated. Waiting for confirmation...`);
 
-      setAttestationStatus(`Attestation created successfully on ${selectedRollup}. UID: ${newAttestationUID}`);
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash: attestation.tx.hash as `0x${string}`
+      });
+
+      if (!receipt.transactionHash) {
+        throw new Error("Failed to get valid transaction hash");
+      }
+
+      setAttestationStatus(`Attestation created successfully on ${selectedRollup}. Transaction Hash: ${receipt.transactionHash}`);
       onAttestationComplete();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Attestation error:", error);
-      setAttestationStatus(`Attestation failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      setAttestationStatus(`Attestation failed: ${error instanceof Error ? error.message : 'Unknown error occurred'}`);
     } finally {
       setIsAttesting(false);
     }
+  };
+
+  const handleRollupChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    setSelectedRollup(e.target.value as "base" | "optimism");
   };
 
   return (
@@ -102,7 +164,7 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
         <select
           id="rollup"
           value={selectedRollup}
-          onChange={(e): void => setSelectedRollup(e.target.value as "base" | "optimism")}
+          onChange={handleRollupChange}
           className="w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
         >
           <option value="base">Base (Ethereum L2 Rollup)</option>
@@ -113,12 +175,6 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
           costs.
         </p>
       </div>
-      {ensName && (
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold mb-2">ENS Name:</h3>
-          <p className="text-lg">{ensName}</p>
-        </div>
-      )}
       {poaps.length > 0 && (
         <div className="mb-6">
           <h3 className="text-xl font-semibold mb-2">POAP Data for Attestation:</h3>

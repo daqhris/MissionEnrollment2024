@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useTargetNetwork } from "./useTargetNetwork";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Abi, AbiEvent, ExtractAbiEventNames } from "abitype";
-import { BlockNumber, GetLogsParameters } from "viem";
-import { Config, UsePublicClientReturnType, useBlockNumber, usePublicClient } from "wagmi";
+import type { Abi, AbiEvent, ExtractAbiEventNames } from "abitype";
+import type { BlockNumber, GetLogsParameters, Log } from "viem";
+import { useBlockNumber, usePublicClient } from "wagmi";
+import type { Config, UsePublicClientReturnType } from "wagmi";
 import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
-import {
+import type {
   ContractAbi,
   ContractName,
   UseScaffoldEventHistoryConfig,
@@ -94,7 +95,7 @@ export const useScaffoldEventHistory = <
     chainId: targetNetwork.id,
   });
   const [isFirstRender, setIsFirstRender] = useState(true);
-  const [poapData, setPoapData] = useState<any>(null);
+  const [poapData, setPoapData] = useState<Record<string, unknown> | null>(null);
 
   // POAP integration logic
   useEffect(() => {
@@ -141,10 +142,15 @@ export const useScaffoldEventHistory = <
     ],
     queryFn: async ({ pageParam }) => {
       if (!isContractAddressAndClientReady) return undefined;
+      const options = {
+        blockData: blockData ? true : undefined,
+        transactionData: transactionData ? true : undefined,
+        receiptData: receiptData ? true : undefined,
+      };
       const data = await getEvents(
         { address: deployedContractData?.address, event, fromBlock: pageParam, args: filters },
         publicClient,
-        { blockData, transactionData, receiptData },
+        options as { blockData?: boolean; transactionData?: boolean; receiptData?: boolean },
       );
 
       return data;
@@ -156,15 +162,15 @@ export const useScaffoldEventHistory = <
     },
     select: data => {
       const events = data.pages.flat();
-      const eventHistoryData = events?.map(addIndexedArgsToEvent) as UseScaffoldEventHistoryData<
+      const eventHistoryData = events?.map(event => addIndexedArgsToEvent(event as any)) as UseScaffoldEventHistoryData<
         TContractName,
         TEventName,
         TBlockData,
         TTransactionData,
         TReceiptData
-      >;
+      > | undefined;
       return {
-        pages: eventHistoryData?.reverse(),
+        pages: eventHistoryData?.reverse() ?? [],
         pageParams: data.pageParams,
       };
     },
@@ -193,7 +199,7 @@ export const useScaffoldEventHistory = <
   };
 };
 
-export const addIndexedArgsToEvent = (event: any) => {
+export const addIndexedArgsToEvent = (event: { args?: Record<string, unknown>; log?: Log }): { args?: Record<string, unknown>; log?: Log } => {
   if (event.args && !Array.isArray(event.args)) {
     return { ...event, args: { ...event.args, ...Object.values(event.args) } };
   }

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTargetNetwork } from "./useTargetNetwork";
 import { useLocalStorage } from "usehooks-ts";
-import { Chain, Hex, HttpTransport, PrivateKeyAccount, createWalletClient, http } from "viem";
-import { WalletClient } from "viem";
+import { createWalletClient, http } from "viem";
+import type { Chain, Hex, HttpTransport, PrivateKeyAccount, WalletClient } from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { usePublicClient } from "wagmi";
 
@@ -100,8 +100,8 @@ export const useBurnerWallet = (): BurnerAccount => {
       return client;
     } else {
       console.log("⚠ Could not create burner wallet");
+      return undefined;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publicClient?.chain.id]);
 
   /**

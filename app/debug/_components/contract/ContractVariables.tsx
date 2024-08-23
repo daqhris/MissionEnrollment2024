@@ -1,10 +1,10 @@
 import { DisplayVariable } from "./DisplayVariable";
-import { Abi, AbiFunction } from "abitype";
-import { Contract, ContractName, GenericContract, InheritedFunctions } from "~~/utils/scaffold-eth/contract";
+import type { Abi, AbiFunction } from "abitype";
+import type { Contract, ContractName, GenericContract, InheritedFunctions } from "~~/utils/scaffold-eth/contract";
 
 interface FunctionDisplay {
   fn: AbiFunction;
-  inheritedFrom?: string;
+  inheritedFrom?: string | undefined;
 }
 
 export const ContractVariables = ({
@@ -29,11 +29,11 @@ export const ContractVariables = ({
     .map((fn: AbiFunction): FunctionDisplay => {
       return {
         fn,
-        inheritedFrom: ((deployedContractData as GenericContract)?.inheritedFunctions as InheritedFunctions)?.[fn.name],
+        inheritedFrom: ((deployedContractData as GenericContract)?.inheritedFunctions as InheritedFunctions)?.[fn.name] ?? undefined,
       };
     })
     .sort((a: FunctionDisplay, b: FunctionDisplay): number =>
-      (b.inheritedFrom ? b.inheritedFrom.localeCompare(a.inheritedFrom || '') : 1)
+      (b.inheritedFrom && a.inheritedFrom) ? b.inheritedFrom.localeCompare(a.inheritedFrom) : b.inheritedFrom ? -1 : a.inheritedFrom ? 1 : 0
     );
 
   if (!functionsToDisplay.length) {
@@ -49,7 +49,7 @@ export const ContractVariables = ({
           contractAddress={deployedContractData.address}
           key={fn.name}
           refreshDisplayVariables={refreshDisplayVariables}
-          inheritedFrom={inheritedFrom}
+          inheritedFrom={inheritedFrom || undefined}
         />
       ))}
     </>

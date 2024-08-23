@@ -37,6 +37,7 @@ export const FaucetButton = (): JSX.Element | null => {
         account: FAUCET_ADDRESS,
         to: address,
         value: parseEther(NUM_OF_ETH),
+        chain: hardhat,
       });
       setLoading(false);
     } catch (error) {

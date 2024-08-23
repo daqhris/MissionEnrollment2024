@@ -1,19 +1,20 @@
 "use client";
 
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { Tuple } from "./Tuple";
 import { TupleArray } from "./TupleArray";
-import { AbiParameter } from "abitype";
+import type { AbiParameter } from "viem";
 import {
   AddressInput,
   Bytes32Input,
   BytesInput,
-  CommonInputProps,
   InputBase,
   IntegerInput,
   IntegerVariant,
 } from "~~/components/scaffold-eth";
-import { AbiParameterTuple } from "~~/utils/scaffold-eth/contract";
+import type { CommonInputProps } from "~~/components/scaffold-eth";
+import type { AbiParameterTuple } from "~~/utils/scaffold-eth/contract";
 
 interface ContractInputProps {
   setForm: Dispatch<SetStateAction<Record<string, unknown>>>;
@@ -67,7 +68,7 @@ const ContractInput: React.FC<ContractInputProps> = ({ setForm, form, stateObjec
           <AddressInput
             {...inputProps}
             value={inputProps.value?.toString() ?? ""}
-            onChange={(value: string): void => inputProps.onChange(value)}
+            onChange={(value: string | undefined): void => inputProps.onChange(value)}
           />
         );
       case "bytes32":

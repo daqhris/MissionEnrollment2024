@@ -1,64 +1,60 @@
 "use client";
 
 // @refresh reset
+import React from 'react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
 import { Balance } from "../Balance";
 import { AddressInfoDropdown } from "./AddressInfoDropdown";
 import { AddressQRCodeModal } from "./AddressQRCodeModal";
 import { WrongNetworkDropdown } from "./WrongNetworkDropdown";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Address } from "viem";
-import { useNetworkColor } from "~~/hooks/scaffold-eth";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+import { useNetworkColor, useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { getBlockExplorerAddressLink } from "~~/utils/scaffold-eth";
 
 /**
- * Custom Wagmi Connect Button (watch balance + custom design)
+ * Custom Connect Button (watch balance + custom design)
  */
 export const RainbowKitCustomConnectButton = (): JSX.Element => {
   const networkColor = useNetworkColor();
   const { targetNetwork } = useTargetNetwork();
+  const { address, isDisconnected } = useAccount();
 
   return (
     <ConnectButton.Custom>
-      {({ account, chain, openConnectModal, mounted }): JSX.Element => {
-        const connected = mounted && account && chain;
-        const blockExplorerAddressLink = account
-          ? getBlockExplorerAddressLink(targetNetwork, account.address)
+      {({ account, chain, openConnectModal }): JSX.Element => {
+        if (!address || isDisconnected) {
+          return (
+            <button className="btn btn-primary btn-sm" onClick={openConnectModal} type="button">
+              Connect Wallet
+            </button>
+          );
+        }
+
+        if (chain?.id !== undefined && targetNetwork?.id !== undefined && chain.id !== targetNetwork.id) {
+          return <WrongNetworkDropdown />;
+        }
+
+        const blockExplorerAddressLink = targetNetwork && address
+          ? getBlockExplorerAddressLink(targetNetwork, address)
           : undefined;
 
         return (
           <>
-            {((): JSX.Element => {
-              if (!connected) {
-                return (
-                  <button className="btn btn-primary btn-sm" onClick={openConnectModal} type="button">
-                    Connect Wallet
-                  </button>
-                );
-              }
-
-              if (chain.unsupported || chain.id !== targetNetwork.id) {
-                return <WrongNetworkDropdown />;
-              }
-
-              return (
-                <>
-                  <div className="flex flex-col items-center mr-1">
-                    <Balance address={account.address as Address} className="min-h-0 h-auto" />
-                    <span className="text-xs" style={{ color: networkColor }}>
-                      {chain.name}
-                    </span>
-                  </div>
-                  <AddressInfoDropdown
-                    address={account.address as Address}
-                    displayName={account.displayName}
-                    ensAvatar={account.ensAvatar}
-                    blockExplorerAddressLink={blockExplorerAddressLink}
-                  />
-                  <AddressQRCodeModal address={account.address as Address} modalId="qrcode-modal" />
-                </>
-              );
-            })()}
+            <div className="flex flex-col items-center mr-1">
+              <Balance address={address} className="min-h-0 h-auto" />
+              {chain && (
+                <span className="text-xs" style={{ color: networkColor() }}>
+                  {chain.name}
+                </span>
+              )}
+            </div>
+            <AddressInfoDropdown
+              address={address}
+              displayName={account?.displayName ?? ''}
+              ensAvatar={account?.ensAvatar ?? ''}
+              blockExplorerAddressLink={blockExplorerAddressLink ?? ''}
+            />
+            <AddressQRCodeModal address={address} modalId="qrcode-modal" />
           </>
         );
       }}

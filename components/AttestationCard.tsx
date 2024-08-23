@@ -1,5 +1,5 @@
 import React from "react";
-import { Attestation } from "../types/attestation";
+import type { Attestation } from "../types/attestation";
 import tw from "tailwind-styled-components";
 
 const Card = tw.div`

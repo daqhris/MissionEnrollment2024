@@ -2,8 +2,7 @@ import { useRef, useState } from "react";
 import { NetworkOptions } from "./NetworkOptions";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { getAddress } from "viem";
-import { Address } from "viem";
-import { useDisconnect } from "wagmi";
+import type { Address } from "viem";
 import {
   ArrowLeftOnRectangleIcon,
   ArrowTopRightOnSquareIcon,
@@ -16,6 +15,7 @@ import {
 import { BlockieAvatar, isENS } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 import { getTargetNetworks } from "~~/utils/scaffold-eth";
+import { useDisconnect } from 'wagmi';
 
 const allowedNetworks = getTargetNetworks();
 
@@ -23,7 +23,7 @@ type AddressInfoDropdownProps = {
   address: Address;
   blockExplorerAddressLink: string | undefined;
   displayName: string;
-  ensAvatar?: string;
+  ensAvatar?: string | null;
 };
 
 export const AddressInfoDropdown = ({
@@ -33,6 +33,8 @@ export const AddressInfoDropdown = ({
   blockExplorerAddressLink,
 }: AddressInfoDropdownProps): JSX.Element => {
   const { disconnect } = useDisconnect();
+  const [isDisconnectLoading, setIsDisconnectLoading] = useState(false);
+
   const checkSumAddress = getAddress(address);
 
   const [addressCopied, setAddressCopied] = useState<boolean>(false);
@@ -45,11 +47,27 @@ export const AddressInfoDropdown = ({
   };
   useOutsideClick(dropdownRef, closeDropdown);
 
+  const handleDisconnect = async (): Promise<void> => {
+    if (disconnect) {
+      try {
+        setIsDisconnectLoading(true);
+        await disconnect();
+        console.log('Wallet disconnected');
+      } catch (error) {
+        console.error("Failed to disconnect:", error);
+      } finally {
+        setIsDisconnectLoading(false);
+      }
+    } else {
+      console.error("Disconnect function is not available");
+    }
+  };
+
   return (
     <>
       <details ref={dropdownRef} className="dropdown dropdown-end leading-3">
         <summary tabIndex={0} className="btn btn-secondary btn-sm pl-0 pr-2 shadow-md dropdown-toggle gap-0 !h-auto">
-          <BlockieAvatar address={checkSumAddress} size={30} ensImage={ensAvatar} />
+          <BlockieAvatar address={checkSumAddress} size={30} ensImage={ensAvatar || null} />
           <span className="ml-2 mr-1">
             {isENS(displayName) ? displayName : checkSumAddress?.slice(0, 6) + "..." + checkSumAddress?.slice(-4)}
           </span>
@@ -125,9 +143,11 @@ export const AddressInfoDropdown = ({
             <button
               className="menu-item text-error btn-sm !rounded-xl flex gap-3 py-3"
               type="button"
-              onClick={(): void => disconnect()}
+              onClick={handleDisconnect}
+              disabled={isDisconnectLoading}
             >
-              <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" /> <span>Disconnect</span>
+              <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" />
+              <span>{isDisconnectLoading ? "Disconnecting..." : "Disconnect"}</span>
             </button>
           </li>
         </ul>

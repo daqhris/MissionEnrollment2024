@@ -5,7 +5,7 @@ import NProgress from "nprogress";
 
 type PushStateInput = [data: unknown, unused: string, url?: string | URL | null | undefined];
 
-export const ProgressBar: React.FC = () => {
+export const ProgressBar: React.FC = (): JSX.Element => {
   const height = "3px";
   const color = "#2299dd";
 
@@ -41,7 +41,7 @@ export const ProgressBar: React.FC = () => {
     </style>
   );
 
-  useEffect(() => {
+  useEffect((): () => void => {
     NProgress.configure({ showSpinner: false });
 
     const handleAnchorClick = (event: MouseEvent): void => {

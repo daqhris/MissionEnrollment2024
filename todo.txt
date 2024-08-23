@@ -1,0 +1,10 @@
+- [ ] Resolve unmet peer dependencies warnings
+- [ ] Fix import error: `useContractEvent` not exported from 'wagmi'
+- [ ] Remove unused variables and imports in components
+- [ ] Add missing return types to functions
+- [ ] Correct React Hook usage errors in component functions
+- [ ] Consider disabling some ESLint rules for smoother builds
+- [x] Fix "Unexpected any" type errors in OnchainAttestation.tsx
+- [x] Address props validation errors for `onAttestationComplete`, `poaps`, and `ensName` in OnchainAttestation.tsx
+- [ ] Remove unused variable error in ProgressBar.tsx
+- [ ] Remove unused variable errors in RainbowKitCustomConnectButton components

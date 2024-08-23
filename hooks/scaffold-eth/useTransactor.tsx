@@ -1,13 +1,14 @@
 import { getPublicClient } from "@wagmi/core";
-import { Hash, SendTransactionParameters, WalletClient } from "viem";
-import { Config, useWalletClient } from "wagmi";
-import { SendTransactionMutate } from "wagmi/query";
+import type { Hash, SendTransactionParameters } from "viem";
+import type { WalletClient } from "viem";
+import { useWalletClient } from "wagmi";
+import type { Config } from "wagmi";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { getBlockExplorerTxLink, getParsedError, notification } from "~~/utils/scaffold-eth";
-import { TransactorFuncOptions } from "~~/utils/scaffold-eth/contract";
+import type { TransactorFuncOptions } from "~~/utils/scaffold-eth/contract";
 
 type TransactionFunc = (
-  tx: (() => Promise<Hash>) | Parameters<SendTransactionMutate<Config, undefined>>[0],
+  tx: (() => Promise<Hash>) | SendTransactionParameters,
   options?: TransactorFuncOptions,
 ) => Promise<Hash | undefined>;
 
@@ -63,9 +64,11 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       } else {
         throw new Error("Incorrect transaction passed to transactor");
       }
-      notification.remove(notificationId);
+      if (notificationId) {
+        notification.remove(notificationId.toString());
+      }
 
-      const blockExplorerTxURL = network ? getBlockExplorerTxLink(network, transactionHash) : "";
+      const blockExplorerTxURL = network && transactionHash ? getBlockExplorerTxLink(network, transactionHash as `0x${string}`) : "";
 
       notificationId = notification.loading(
         <TxnNotification message="Waiting for transaction to complete." blockExplorerLink={blockExplorerTxURL} />,
@@ -75,7 +78,9 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
         hash: transactionHash,
         confirmations: options?.blockConfirmations,
       });
-      notification.remove(notificationId);
+      if (notificationId) {
+        notification.remove(notificationId.toString());
+      }
 
       notification.success(
         <TxnNotification message="Transaction completed successfully!" blockExplorerLink={blockExplorerTxURL} />,
@@ -85,9 +90,9 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       );
 
       if (options?.onBlockConfirmation) options.onBlockConfirmation(transactionReceipt);
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (notificationId) {
-        notification.remove(notificationId);
+        notification.remove(notificationId as string);
       }
       console.error("⚡️ ~ file: useTransactor.ts ~ error", error);
       const message = getParsedError(error);

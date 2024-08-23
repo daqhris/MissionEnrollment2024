@@ -86,7 +86,7 @@ export const isValidInteger = (dataType: IntegerVariant, value: bigint | string,
   let valueAsBigInt: bigint | undefined;
   try {
     valueAsBigInt = BigInt(value);
-  } catch (e) {
+  } catch {
     // Ignore error, valueAsBigInt will remain undefined
   }
   if (typeof valueAsBigInt !== "bigint") {
@@ -104,7 +104,7 @@ export const isValidInteger = (dataType: IntegerVariant, value: bigint | string,
   const significantHexDigits = hexString.match(/.*x0*(.*)$/)?.[1] ?? "";
   if (
     significantHexDigits.length * 4 > bitcount ||
-    (isSigned && significantHexDigits.length * 4 === bitcount && parseInt(significantHexDigits.slice(-1)?.[0], 16) < 8)
+    (isSigned && significantHexDigits.length * 4 === bitcount && parseInt(significantHexDigits.slice(-1) || '0', 16) < 8)
   ) {
     return false;
   }

@@ -2,9 +2,10 @@
 
 import { useEffect } from "react";
 import { InheritanceTooltip } from "./InheritanceTooltip";
-import { DisplayContent, displayTxResult } from "./utilsDisplay";
-import { Abi, AbiFunction } from "abitype";
-import { Address } from "viem";
+import { displayTxResult } from "./utilsDisplay";
+import type { DisplayContent } from "./utilsDisplay";
+import type { Abi, AbiFunction } from "abitype";
+import type { Address } from "viem";
 import { useReadContract } from "wagmi";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useAnimationConfig } from "~~/hooks/scaffold-eth";
@@ -15,7 +16,7 @@ type DisplayVariableProps = {
   contractAddress: Address;
   abiFunction: AbiFunction;
   refreshDisplayVariables: boolean;
-  inheritedFrom?: string;
+  inheritedFrom?: string | undefined;
   abi: Abi;
 };
 
@@ -64,7 +65,7 @@ export const DisplayVariable = ({
             <ArrowPathIcon className="h-3 w-3 cursor-pointer" aria-hidden="true" />
           )}
         </button>
-        <InheritanceTooltip inheritedFrom={inheritedFrom} />
+        {inheritedFrom && <InheritanceTooltip inheritedFrom={inheritedFrom} />}
       </div>
       <div className="text-gray-500 font-medium flex flex-col items-start">
         <div>

@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { BrowserProvider, Eip1193Provider, FallbackProvider, JsonRpcProvider, JsonRpcSigner, Provider } from "ethers";
-import { type HttpTransport, PublicClient, WalletClient } from "viem";
+import { BrowserProvider, FallbackProvider, JsonRpcProvider, JsonRpcSigner } from "ethers";
+import type { Eip1193Provider, Provider, Networkish } from "ethers";
+import type { HttpTransport, PublicClient, WalletClient } from "viem";
 import { usePublicClient, useWalletClient } from "wagmi";
-
-// Grouped imports and removed unnecessary comment
 
 export function publicClientToProvider(publicClient: PublicClient): Provider {
   const { chain, transport } = publicClient;
@@ -19,12 +18,12 @@ export function publicClientToProvider(publicClient: PublicClient): Provider {
   };
   if (transport.type === "fallback") {
     const providers = (transport.transports as ReturnType<HttpTransport>[]).map(
-      ({ value }) => new JsonRpcProvider(value?.url, network),
+      ({ value }) => new JsonRpcProvider(value?.url, network as Networkish),
     );
-    if (providers.length === 1) return providers[0];
+    if (providers.length === 1) return providers[0] as Provider;
     return new FallbackProvider(providers);
   }
-  return new JsonRpcProvider(transport.url, network);
+  return new JsonRpcProvider(transport.url, network as Networkish);
 }
 
 export async function walletClientToSigner(walletClient: WalletClient): Promise<JsonRpcSigner> {
@@ -38,11 +37,11 @@ export async function walletClientToSigner(walletClient: WalletClient): Promise<
     name: chain.name,
     ensAddress: chain.contracts?.ensRegistry?.address,
   };
-  const provider = new BrowserProvider(transport, network);
+  const provider = new BrowserProvider(transport, network as Networkish);
   return provider.getSigner(account.address);
 }
 
-export function useSigner() {
+export function useSigner(): JsonRpcSigner | undefined {
   const { data: walletClient } = useWalletClient();
   const [signer, setSigner] = useState<JsonRpcSigner | undefined>(undefined);
 
@@ -62,13 +61,13 @@ export function useSigner() {
   }, [walletClient]);
 
   useEffect(() => {
-    getSigner();
+    void getSigner();
   }, [getSigner]);
 
   return signer;
 }
 
-export function useProvider() {
+export function useProvider(): Provider | undefined {
   const publicClient = usePublicClient();
   const [provider, setProvider] = useState<Provider | undefined>(undefined);
 

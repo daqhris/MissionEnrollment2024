@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { CommonInputProps, InputBase, IntegerVariant, isValidInteger } from "~~/components/scaffold-eth";
+import type { CommonInputProps } from "~~/components/scaffold-eth";
+import { InputBase, IntegerVariant, isValidInteger } from "~~/components/scaffold-eth";
 
 type IntegerInputProps = CommonInputProps<string | bigint> & {
   variant?: IntegerVariant;
@@ -37,12 +38,12 @@ export const IntegerInput = ({
 
   return (
     <InputBase
-      name={name}
-      value={value}
-      placeholder={placeholder}
+      name={name || ''}
+      value={value?.toString() || ''}
+      placeholder={placeholder || ''}
       error={inputError}
-      onChange={onChange}
-      disabled={disabled}
+      onChange={(newValue: string | bigint) => onChange(newValue)}
+      disabled={disabled || false}
       suffix={
         !inputError &&
         !disableMultiplyBy1e18 && (
@@ -53,7 +54,7 @@ export const IntegerInput = ({
             <button
               className={`${disabled ? "cursor-not-allowed" : "cursor-pointer"} font-semibold px-4 text-accent`}
               onClick={multiplyBy1e18}
-              disabled={disabled}
+              disabled={disabled || false}
             >
               ∗
             </button>

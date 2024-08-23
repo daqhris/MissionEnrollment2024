@@ -1,10 +1,11 @@
 "use client";
 
-import { FC, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { SetStateAction } from "react";
 import ContractInput from "./ContractInput";
 import { InheritanceTooltip } from "./InheritanceTooltip";
-import { Abi, AbiFunction } from "abitype";
-import { Address, TransactionReceipt } from "viem";
+import type { Abi, AbiFunction } from "abitype";
+import type { Address, TransactionReceipt } from "viem";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import {
   TxReceipt,
@@ -22,18 +23,18 @@ type WriteOnlyFunctionFormProps = {
   abiFunction: AbiFunction;
   onChange: () => void;
   contractAddress: Address;
-  inheritedFrom?: string;
+  inheritedFrom?: string | undefined;
 };
 
 type FormState = Record<string, string | bigint>;
 
-export const WriteOnlyFunctionForm: FC<WriteOnlyFunctionFormProps> = ({
+export const WriteOnlyFunctionForm = ({
   abi,
   abiFunction,
   onChange,
   contractAddress,
   inheritedFrom,
-}): JSX.Element => {
+}: WriteOnlyFunctionFormProps): JSX.Element => {
   const [form, setForm] = useState<FormState>(() => getInitialFormState(abiFunction));
   const [txValue, setTxValue] = useState<string | bigint>("");
   const { chain } = useAccount();
@@ -97,7 +98,7 @@ export const WriteOnlyFunctionForm: FC<WriteOnlyFunctionFormProps> = ({
       <div className={`flex gap-3 ${zeroInputs ? "flex-row justify-between items-center" : "flex-col"}`}>
         <p className="font-medium my-0 break-words">
           {abiFunction.name}
-          <InheritanceTooltip inheritedFrom={inheritedFrom} />
+          {inheritedFrom && <InheritanceTooltip inheritedFrom={inheritedFrom} />}
         </p>
         {inputs}
         {abiFunction.stateMutability === "payable" ? (

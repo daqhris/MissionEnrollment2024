@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { GetStaticProps } from "next";
+import type { GetStaticProps } from "next";
 
 export async function getStaticPaths(): Promise<{
   paths: { params: { uid: string } }[];

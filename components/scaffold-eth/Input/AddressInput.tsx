@@ -1,14 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { blo } from "blo";
 import { useDebounceValue } from "usehooks-ts";
-import { Address, isAddress } from "viem";
+import type { Address } from "viem";
+import { isAddress } from "viem";
 import { normalize } from "viem/ens";
 import { useEnsAddress, useEnsAvatar, useEnsName } from "wagmi";
-import { CommonInputProps, InputBase, isENS } from "~~/components/scaffold-eth";
+import type { CommonInputProps } from "~~/components/scaffold-eth";
+import { InputBase, isENS } from "~~/components/scaffold-eth";
 
-interface AddressInputProps extends CommonInputProps<Address | string> {
-  value: Address | string;
-  onChange: (newValue: Address | string) => void;
+interface AddressInputProps extends CommonInputProps<Address | string | undefined> {
+  value: Address | string | undefined;
+  onChange: (newValue: Address | string | undefined) => void;
 }
 
 /**
@@ -17,8 +19,8 @@ interface AddressInputProps extends CommonInputProps<Address | string> {
 export const AddressInput: React.FC<AddressInputProps> = ({ value, name, placeholder, onChange, disabled }) => {
   // Debounce the input to keep clean RPC calls when resolving ENS names
   // If the input is an address, we don't need to debounce it
-  const [_debouncedValue] = useDebounceValue(value, 500);
-  const debouncedValue = isAddress(value) ? value : _debouncedValue;
+  const [_debouncedValue] = useDebounceValue(value || '', 500);
+  const debouncedValue = value && isAddress(value) ? value : _debouncedValue;
   const isDebouncedValueLive = debouncedValue === value;
 
   // If the user changes the input after an ENS name is already resolved, we want to remove the stale result
@@ -45,10 +47,10 @@ export const AddressInput: React.FC<AddressInputProps> = ({ value, name, placeho
     isError: isEnsNameError,
     isSuccess: isEnsNameSuccess,
   } = useEnsName({
-    address: settledValue as Address,
+    address: settledValue && isAddress(settledValue) ? (settledValue as Address) : undefined,
     chainId: 1,
     query: {
-      enabled: isAddress(debouncedValue),
+      enabled: Boolean(settledValue) && isAddress(settledValue as string),
       gcTime: 30_000,
     },
   });
@@ -72,7 +74,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({ value, name, placeho
   }, [ensAddress, onChange, debouncedValue]);
 
   const handleChange = useCallback(
-    (newValue: Address | string) => {
+    (newValue: Address | string | undefined) => {
       setEnteredEnsName(undefined);
       onChange(newValue);
     },
@@ -88,13 +90,13 @@ export const AddressInput: React.FC<AddressInputProps> = ({ value, name, placeho
     ensAddress === null;
 
   return (
-    <InputBase<Address | string>
-      name={name}
-      placeholder={placeholder}
+    <InputBase<string>
+      name={name || ''}
+      placeholder={placeholder || ''}
       error={ensAddress === null}
-      value={value}
-      onChange={handleChange}
-      disabled={isEnsAddressLoading || isEnsNameLoading || disabled}
+      value={typeof value === 'string' ? value : value ? (value as Address).toString() : ''}
+      onChange={(newValue) => handleChange(newValue)}
+      disabled={isEnsAddressLoading || isEnsNameLoading || disabled || false}
       reFocus={reFocus}
       prefix={
         ensName ? (
@@ -104,7 +106,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({ value, name, placeho
               <span className="w-[35px]">
                 {
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img className="w-full rounded-full" src={ensAvatar} alt={`${ensAddress} avatar`} />
+                  <img className="w-full rounded-full" src={ensAvatar} alt={`${ensAddress ?? ''} avatar`} />
                 }
               </span>
             ) : null}
@@ -122,7 +124,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({ value, name, placeho
       suffix={
         // Don't want to use nextJS Image here (and adding remote patterns for the URL)
         // eslint-disable-next-line @next/next/no-img-element
-        value && <img alt="" className="!rounded-full" src={blo(value as `0x${string}`)} width="35" height="35" />
+        value ? <img alt="" className="!rounded-full" src={blo(value as `0x${string}`)} width="35" height="35" /> : undefined
       }
     />
   );

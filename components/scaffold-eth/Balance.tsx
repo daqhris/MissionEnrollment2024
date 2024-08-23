@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Address, formatEther } from "viem";
+import { formatEther } from "viem";
+import type { Address } from "viem";
 import { useDisplayUsdMode } from "~~/hooks/scaffold-eth/useDisplayUsdMode";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { useWatchBalance } from "~~/hooks/scaffold-eth/useWatchBalance";
@@ -29,7 +30,7 @@ export const Balance = ({ address, className = "", usdMode }: BalanceProps): JSX
     address,
   });
 
-  const { displayUsdMode, toggleDisplayUsdMode } = useDisplayUsdMode({ defaultUsdMode: usdMode });
+  const { displayUsdMode, toggleDisplayUsdMode } = useDisplayUsdMode({ defaultUsdMode: usdMode ?? false });
 
   if (!address || isLoading || balance === null || (isNativeCurrencyPriceFetching && nativeCurrencyPrice === 0)) {
     return (

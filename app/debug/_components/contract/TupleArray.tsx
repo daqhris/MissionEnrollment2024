@@ -1,8 +1,9 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import ContractInput from "./ContractInput";
 import { getFunctionInputKey, getInitalTupleArrayFormState } from "./utilsContract";
 import { replacer } from "~~/utils/scaffold-eth/common";
-import { AbiParameterTuple } from "~~/utils/scaffold-eth/contract";
+import type { AbiParameterTuple } from "~~/utils/scaffold-eth/contract";
 
 type TupleArrayProps = {
   abiTupleParameter: AbiParameterTuple & { isVirtual?: true };
@@ -20,41 +21,47 @@ export const TupleArray: React.FC<TupleArrayProps> = ({ abiTupleParameter, setPa
   const depth = (abiTupleParameter.type.match(/\[\]/g) || []).length;
 
   useEffect((): void => {
-    // Extract and group fields based on index prefix
-    const groupedFields = Object.keys(form).reduce((acc, key) => {
-      const [indexPrefix, ...restArray] = key.split("_");
-      const componentName = restArray.join("_");
-      if (!acc[indexPrefix]) {
-        acc[indexPrefix] = {};
-      }
-      acc[indexPrefix][componentName] = form[key];
-      return acc;
-    }, {} as Record<string, Record<string, unknown>>);
+    const groupFields = (form: Record<string, unknown>): Record<string, Record<string, unknown>> => {
+      return Object.entries(form).reduce<Record<string, Record<string, unknown>>>((acc, [key, value]) => {
+        const [indexPrefix, ...restArray] = key.split("_");
+        const componentName = restArray.join("_");
+        if (indexPrefix?.trim()) {
+          acc[indexPrefix] = { ...acc[indexPrefix] ?? {}, [componentName]: value };
+        }
+        return acc;
+      }, {});
+    };
 
-    let argsArray: Array<Record<string, unknown>> = [];
+    const createArgsArray = (groupedFields: Record<string, Record<string, unknown>>): Array<Record<string, unknown>> => {
+      return Object.values(groupedFields).map(group =>
+        abiTupleParameter.components.reduce((argsStruct, component, index) => {
+          const key = component.name || `input_${index}_`;
+          if (group[key] !== undefined) {
+            argsStruct[key] = group[key];
+          }
+          return argsStruct;
+        }, {} as Record<string, unknown>)
+      );
+    };
 
-    Object.keys(groupedFields).forEach(key => {
-      const currentKeyValues = Object.values(groupedFields[key]);
-
-      const argsStruct: Record<string, unknown> = {};
-      abiTupleParameter.components.forEach((component, componentIndex) => {
-        argsStruct[component.name || `input_${componentIndex}_`] = currentKeyValues[componentIndex];
+    const processArgsArray = (argsArray: Array<Record<string, unknown>>): Array<Record<string, unknown>> => {
+      if (depth <= 1) return argsArray;
+      const firstComponentName = abiTupleParameter.components[0]?.name || "tuple";
+      return argsArray.map(args => {
+        const firstComponent = args[firstComponentName];
+        return (firstComponent && typeof firstComponent === 'object') ? firstComponent as Record<string, unknown> : {};
       });
+    };
 
-      argsArray.push(argsStruct);
-    });
+    const groupedFields = groupFields(form);
+    const argsArray = createArgsArray(groupedFields);
+    const processedArgsArray = processArgsArray(argsArray);
 
-    if (depth > 1) {
-      argsArray = argsArray.map(args => {
-        return args[abiTupleParameter.components[0].name || "tuple"] as Record<string, unknown>;
-      });
-    }
-
-    setParentForm(parentForm => {
-      return { ...parentForm, [parentStateObjectKey]: JSON.stringify(argsArray, replacer) };
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(form, replacer)]);
+    setParentForm(prevForm => ({
+      ...prevForm,
+      [parentStateObjectKey]: JSON.stringify(processedArgsArray, replacer)
+    }));
+  }, [form, abiTupleParameter.components, depth, parentStateObjectKey, setParentForm]);
 
   const addInput = (): void => {
     setAdditionalInputs(previousValue => {

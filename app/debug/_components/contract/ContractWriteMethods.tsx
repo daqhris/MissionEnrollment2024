@@ -1,10 +1,10 @@
-import { Abi, AbiFunction } from "abitype";
+import type { Abi, AbiFunction } from "abitype";
 import { WriteOnlyFunctionForm } from "~~/app/debug/_components/contract";
-import { Contract, ContractName, GenericContract, InheritedFunctions } from "~~/utils/scaffold-eth/contract";
+import type { Contract, ContractName, GenericContract, InheritedFunctions } from "~~/utils/scaffold-eth/contract";
 
 interface FunctionDisplay {
   fn: AbiFunction;
-  inheritedFrom?: string;
+  inheritedFrom?: string | undefined;
 }
 
 export const ContractWriteMethods = ({
@@ -32,7 +32,7 @@ export const ContractWriteMethods = ({
       };
     })
     .sort((a: FunctionDisplay, b: FunctionDisplay): number =>
-      (b.inheritedFrom ? b.inheritedFrom.localeCompare(a.inheritedFrom || '') : 1)
+      (b.inheritedFrom && a.inheritedFrom) ? b.inheritedFrom.localeCompare(a.inheritedFrom) : b.inheritedFrom ? -1 : a.inheritedFrom ? 1 : 0
     );
 
   if (!functionsToDisplay.length) {

@@ -1,8 +1,9 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import ContractInput from "./ContractInput";
 import { getFunctionInputKey, getInitalTupleFormState } from "./utilsContract";
 import { replacer } from "~~/utils/scaffold-eth/common";
-import { AbiParameterTuple } from "~~/utils/scaffold-eth/contract";
+import type { AbiParameterTuple } from "~~/utils/scaffold-eth/contract";
 
 type TupleProps = {
   abiTupleParameter: AbiParameterTuple;

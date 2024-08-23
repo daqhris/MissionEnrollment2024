@@ -1,7 +1,7 @@
 import React from "react";
 import { AttestationCard } from "../components/AttestationCard";
 import { GET_ATTESTATIONS } from "../graphql/queries";
-import { Attestation } from "../types/attestation";
+import type { Attestation } from "../types/attestation";
 import { useQuery } from "@apollo/client";
 import { useAccount } from "wagmi";
 
