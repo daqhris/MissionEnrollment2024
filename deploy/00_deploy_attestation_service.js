@@ -1,7 +1,12 @@
+require('dotenv').config();
 const { ethers } = require("hardhat");
 
 async function main() {
   console.log("Deploying AttestationService...");
+
+  // Log environment variables
+  console.log("EAS_CONTRACT_ADDRESS:", process.env.EAS_CONTRACT_ADDRESS);
+  console.log("SCHEMA_REGISTRY_ADDRESS:", process.env.SCHEMA_REGISTRY_ADDRESS);
 
   // Get the contract factory
   const AttestationService = await ethers.getContractFactory("AttestationService");
