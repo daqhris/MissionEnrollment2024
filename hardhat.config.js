@@ -13,11 +13,11 @@ console.log('ALCHEMY_API_KEY:', process.env.ALCHEMY_API_KEY);
 console.log('PRIVATE_KEY:', process.env.PRIVATE_KEY ? '****' + process.env.PRIVATE_KEY.slice(-4) : 'undefined');
 console.log('BLOCKSCOUT_API_KEY:', process.env.BLOCKSCOUT_API_KEY ? '****' + process.env.BLOCKSCOUT_API_KEY.slice(-4) : 'undefined');
 console.log('DEPLOYER_ETH_ADDRESS:', process.env.DEPLOYER_ETH_ADDRESS);
-console.log('ETHERSCAN_API_KEY:', process.env.ETHERSCAN_API_KEY ? '****' + process.env.ETHERSCAN_API_KEY.slice(-4) : 'undefined');
+console.log('BLOCKSCOUT_OPTIMISM_API_KEY:', process.env.BLOCKSCOUT_OPTIMISM_API_KEY ? '****' + process.env.BLOCKSCOUT_OPTIMISM_API_KEY.slice(-4) : 'undefined');
 
 // Ensure required environment variables are set
-if (!process.env.ALCHEMY_API_KEY || !process.env.PRIVATE_KEY || !process.env.BLOCKSCOUT_API_KEY || !process.env.DEPLOYER_ETH_ADDRESS || !process.env.ETHERSCAN_API_KEY) {
-  console.error("Please set ALCHEMY_API_KEY, PRIVATE_KEY, BLOCKSCOUT_API_KEY, DEPLOYER_ETH_ADDRESS, and ETHERSCAN_API_KEY in your .env file");
+if (!process.env.ALCHEMY_API_KEY || !process.env.PRIVATE_KEY || !process.env.BLOCKSCOUT_API_KEY || !process.env.DEPLOYER_ETH_ADDRESS || !process.env.BLOCKSCOUT_OPTIMISM_API_KEY) {
+  console.error("Please set ALCHEMY_API_KEY, PRIVATE_KEY, BLOCKSCOUT_API_KEY, DEPLOYER_ETH_ADDRESS, and BLOCKSCOUT_OPTIMISM_API_KEY in your .env file");
   process.exit(1);
 }
 
@@ -67,7 +67,7 @@ module.exports = {
       verify: {
         etherscan: {
           apiUrl: "https://api-sepolia-optimistic.etherscan.io/api",
-          apiKey: process.env.ETHERSCAN_API_KEY,
+          apiKey: process.env.BLOCKSCOUT_OPTIMISM_API_KEY,
         },
       },
     },
@@ -90,7 +90,7 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
-      "optimism-sepolia": process.env.ETHERSCAN_API_KEY,
+      "optimism-sepolia": process.env.BLOCKSCOUT_OPTIMISM_API_KEY,
     },
     customChains: [
       {
