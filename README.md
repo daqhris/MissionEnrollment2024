@@ -142,14 +142,11 @@ Its build and deploy phases were made possible by the assistance of Devin, an AI
 
 The AttestationService contract has been deployed on the following networks:
 
-### Optimism Sepolia
-- Contract Address: 0xa8f9605Bd27C779e445b584d3Ca489E1084efAFE
-
-### Base Sepolia
-- Contract Address: 0xa8f9605Bd27C779e445b584d3Ca489E1084efAFE
+### Optimism Sepolia and Base Sepolia
+- Contract Address: 0x4255840565231A11Dd6c6BE1FbD279A1F7826E78
 
 Both deployments use the following addresses:
 - EAS Contract Address: 0xC2679fBD37d54388Ce493F1DB75320D236e1815e
 - Schema Registry Address: 0x54f0e66D5A04702F5Df9BAe330295a11bD862c81
 
-These contracts are integral to the attestation process in the Mission Enrollment application.
+These contracts are integral to the attestation process in the Mission Enrollment application. Please note that contract verification is pending due to API key issues.

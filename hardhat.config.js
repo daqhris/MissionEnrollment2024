@@ -91,6 +91,7 @@ module.exports = {
   etherscan: {
     apiKey: {
       "optimism-sepolia": process.env.BLOCKSCOUT_OPTIMISM_API_KEY,
+      "base-sepolia": process.env.BLOCKSCOUT_API_KEY,
     },
     customChains: [
       {
@@ -99,6 +100,14 @@ module.exports = {
         urls: {
           apiURL: "https://api-sepolia-optimistic.etherscan.io/api",
           browserURL: "https://sepolia-optimism.etherscan.io"
+        }
+      },
+      {
+        network: "base-sepolia",
+        chainId: 84532,
+        urls: {
+          apiURL: "https://api-sepolia.basescan.org",
+          browserURL: "https://sepolia.basescan.org"
         }
       }
     ]
