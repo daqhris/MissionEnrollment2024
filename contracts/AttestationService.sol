@@ -16,6 +16,9 @@ contract AttestationService is AccessControl {
   bytes32 public constant ATTESTATION_CREATOR_ROLE = keccak256("ATTESTATION_CREATOR_ROLE");
   address private constant MISSION_ENROLLMENT_DAQHRIS_ETH_ADDRESS = 0xF0bC5CC2B4866dAAeCb069430c60b24520077037;
 
+  mapping(address => bool) private approvedAttestationCreators;
+  bool private initialized;
+
   event SchemaCreated(bytes32 indexed schemaId);
   event AttestationCreated(bytes32 indexed attestationId, address indexed recipient, address indexed attester);
 
@@ -24,7 +27,12 @@ contract AttestationService is AccessControl {
     eas = IEAS(_eas);
     schemaRegistry = ISchemaRegistry(_schemaRegistry);
     _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-    _grantRole(ATTESTATION_CREATOR_ROLE, address(this)); // Temporary grant to contract itself
+  }
+
+  function initialize() external onlyRole(DEFAULT_ADMIN_ROLE) {
+    require(!initialized, "Contract already initialized");
+    approvedAttestationCreators[MISSION_ENROLLMENT_DAQHRIS_ETH_ADDRESS] = true;
+    initialized = true;
   }
 
   function createMissionEnrollmentSchema() external onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -35,7 +43,8 @@ contract AttestationService is AccessControl {
     emit SchemaCreated(schemaId);
   }
 
-  function createMissionEnrollmentAttestation(address recipient, uint256 tokenId) external onlyRole(ATTESTATION_CREATOR_ROLE) returns (bytes32) {
+  function createMissionEnrollmentAttestation(address recipient, uint256 tokenId) external returns (bytes32) {
+    require(approvedAttestationCreators[msg.sender], "Not authorized to create attestations");
     require(missionEnrollmentSchema != bytes32(0), "Schema not created");
     require(recipient != address(0), "Invalid recipient");
     require(tokenId != 0, "Invalid token ID");
@@ -62,16 +71,19 @@ contract AttestationService is AccessControl {
   function verifyAttestation(bytes32 attestationId) external view returns (bool) {
     require(attestationId != bytes32(0), "Invalid attestation ID");
     Attestation memory attestation = eas.getAttestation(attestationId);
-    return attestation.uid == attestationId && attestation.attester == MISSION_ENROLLMENT_DAQHRIS_ETH_ADDRESS;
+    return attestation.uid == attestationId && approvedAttestationCreators[attestation.attester];
   }
 
   function grantAttestationCreatorRole(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
-    require(account == MISSION_ENROLLMENT_DAQHRIS_ETH_ADDRESS, "Only MISSION_ENROLLMENT_DAQHRIS_ETH_ADDRESS can be granted this role");
-    grantRole(ATTESTATION_CREATOR_ROLE, account);
+    approvedAttestationCreators[account] = true;
   }
 
   function revokeAttestationCreatorRole(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
     require(account != MISSION_ENROLLMENT_DAQHRIS_ETH_ADDRESS, "Cannot revoke role from main attestation creator");
-    revokeRole(ATTESTATION_CREATOR_ROLE, account);
+    approvedAttestationCreators[account] = false;
+  }
+
+  function isApprovedAttestationCreator(address account) external view returns (bool) {
+    return approvedAttestationCreators[account];
   }
 }
