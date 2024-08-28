@@ -137,3 +137,33 @@ Its build and deploy phases were made possible by the assistance of Devin, an AI
 - [Ethereum Attestation Service Documentation](https://docs.attest.sh/)
 - [ENS Documentation](https://docs.ens.domains/)
 - [POAP Documentation](https://documentation.poap.tech/)
+
+## Deployment and Verification Status
+
+### AttestationService Contract on Optimism Sepolia
+
+- Contract Address: 0xa8f9605Bd27C779e445b584d3Ca489E1084efAFE
+- Deployment Status: Successful
+- Verification Status: Pending
+- Current Issue: Invalid Etherscan API Key
+
+#### Verification Plan:
+1. Obtain a valid Etherscan API key for Optimism Sepolia
+2. Update the `.env` file with the new API key
+3. Run the verification command:
+   ```
+   npx hardhat --network optimism-sepolia verify --contract contracts/AttestationService.sol:AttestationService 0xa8f9605Bd27C779e445b584d3Ca489E1084efAFE 0xC2679fBD37d54388Ce493F1DB75320D236e1815e 0x54f0e66D5A04702F5Df9BAe330295a11bD862c81
+   ```
+
+### AttestationService Contract on Base Sepolia
+
+- Deployment Status: Not deployed
+- Reason: Missing SCHEMA_REGISTRY_ADDRESS for Base Sepolia
+
+#### Next Steps:
+1. Obtain the correct SCHEMA_REGISTRY_ADDRESS for Base Sepolia
+2. Update the `.env` file with the correct address
+3. Deploy the AttestationService contract
+4. Verify the contract on Blockscout for Base Sepolia
+
+Note: Ensure that the EAS_CONTRACT_ADDRESS (0xC2679fBD37d54388Ce493F1DB75320D236e1815e) is correct for both L2 networks before deployment.
