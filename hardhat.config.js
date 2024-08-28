@@ -13,10 +13,11 @@ console.log('ALCHEMY_API_KEY:', process.env.ALCHEMY_API_KEY);
 console.log('PRIVATE_KEY:', process.env.PRIVATE_KEY ? '****' + process.env.PRIVATE_KEY.slice(-4) : 'undefined');
 console.log('BLOCKSCOUT_API_KEY:', process.env.BLOCKSCOUT_API_KEY ? '****' + process.env.BLOCKSCOUT_API_KEY.slice(-4) : 'undefined');
 console.log('DEPLOYER_ETH_ADDRESS:', process.env.DEPLOYER_ETH_ADDRESS);
+console.log('BLOCKSCOUT_OPTIMISM_API_KEY:', process.env.BLOCKSCOUT_OPTIMISM_API_KEY ? '****' + process.env.BLOCKSCOUT_OPTIMISM_API_KEY.slice(-4) : 'undefined');
 
 // Ensure required environment variables are set
-if (!process.env.ALCHEMY_API_KEY || !process.env.PRIVATE_KEY || !process.env.BLOCKSCOUT_API_KEY || !process.env.DEPLOYER_ETH_ADDRESS) {
-  console.error("Please set ALCHEMY_API_KEY, PRIVATE_KEY, BLOCKSCOUT_API_KEY, and DEPLOYER_ETH_ADDRESS in your .env file");
+if (!process.env.ALCHEMY_API_KEY || !process.env.PRIVATE_KEY || !process.env.BLOCKSCOUT_API_KEY || !process.env.DEPLOYER_ETH_ADDRESS || !process.env.BLOCKSCOUT_OPTIMISM_API_KEY) {
+  console.error("Please set ALCHEMY_API_KEY, PRIVATE_KEY, BLOCKSCOUT_API_KEY, DEPLOYER_ETH_ADDRESS, and BLOCKSCOUT_OPTIMISM_API_KEY in your .env file");
   process.exit(1);
 }
 
@@ -63,6 +64,12 @@ module.exports = {
       accounts: [process.env.PRIVATE_KEY],
       chainId: 11155420,
       gasPrice: 1000000000,
+      verify: {
+        etherscan: {
+          apiUrl: "https://api-sepolia-optimistic.etherscan.io/api",
+          apiKey: process.env.BLOCKSCOUT_OPTIMISM_API_KEY,
+        },
+      },
     },
   },
   namedAccounts: {
@@ -82,7 +89,10 @@ module.exports = {
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.BLOCKSCOUT_OPTIMISM_API_KEY,
+    apiKey: {
+      "optimism-sepolia": process.env.BLOCKSCOUT_OPTIMISM_API_KEY,
+      "base-sepolia": process.env.BLOCKSCOUT_API_KEY,
+    },
     customChains: [
       {
         network: "optimism-sepolia",
@@ -90,6 +100,14 @@ module.exports = {
         urls: {
           apiURL: "https://api-sepolia-optimistic.etherscan.io/api",
           browserURL: "https://sepolia-optimism.etherscan.io"
+        }
+      },
+      {
+        network: "base-sepolia",
+        chainId: 84532,
+        urls: {
+          apiURL: "https://api-sepolia.basescan.org",
+          browserURL: "https://sepolia.basescan.org"
         }
       }
     ]

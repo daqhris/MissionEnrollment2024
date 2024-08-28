@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ethers } from "ethers";
+import { JsonRpcProvider } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const POAP_API_URL = "https://api.poap.tech/actions/scan";
@@ -65,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   let resolvedAddress: string;
   try {
     console.log(`ETHEREUM_RPC_URL: ${process.env.ETHEREUM_RPC_URL}`);
-    const provider = new ethers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL);
+    const provider = new JsonRpcProvider(process.env.ETHEREUM_RPC_URL);
 
     if (address.endsWith(".eth")) {
       console.log(`Attempting to resolve ENS name: ${address}`);
