@@ -138,39 +138,18 @@ Its build and deploy phases were made possible by the assistance of Devin, an AI
 - [ENS Documentation](https://docs.ens.domains/)
 - [POAP Documentation](https://documentation.poap.tech/)
 
-## Deployment and Verification Status
+## Deployed Contracts
 
-### AttestationService Contract on Optimism Sepolia
+The AttestationService contract has been deployed on the following networks:
 
+### Optimism Sepolia
 - Contract Address: 0xa8f9605Bd27C779e445b584d3Ca489E1084efAFE
-- Deployment Status: Successful
-- Verification Status: Pending
-- Current Issue: Invalid Etherscan API Key
 
-#### Verification Plan:
-1. Obtain a valid Etherscan API key for Optimism Sepolia
-2. Update the `.env` file with the new API key
-3. Run the verification command:
-   ```
-   npx hardhat --network optimism-sepolia verify --contract contracts/AttestationService.sol:AttestationService 0xa8f9605Bd27C779e445b584d3Ca489E1084efAFE 0xC2679fBD37d54388Ce493F1DB75320D236e1815e 0x54f0e66D5A04702F5Df9BAe330295a11bD862c81
-   ```
-
-### AttestationService Contract on Base Sepolia
-
+### Base Sepolia
 - Contract Address: 0xa8f9605Bd27C779e445b584d3Ca489E1084efAFE
-- Deployment Status: Successful
-- Verification Status: Failed
-- Current Issue: Missing API key for Base Sepolia network
-- Compiler Type: Solidity single-file
-- Compiler Version: 0.8.20
-- Open Source License Type: MIT
 
-#### Verification Plan:
-1. Obtain a valid API key for Base Sepolia network verification
-2. Update the `.env` file with the new API key
-3. Run the verification command:
-   ```
-   npx hardhat --network base-sepolia verify --contract contracts/AttestationService.sol:AttestationService 0xa8f9605Bd27C779e445b584d3Ca489E1084efAFE 0xC2679fBD37d54388Ce493F1DB75320D236e1815e 0x54f0e66D5A04702F5Df9BAe330295a11bD862c81
-   ```
+Both deployments use the following addresses:
+- EAS Contract Address: 0xC2679fBD37d54388Ce493F1DB75320D236e1815e
+- Schema Registry Address: 0x54f0e66D5A04702F5Df9BAe330295a11bD862c81
 
-Note: The EAS_CONTRACT_ADDRESS (0xC2679fBD37d54388Ce493F1DB75320D236e1815e) and SCHEMA_REGISTRY_ADDRESS (0x54f0e66D5A04702F5Df9BAe330295a11bD862c81) were used for deployment on Base Sepolia.
+These contracts are integral to the attestation process in the Mission Enrollment application.
