@@ -14,7 +14,7 @@ contract AttestationService is AccessControl {
 
   bytes32 public missionEnrollmentSchema;
   bytes32 public constant ATTESTATION_CREATOR_ROLE = keccak256("ATTESTATION_CREATOR_ROLE");
-  string private constant DAQHRIS_ETH_ADDRESS = "mission-enrollment.daqhris.eth";
+  string private constant MISSION_ENROLLMENT_DAQHRIS_ETH_ADDRESS = "mission-enrollment.daqhris.eth";
 
   event SchemaCreated(bytes32 indexed schemaId);
   event AttestationCreated(bytes32 indexed attestationId, address indexed recipient, address indexed attester);
@@ -62,16 +62,16 @@ contract AttestationService is AccessControl {
   function verifyAttestation(bytes32 attestationId) external view returns (bool) {
     require(attestationId != bytes32(0), "Invalid attestation ID");
     Attestation memory attestation = eas.getAttestation(attestationId);
-    return attestation.uid == attestationId && keccak256(abi.encodePacked(attestation.attester)) == keccak256(abi.encodePacked(DAQHRIS_ETH_ADDRESS));
+    return attestation.uid == attestationId && keccak256(abi.encodePacked(attestation.attester)) == keccak256(abi.encodePacked(MISSION_ENROLLMENT_DAQHRIS_ETH_ADDRESS));
   }
 
   function grantAttestationCreatorRole(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
-    require(keccak256(abi.encodePacked(account)) == keccak256(abi.encodePacked(DAQHRIS_ETH_ADDRESS)), "Only DAQHRIS_ETH_ADDRESS can be granted this role");
+    require(keccak256(abi.encodePacked(account)) == keccak256(abi.encodePacked(MISSION_ENROLLMENT_DAQHRIS_ETH_ADDRESS)), "Only MISSION_ENROLLMENT_DAQHRIS_ETH_ADDRESS can be granted this role");
     grantRole(ATTESTATION_CREATOR_ROLE, account);
   }
 
   function revokeAttestationCreatorRole(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
-    require(keccak256(abi.encodePacked(account)) != keccak256(abi.encodePacked(DAQHRIS_ETH_ADDRESS)), "Cannot revoke role from main attestation creator");
+    require(keccak256(abi.encodePacked(account)) != keccak256(abi.encodePacked(MISSION_ENROLLMENT_DAQHRIS_ETH_ADDRESS)), "Cannot revoke role from main attestation creator");
     revokeRole(ATTESTATION_CREATOR_ROLE, account);
   }
 }
