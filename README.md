@@ -157,13 +157,20 @@ Its build and deploy phases were made possible by the assistance of Devin, an AI
 
 ### AttestationService Contract on Base Sepolia
 
-- Deployment Status: Not deployed
-- Reason: Missing SCHEMA_REGISTRY_ADDRESS for Base Sepolia
+- Contract Address: 0xa8f9605Bd27C779e445b584d3Ca489E1084efAFE
+- Deployment Status: Successful
+- Verification Status: Failed
+- Current Issue: Missing API key for Base Sepolia network
+- Compiler Type: Solidity single-file
+- Compiler Version: 0.8.20
+- Open Source License Type: MIT
 
-#### Next Steps:
-1. Obtain the correct SCHEMA_REGISTRY_ADDRESS for Base Sepolia
-2. Update the `.env` file with the correct address
-3. Deploy the AttestationService contract
-4. Verify the contract on Blockscout for Base Sepolia
+#### Verification Plan:
+1. Obtain a valid API key for Base Sepolia network verification
+2. Update the `.env` file with the new API key
+3. Run the verification command:
+   ```
+   npx hardhat --network base-sepolia verify --contract contracts/AttestationService.sol:AttestationService 0xa8f9605Bd27C779e445b584d3Ca489E1084efAFE 0xC2679fBD37d54388Ce493F1DB75320D236e1815e 0x54f0e66D5A04702F5Df9BAe330295a11bD862c81
+   ```
 
-Note: Ensure that the EAS_CONTRACT_ADDRESS (0xC2679fBD37d54388Ce493F1DB75320D236e1815e) is correct for both L2 networks before deployment.
+Note: The EAS_CONTRACT_ADDRESS (0xC2679fBD37d54388Ce493F1DB75320D236e1815e) and SCHEMA_REGISTRY_ADDRESS (0x54f0e66D5A04702F5Df9BAe330295a11bD862c81) were used for deployment on Base Sepolia.
