@@ -122,22 +122,6 @@ This onchain app includes a special feature that is dependent on ETHGlobal Bruss
 Users are invited to retrieve their ETHGlobal Brussels 2024 POAP, adding an extra layer of credibility to their enrollment attestations.  
 The app builder participated in this global hackathon when it was held for the first time in Belgium.
 
-## Disclaimer
-
-If necessary, users should verify the authenticity of mission enrollments through additional public means.  
-The source code was forked from the project [TruthBot by EAS](https://github.com/ethereum-attestation-service/eas-is-true) and parts of the codebase require components from [Scaffold-ETH 2](https://github.com/scaffold-eth/scaffold-eth-2).
-
-The app creation was initiated by _daqhris.eth_ at a virtual hackathon: [ETHGlobal Superhack 2024](https://ethglobal.com/events/superhack2024).  
-Its build and deploy phases were made possible by the assistance of Devin, an AI software engineer.
-
-[ethglobal.com/showcase/missionenrollment-i4fkr](https://ethglobal.com/showcase/missionenrollment-i4fkr)
-
-## External Resources
-
-- [Ethereum Attestation Service Documentation](https://docs.attest.sh/)
-- [ENS Documentation](https://docs.ens.domains/)
-- [POAP Documentation](https://documentation.poap.tech/)
-
 ## Deployed Contracts
 
 The AttestationService contract has been deployed on the following networks:
@@ -149,4 +133,19 @@ Both deployments use the following addresses:
 - EAS Contract Address: 0xC2679fBD37d54388Ce493F1DB75320D236e1815e
 - Schema Registry Address: 0x54f0e66D5A04702F5Df9BAe330295a11bD862c81
 
-These contracts are integral to the attestation process in the Mission Enrollment application. Please note that contract verification is pending due to API key issues.
+## External Resources
+
+- [Ethereum Attestation Service Documentation](https://docs.attest.sh/)
+- [ENS Documentation](https://docs.ens.domains/)
+- [POAP Documentation](https://documentation.poap.tech/)
+
+
+## Disclaimer
+
+If necessary, users should verify the authenticity of mission enrollments through additional public means.  
+The source code was forked from the project [TruthBot by EAS](https://github.com/ethereum-attestation-service/eas-is-true) and parts of the codebase require components from [Scaffold-ETH 2](https://github.com/scaffold-eth/scaffold-eth-2).
+
+The creation of the dApp was initiated by _daqhris.eth_ at a virtual hackathon: [ETHGlobal Superhack 2024](https://ethglobal.com/events/superhack2024).  
+This became possible thanks to the help and collaboration of Devin, the world's first AI software engineer, created by [Cognition.AI](https://www.cognition.ai/).
+
+[ethglobal.com/showcase/missionenrollment-i4fkr](https://ethglobal.com/showcase/missionenrollment-i4fkr)
