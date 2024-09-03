@@ -1,10 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import eventIdsData from "../event_ids.json";
-import axios from "axios";
 import { useEnsAddress } from "wagmi";
+import { debounce } from "lodash";
+import { ethers } from "ethers";
+import POAPContractABI from "../contracts/POAPContract.json";
+import { POAP_CONTRACT_ADDRESS } from "../config";
+import axios from "axios";
+
+const IPFS_GATEWAY_URL = "https://ipfs.io/ipfs/";
 
 const { eventIds } = eventIdsData;
+const DEBOUNCE_DELAY = 300; // milliseconds
 
 interface POAPEvent {
   event: {
@@ -20,12 +27,14 @@ interface EventAttendanceVerificationProps {
   onVerified: () => void;
   setPoaps: (poaps: POAPEvent[]) => void;
   userAddress: string;
+  signer: ethers.Signer;
 }
 
 const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = ({
   onVerified,
   setPoaps,
   userAddress,
+  signer,
 }): JSX.Element => {
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [proofResult, setProofResult] = useState<string | null>(null);
@@ -50,102 +59,107 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
       setLocalPoaps([]);
       setMissingPoaps([]);
 
-      const maxRetries = 3;
-      let retries = 0;
+      try {
+        console.log(`Fetching POAPs for address: ${addressToFetch}`);
 
-      while (retries < maxRetries) {
-        try {
-          console.log(`Fetching POAPs for address: ${addressToFetch} (Attempt ${retries + 1})`);
-          const response = await axios.get(
-            `/api/fetchPoaps?address=${encodeURIComponent(addressToFetch.toLowerCase())}`,
-          );
-          console.log("API response:", JSON.stringify(response.data, null, 2));
-
-          const { poaps = [] } = response.data;
-
-          const validPoaps = Array.isArray(poaps) ? poaps : [];
-          const filteredPoaps = validPoaps.filter(isEthGlobalBrusselsPOAP);
-
-          console.log("Filtered POAPs:", filteredPoaps);
-
-          setLocalPoaps(filteredPoaps);
-          setPoaps(filteredPoaps);
-
-          const foundEventIds = filteredPoaps.map(poap => poap.event.id);
-          const missingEventIds = eventIds.filter(id => !foundEventIds.includes(id));
-          setMissingPoaps(missingEventIds);
-
-          if (filteredPoaps.length > 0) {
-            const requiredPoapCount = 1;
-            if (filteredPoaps.length >= requiredPoapCount) {
-              setProofResult(`Proof successful! ${addressToFetch} has a valid POAP for ETHGlobal Brussels 2024.`);
-              onVerified();
-            } else {
-              setProofResult(
-                `${addressToFetch} has a POAP from ETHGlobal Brussels 2024, but it may not be the specific required one. Please check with the event organizers.`,
-              );
-            }
-          } else {
-            setProofResult("No POAPs from ETHGlobal Brussels 2024 were found for this address.");
-          }
-
-          break;
-        } catch (error) {
-          console.error(`Error fetching POAP data (Attempt ${retries + 1}):`, error);
-
-          if (axios.isAxiosError(error)) {
-            const status = error.response?.status;
-            const errorMessage = error.response?.data?.error || "Unknown error";
-            console.error(`API Error: Status ${status}, Message: ${errorMessage}`);
-
-            switch (status) {
-              case 400:
-                setProofResult(`Invalid input: ${errorMessage}. Please check your address and try again.`);
-                setIsVerifying(false);
-                return;
-              case 401:
-                setProofResult("Unauthorized. Please check your API key configuration.");
-                setIsVerifying(false);
-                return;
-              case 404:
-                setProofResult("No POAPs found for this address. Make sure you've attended ETHGlobal Brussels 2024.");
-                setIsVerifying(false);
-                return;
-              case 429:
-                setProofResult("Too many requests. Please try again later.");
-                setIsVerifying(false);
-                return;
-              default:
-                if (status && status >= 500) {
-                  setProofResult(`Server error: ${errorMessage}. Retrying...`);
-                } else {
-                  setProofResult(`Network error: ${errorMessage}. Retrying...`);
-                }
-            }
-          } else {
-            console.error("Unexpected error:", error);
-            setProofResult("An unexpected error occurred. Retrying...");
-          }
-
-          retries++;
-          if (retries >= maxRetries) {
-            setProofResult("Failed to fetch POAPs after multiple attempts. Please try again later.");
-            setLocalPoaps([]);
-            setMissingPoaps(eventIds);
-            setIsVerifying(false);
-            return;
-          }
-
-          setProofResult(`Retrying... Attempt ${retries + 1} of ${maxRetries}`);
-
-          const delay = Math.min(1000 * Math.pow(2, retries) + Math.random() * 1000, 10000);
-          await new Promise(resolve => setTimeout(resolve, delay));
+        if (!signer) {
+          throw new Error("Signer is not available");
         }
+
+        // Create a contract instance
+        const contract = new ethers.Contract(POAP_CONTRACT_ADDRESS, POAPContractABI, signer);
+
+        // Check if required methods exist
+        if (!contract.balanceOf || !contract.tokenOfOwnerByIndex || !contract.tokenURI) {
+          throw new Error("Contract is missing required methods");
+        }
+
+        // Get the balance of POAPs for the address
+        const balance = await contract.balanceOf(addressToFetch);
+        if (!balance) {
+          throw new Error("Failed to fetch POAP balance");
+        }
+
+        const poaps: POAPEvent[] = [];
+
+        // Fetch POAP metadata for each token
+        for (let i = 0; i < balance.toNumber(); i++) {
+          try {
+            const tokenId = await contract.tokenOfOwnerByIndex(addressToFetch, i);
+            const tokenURI = await contract.tokenURI(tokenId);
+
+            // Convert tokenURI to IPFS URL if it's an IPFS hash
+            const metadataURL = tokenURI.startsWith('ipfs://')
+              ? `${IPFS_GATEWAY_URL}${tokenURI.slice(7)}`
+              : tokenURI;
+
+            // Fetch metadata from IPFS or original URL
+            const response = await fetch(metadataURL);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const metadata = await response.json();
+
+            const imageUrl = metadata.image?.startsWith('ipfs://')
+              ? `${IPFS_GATEWAY_URL}${metadata.image.slice(7)}`
+              : metadata.image || "";
+
+            poaps.push({
+              event: {
+                id: tokenId.toString(),
+                name: metadata.name || "Unknown Event",
+                image_url: imageUrl,
+                start_date: metadata.attributes?.find((attr: any) => attr.trait_type === 'event_date')?.value || '',
+              },
+              token_id: tokenId.toString(),
+            });
+          } catch (tokenError) {
+            console.warn(`Failed to fetch token data for index ${i}:`, tokenError);
+            continue;
+          }
+        }
+
+        const filteredPoaps = poaps.filter(isEthGlobalBrusselsPOAP);
+
+        console.log("Filtered POAPs:", filteredPoaps);
+
+        setLocalPoaps(filteredPoaps);
+        setPoaps(filteredPoaps);
+
+        const foundEventIds = filteredPoaps.map(poap => poap.event.id);
+        const missingEventIds = eventIds.filter(id => !foundEventIds.includes(id));
+        setMissingPoaps(missingEventIds);
+
+        if (filteredPoaps.length > 0) {
+          const requiredPoapCount = 1;
+          if (filteredPoaps.length >= requiredPoapCount) {
+            setProofResult(`Proof successful! ${addressToFetch} has a valid POAP for ETHGlobal Brussels 2024.`);
+            onVerified();
+          } else {
+            setProofResult(
+              `${addressToFetch} has a POAP from ETHGlobal Brussels 2024, but it may not be the specific required one. Please check with the event organizers.`,
+            );
+          }
+        } else {
+          setProofResult("No POAPs from ETHGlobal Brussels 2024 were found for this address.");
+        }
+      } catch (error) {
+        console.error("Error fetching POAP data:", error);
+        setProofResult(`An error occurred while fetching POAP data: ${(error as Error).message}`);
+        setLocalPoaps([]);
+        setMissingPoaps(eventIds);
       }
 
       setIsVerifying(false);
     },
-    [onVerified, setPoaps],
+    [onVerified, setPoaps, signer, POAP_CONTRACT_ADDRESS, POAPContractABI, eventIds],
+  );
+
+  const debouncedFetchPOAPs = useCallback(
+    debounce((address: string) => {
+      fetchPOAPs(address);
+    }, DEBOUNCE_DELAY),
+    [fetchPOAPs, DEBOUNCE_DELAY]
   );
 
   useEffect((): void => {
@@ -153,29 +167,40 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
     const isEthereumAddress = isValidEthereumAddress(validAddress);
     const isENS = validAddress?.endsWith(".eth");
 
+    if (!validAddress) {
+      setProofResult(null);
+      return;
+    }
+
     if (isEthereumAddress) {
-      fetchPOAPs(validAddress);
+      debouncedFetchPOAPs(validAddress);
     } else if (isENS) {
       if (isResolvingENS) {
         setProofResult("Resolving ENS name...");
       } else if (ensResolutionError || !resolvedAddress) {
         setProofResult("Unable to resolve ENS name. Please try again or use an Ethereum address.");
       } else if (resolvedAddress) {
-        fetchPOAPs(resolvedAddress);
+        debouncedFetchPOAPs(resolvedAddress);
       }
-    } else if (validAddress) {
+    } else {
       setProofResult("Please enter a valid Ethereum address or ENS name");
     }
-  }, [userAddress, manualAddress, fetchPOAPs, resolvedAddress, isResolvingENS, ensResolutionError]);
+  }, [userAddress, manualAddress, debouncedFetchPOAPs, resolvedAddress, isResolvingENS, ensResolutionError]);
 
   const isValidEthereumAddress = (address: string): boolean =>
     /^0x[a-fA-F0-9]{40}$/.test(address) || /^[a-zA-Z0-9-]+\.eth$/.test(address);
 
   const isEthGlobalBrusselsPOAP = (poap: POAPEvent): boolean => {
+    if (!poap.event || !poap.event.name || !poap.event.start_date) {
+      return false;
+    }
+    const eventName = poap.event.name.toLowerCase();
     const eventDate = new Date(poap.event.start_date);
     return (
-      poap.event.name.toLowerCase().includes("ethglobal brussels") &&
-      poap.event.name.toLowerCase().includes("2024") &&
+      eventName.includes("ethglobal") &&
+      eventName.includes("brussels") &&
+      eventName.includes("2024") &&
+      !isNaN(eventDate.getTime()) &&
       eventDate.getFullYear() === 2024 &&
       eventDate >= new Date("2024-07-11") &&
       eventDate <= new Date("2024-07-14")
@@ -186,6 +211,22 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
     setImageLoadErrors(prev => ({ ...prev, [tokenId]: true }));
   };
 
+  const handleVerifyClick = (): void => {
+    const addressToUse = manualAddress || userAddress;
+    if (addressToUse && isValidEthereumAddress(addressToUse)) {
+      fetchPOAPs(addressToUse);
+    } else {
+      setProofResult("Please enter a valid Ethereum address or ENS name, or connect your wallet");
+    }
+  };
+
+  const debouncedHandleAddressChange = useCallback(
+    debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+      setManualAddress(e.target.value);
+    }, DEBOUNCE_DELAY),
+    [setManualAddress, DEBOUNCE_DELAY]
+  );
+
   return (
     <div className="p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-3xl font-bold mb-6 text-center">Event Attendance Proof</h2>
@@ -195,7 +236,7 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
           type="text"
           placeholder="Enter Ethereum address or ENS name (optional)"
           value={manualAddress}
-          onChange={(e): void => setManualAddress(e.target.value)}
+          onChange={(e): void => debouncedHandleAddressChange(e)}
           className={`w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
             manualAddress && !isValidEthereumAddress(manualAddress) ? "border-red-500" : "border-gray-300"
           }`}
@@ -208,14 +249,7 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
         )}
       </div>
       <button
-        onClick={(): void => {
-          const addressToUse = manualAddress || userAddress;
-          if (addressToUse && isValidEthereumAddress(addressToUse)) {
-            fetchPOAPs(addressToUse);
-          } else {
-            setProofResult("Please enter a valid Ethereum address or ENS name, or connect your wallet");
-          }
-        }}
+        onClick={handleVerifyClick}
         disabled={isVerifying || (!manualAddress && !userAddress)}
         className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 mb-6 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
         title="Click to verify your attendance using POAPs"

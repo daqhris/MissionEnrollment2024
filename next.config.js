@@ -15,7 +15,11 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["api.poap.tech", "placehold.co", "assets.poap.xyz"],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'api.poap.tech' },
+      { protocol: 'https', hostname: 'placehold.co' },
+      { protocol: 'https', hostname: 'assets.poap.xyz' },
+    ],
   },
   swcMinify: true,
   compiler: {
