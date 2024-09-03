@@ -3,6 +3,7 @@ import Image from "next/image";
 import eventIdsData from "../event_ids.json";
 import { useEnsAddress } from "wagmi";
 import { ethers, poapContract, safePoapContractCall } from "../config";
+import { BigNumber } from "ethers";
 
 const { eventIds } = eventIdsData;
 
@@ -58,7 +59,7 @@ const fetchPOAPs = useCallback(
       }
 
       console.log(`Fetching POAP balance for address: ${addressToFetch}`);
-      const balance = await safePoapContractCall<ethers.BigNumber>('balanceOf', addressToFetch);
+      const balance = await safePoapContractCall<BigNumber>('balanceOf', addressToFetch);
       if (!balance) {
         throw new Error("Failed to fetch POAP balance");
       }
@@ -70,7 +71,7 @@ const fetchPOAPs = useCallback(
       for (let i = 0; i < balance.toNumber(); i++) {
         try {
           console.log(`Fetching token ID for ${addressToFetch} at index ${i}`);
-          const tokenId = await safePoapContractCall<ethers.BigNumber>('tokenOfOwnerByIndex', addressToFetch, i);
+          const tokenId = await safePoapContractCall<BigNumber>('tokenOfOwnerByIndex', addressToFetch, i);
           if (!tokenId) {
             console.error(`Failed to fetch token ID for ${addressToFetch} at index ${i}`);
             continue;
