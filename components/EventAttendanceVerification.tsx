@@ -3,7 +3,6 @@ import Image from "next/image";
 import eventIdsData from "../event_ids.json";
 import { useEnsAddress } from "wagmi";
 import { poapContract, safePoapContractCall, ethers } from "../config";
-import { BigNumber } from "ethers";
 
 const { eventIds } = eventIdsData;
 
@@ -59,8 +58,8 @@ const fetchPOAPs = useCallback(
       }
 
       console.log(`Fetching POAP balance for address: ${addressToFetch}`);
-      const balance = await safePoapContractCall<ethers.BigNumber>('balanceOf', addressToFetch);
-      if (!balance || !ethers.BigNumber.isBigNumber(balance)) {
+      const balance = await safePoapContractCall<bigint>('balanceOf', addressToFetch);
+      if (!balance || balance <= 0n) {
         throw new Error("Failed to fetch POAP balance or invalid balance type");
       }
       console.log(`POAP balance for ${addressToFetch}: ${balance.toString()}`);
@@ -68,15 +67,15 @@ const fetchPOAPs = useCallback(
       const poaps: POAPEvent[] = [];
 
       // Fetch POAP data for each token
-      for (let i = 0; i < balance.toNumber(); i++) {
+      for (let i = 0; i < Number(balance); i++) {
         try {
           console.log(`Fetching token ID for ${addressToFetch} at index ${i}`);
-          const tokenId = await safePoapContractCall<BigNumber>('tokenOfOwnerByIndex', addressToFetch, i);
-          if (!tokenId || !BigNumber.isBigNumber(tokenId)) {
+          const tokenId = await safePoapContractCall<ethers.BigNumberish>('tokenOfOwnerByIndex', addressToFetch, i);
+          if (!tokenId || ethers.getBigInt(tokenId) <= 0n) {
             console.error(`Failed to fetch token ID or invalid token ID type for ${addressToFetch} at index ${i}`);
             continue;
           }
-          console.log(`Token ID for ${addressToFetch} at index ${i}: ${tokenId.toString()}`);
+          console.log(`Token ID for ${addressToFetch} at index ${i}: ${ethers.getBigInt(tokenId).toString()}`);
 
           console.log(`Fetching token URI for token ID ${tokenId}`);
           const tokenURI = await safePoapContractCall<string>('tokenURI', tokenId);
