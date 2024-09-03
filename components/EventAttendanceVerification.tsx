@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import eventIdsData from "../event_ids.json";
 import { useEnsAddress } from "wagmi";
-import { poapContract, safePoapContractCall } from "../config";
-import { BigNumber } from "@ethersproject/bignumber";
+import { poapContract, safePoapContractCall, ethers } from "../config";
+import { BigNumber } from "ethers";
 
 const { eventIds } = eventIdsData;
 
@@ -59,9 +59,9 @@ const fetchPOAPs = useCallback(
       }
 
       console.log(`Fetching POAP balance for address: ${addressToFetch}`);
-      const balance = await safePoapContractCall<BigNumber>('balanceOf', addressToFetch);
-      if (!balance) {
-        throw new Error("Failed to fetch POAP balance");
+      const balance = await safePoapContractCall<ethers.BigNumber>('balanceOf', addressToFetch);
+      if (!balance || !ethers.BigNumber.isBigNumber(balance)) {
+        throw new Error("Failed to fetch POAP balance or invalid balance type");
       }
       console.log(`POAP balance for ${addressToFetch}: ${balance.toString()}`);
 
@@ -72,8 +72,8 @@ const fetchPOAPs = useCallback(
         try {
           console.log(`Fetching token ID for ${addressToFetch} at index ${i}`);
           const tokenId = await safePoapContractCall<BigNumber>('tokenOfOwnerByIndex', addressToFetch, i);
-          if (!tokenId) {
-            console.error(`Failed to fetch token ID for ${addressToFetch} at index ${i}`);
+          if (!tokenId || !BigNumber.isBigNumber(tokenId)) {
+            console.error(`Failed to fetch token ID or invalid token ID type for ${addressToFetch} at index ${i}`);
             continue;
           }
           console.log(`Token ID for ${addressToFetch} at index ${i}: ${tokenId.toString()}`);
