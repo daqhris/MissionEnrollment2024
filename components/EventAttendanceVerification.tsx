@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import eventIdsData from "../event_ids.json";
 import { useEnsAddress } from "wagmi";
-import { ethers, poapContract, safePoapContractCall } from "../config";
-import { BigNumber } from "ethers";
+import { poapContract, safePoapContractCall } from "../config";
+import { BigNumber } from "@ethersproject/bignumber";
 
 const { eventIds } = eventIdsData;
 
@@ -113,7 +113,7 @@ const fetchPOAPs = useCallback(
               id: tokenId.toString(),
               name: metadata.name || "Unknown Event",
               image_url: metadata.image || "",
-              start_date: metadata.attributes?.find((attr: any) => attr.trait_type === 'event_date')?.value || '',
+              start_date: metadata.attributes?.find((attr: { trait_type: string; value: string }) => attr.trait_type === 'event_date')?.value || '',
             },
             token_id: tokenId.toString(),
           });
@@ -164,7 +164,7 @@ const fetchPOAPs = useCallback(
       setIsVerifying(false);
     }
   },
-  [onVerified, setPoaps, eventIds, poapContract, safePoapContractCall],
+  [onVerified, setPoaps],
 );
 
   useEffect((): void => {

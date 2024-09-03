@@ -23,7 +23,7 @@ const POAPDataRetrieval: React.FC<POAPDataRetrievalProps> = ({ userAddress }) =>
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPOAPs = async () => {
+    const fetchPOAPs = async (): Promise<void> => {
       setIsLoading(true);
       setError(null);
 
