@@ -47,22 +47,23 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
 const ETH_GLOBAL_BRUSSELS_2024_EVENT_ID = "141"; // Actual event ID for ETHGlobal Brussels 2024
 
 const isEthGlobalBrusselsPOAP = (poap: POAPEvent): boolean => {
-  // Check if the event ID matches the specific ETHGlobal Brussels 2024 event
+  // Primary check: Match the specific event ID
   if (poap.event.id === ETH_GLOBAL_BRUSSELS_2024_EVENT_ID) {
     return true;
   }
 
-  // Fallback check in case the event ID doesn't match but other criteria do
+  // Secondary check: Use event details for verification
   const eventDate = new Date(poap.event.start_date);
   const eventName = poap.event.name.toLowerCase();
-  return (
-    eventName.includes("ethglobal") &&
-    eventName.includes("brussels") &&
-    eventName.includes("2024") &&
-    eventDate.getFullYear() === 2024 &&
-    eventDate >= new Date("2024-07-11") &&
-    eventDate <= new Date("2024-07-14")
-  );
+
+  const isCorrectName = eventName.includes("ethglobal") &&
+                        eventName.includes("brussels") &&
+                        eventName.includes("2024");
+  const isCorrectYear = eventDate.getFullYear() === 2024;
+  const isWithinEventDates = eventDate >= new Date("2024-07-11") &&
+                             eventDate <= new Date("2024-07-14");
+
+  return isCorrectName && isCorrectYear && isWithinEventDates;
 };
 
 const fetchPOAPs = useCallback(
@@ -166,15 +167,20 @@ const fetchPOAPs = useCallback(
 
       if (poaps.length > 0) {
         const requiredPoapCount = 1;
-        if (poaps.length >= requiredPoapCount) {
+        const ethGlobalBrusselsPOAPs = poaps.filter(poap => poap.event.id === ETH_GLOBAL_BRUSSELS_2024_EVENT_ID);
+
+        if (ethGlobalBrusselsPOAPs.length >= requiredPoapCount) {
           console.log(`Proof successful for ${addressToFetch}`);
-          setProofResult(`Proof successful! ${addressToFetch} has a valid POAP for ETHGlobal Brussels 2024.`);
+          setProofResult(`Proof successful! ${addressToFetch} has ${ethGlobalBrusselsPOAPs.length} valid POAP(s) for ETHGlobal Brussels 2024.`);
           onVerified();
-        } else {
+        } else if (poaps.length >= requiredPoapCount) {
           console.log(`Partial proof for ${addressToFetch}`);
           setProofResult(
-            `${addressToFetch} has a POAP from ETHGlobal Brussels 2024, but it may not be the specific required one. Please check with the event organizers.`,
+            `${addressToFetch} has ${poaps.length} POAP(s) that might be related to ETHGlobal Brussels 2024, but they may not be the specific required ones. Please check with the event organizers.`
           );
+        } else {
+          console.log(`Insufficient POAPs found for ${addressToFetch}`);
+          setProofResult(`${addressToFetch} has some POAPs, but none are specifically for ETHGlobal Brussels 2024.`);
         }
       } else {
         console.log(`No valid POAPs found for ${addressToFetch}`);
@@ -190,7 +196,7 @@ const fetchPOAPs = useCallback(
       setIsVerifying(false);
     }
   },
-  [onVerified, setPoaps],
+  [onVerified, setPoaps, ETH_GLOBAL_BRUSSELS_2024_EVENT_ID],
 );
 
   useEffect((): void => {
@@ -287,17 +293,17 @@ const fetchPOAPs = useCallback(
       )}
       {localPoaps && localPoaps.length > 0 && (
         <div className="mt-6 bg-green-100 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold text-green-900 mb-4">POAPs Found</h3>
+          <h3 className="text-xl font-semibold text-green-900 mb-4">ETHGlobal Brussels 2024 POAPs Found</h3>
           <p className="text-green-800 mb-6">
-            {localPoaps.length === eventIds.length
-              ? "You have all required POAPs for ETHGlobal Brussels 2024."
-              : `You have ${localPoaps.length} out of ${eventIds.length} required POAPs for ETHGlobal Brussels 2024.`}
+            {localPoaps.length === 1
+              ? "You have the required POAP for ETHGlobal Brussels 2024."
+              : `You have ${localPoaps.length} POAPs from ETHGlobal Brussels 2024.`}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {localPoaps.map(poap => (
               <div
                 key={poap.token_id}
-                className="flex flex-col items-center p-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
               >
                 <Image
                   src={
@@ -306,15 +312,16 @@ const fetchPOAPs = useCallback(
                       : poap.event?.image_url || "/placeholder-poap.png"
                   }
                   alt={poap.event?.name || "POAP"}
-                  width={80}
-                  height={80}
-                  className="rounded-full mb-2"
+                  width={100}
+                  height={100}
+                  className="rounded-full mb-3"
                   onError={(): void => handleImageError(poap.token_id)}
                 />
-                <p className="text-sm font-medium text-center">{poap.event?.name || "Unknown Event"}</p>
-                <p className="text-xs text-center text-gray-500">
+                <p className="text-sm font-medium text-center mb-1">{poap.event?.name || "Unknown Event"}</p>
+                <p className="text-xs text-center text-gray-500 mb-2">
                   {poap.event?.start_date ? new Date(poap.event.start_date).toLocaleDateString() : "Date unknown"}
                 </p>
+                <p className="text-xs text-center text-blue-600">Token ID: {poap.token_id}</p>
               </div>
             ))}
           </div>
