@@ -43,6 +43,24 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
     chainId: 1, // Mainnet
   });
 
+// Specific event ID for ETHGlobal Brussels 2024
+const ETH_GLOBAL_BRUSSELS_2024_EVENT_ID = "123456"; // Replace with actual event ID
+
+const isEthGlobalBrusselsPOAP = (poap: POAPEvent): boolean => {
+  if (poap.event.id === ETH_GLOBAL_BRUSSELS_2024_EVENT_ID) {
+    return true;
+  }
+
+  const eventDate = new Date(poap.event.start_date);
+  return (
+    poap.event.name.toLowerCase().includes("ethglobal brussels") &&
+    poap.event.name.toLowerCase().includes("2024") &&
+    eventDate.getFullYear() === 2024 &&
+    eventDate >= new Date("2024-07-11") &&
+    eventDate <= new Date("2024-07-14")
+  );
+};
+
 const fetchPOAPs = useCallback(
   async (addressToFetch: string): Promise<void> => {
     console.log(`Starting POAP fetch for address: ${addressToFetch}`);
@@ -107,7 +125,8 @@ const fetchPOAPs = useCallback(
           }
           console.log(`Metadata for token ID ${tokenId}:`, metadata);
 
-          poaps.push({
+          // Early filtering: Check if the POAP is from ETHGlobal Brussels 2024
+          if (isEthGlobalBrusselsPOAP({
             event: {
               id: tokenId.toString(),
               name: metadata.name || "Unknown Event",
@@ -115,7 +134,17 @@ const fetchPOAPs = useCallback(
               start_date: metadata.attributes?.find((attr: { trait_type: string; value: string }) => attr.trait_type === 'event_date')?.value || '',
             },
             token_id: tokenId.toString(),
-          });
+          })) {
+            poaps.push({
+              event: {
+                id: tokenId.toString(),
+                name: metadata.name || "Unknown Event",
+                image_url: metadata.image || "",
+                start_date: metadata.attributes?.find((attr: { trait_type: string; value: string }) => attr.trait_type === 'event_date')?.value || '',
+              },
+              token_id: tokenId.toString(),
+            });
+          }
         } catch (error) {
           console.error(`Error processing POAP data for token ${i}:`, error);
           // Continue to the next token if there's an error with the current one
@@ -123,23 +152,20 @@ const fetchPOAPs = useCallback(
         }
       }
 
-      console.log(`Total POAPs fetched for ${addressToFetch}:`, poaps.length);
-      console.log(`Filtering POAPs for ETHGlobal Brussels 2024`);
-      const filteredPoaps = poaps.filter(isEthGlobalBrusselsPOAP);
-      console.log("Filtered POAPs:", filteredPoaps);
+      console.log(`Total ETHGlobal Brussels 2024 POAPs fetched for ${addressToFetch}:`, poaps.length);
 
       console.log(`Setting local POAPs and updating state`);
-      setLocalPoaps(filteredPoaps);
-      setPoaps(filteredPoaps);
+      setLocalPoaps(poaps);
+      setPoaps(poaps);
 
-      const foundEventIds = filteredPoaps.map(poap => poap.event.id);
+      const foundEventIds = poaps.map(poap => poap.event.id);
       const missingEventIds = eventIds.filter(id => !foundEventIds.includes(id));
       console.log(`Missing event IDs:`, missingEventIds);
       setMissingPoaps(missingEventIds);
 
-      if (filteredPoaps.length > 0) {
+      if (poaps.length > 0) {
         const requiredPoapCount = 1;
-        if (filteredPoaps.length >= requiredPoapCount) {
+        if (poaps.length >= requiredPoapCount) {
           console.log(`Proof successful for ${addressToFetch}`);
           setProofResult(`Proof successful! ${addressToFetch} has a valid POAP for ETHGlobal Brussels 2024.`);
           onVerified();
@@ -189,16 +215,7 @@ const fetchPOAPs = useCallback(
   const isValidEthereumAddress = (address: string): boolean =>
     /^0x[a-fA-F0-9]{40}$/.test(address) || /^[a-zA-Z0-9-]+\.eth$/.test(address);
 
-  const isEthGlobalBrusselsPOAP = (poap: POAPEvent): boolean => {
-    const eventDate = new Date(poap.event.start_date);
-    return (
-      poap.event.name.toLowerCase().includes("ethglobal brussels") &&
-      poap.event.name.toLowerCase().includes("2024") &&
-      eventDate.getFullYear() === 2024 &&
-      eventDate >= new Date("2024-07-11") &&
-      eventDate <= new Date("2024-07-14")
-    );
-  };
+
 
   const handleImageError = (tokenId: string): void => {
     setImageLoadErrors(prev => ({ ...prev, [tokenId]: true }));
