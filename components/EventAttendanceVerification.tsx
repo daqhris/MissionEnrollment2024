@@ -44,17 +44,21 @@ const EventAttendanceVerification: React.FC<EventAttendanceVerificationProps> = 
   });
 
 // Specific event ID for ETHGlobal Brussels 2024
-const ETH_GLOBAL_BRUSSELS_2024_EVENT_ID = "123456"; // Replace with actual event ID
+const ETH_GLOBAL_BRUSSELS_2024_EVENT_ID = "141"; // Actual event ID for ETHGlobal Brussels 2024
 
 const isEthGlobalBrusselsPOAP = (poap: POAPEvent): boolean => {
+  // Check if the event ID matches the specific ETHGlobal Brussels 2024 event
   if (poap.event.id === ETH_GLOBAL_BRUSSELS_2024_EVENT_ID) {
     return true;
   }
 
+  // Fallback check in case the event ID doesn't match but other criteria do
   const eventDate = new Date(poap.event.start_date);
+  const eventName = poap.event.name.toLowerCase();
   return (
-    poap.event.name.toLowerCase().includes("ethglobal brussels") &&
-    poap.event.name.toLowerCase().includes("2024") &&
+    eventName.includes("ethglobal") &&
+    eventName.includes("brussels") &&
+    eventName.includes("2024") &&
     eventDate.getFullYear() === 2024 &&
     eventDate >= new Date("2024-07-11") &&
     eventDate <= new Date("2024-07-14")
@@ -126,7 +130,7 @@ const fetchPOAPs = useCallback(
           console.log(`Metadata for token ID ${tokenId}:`, metadata);
 
           // Early filtering: Check if the POAP is from ETHGlobal Brussels 2024
-          if (isEthGlobalBrusselsPOAP({
+          const poapEvent = {
             event: {
               id: tokenId.toString(),
               name: metadata.name || "Unknown Event",
@@ -134,16 +138,13 @@ const fetchPOAPs = useCallback(
               start_date: metadata.attributes?.find((attr: { trait_type: string; value: string }) => attr.trait_type === 'event_date')?.value || '',
             },
             token_id: tokenId.toString(),
-          })) {
-            poaps.push({
-              event: {
-                id: tokenId.toString(),
-                name: metadata.name || "Unknown Event",
-                image_url: metadata.image || "",
-                start_date: metadata.attributes?.find((attr: { trait_type: string; value: string }) => attr.trait_type === 'event_date')?.value || '',
-              },
-              token_id: tokenId.toString(),
-            });
+          };
+
+          if (isEthGlobalBrusselsPOAP(poapEvent)) {
+            console.log(`Found ETHGlobal Brussels 2024 POAP: ${poapEvent.event.name}`);
+            poaps.push(poapEvent);
+          } else {
+            console.log(`Skipping non-ETHGlobal Brussels 2024 POAP: ${poapEvent.event.name}`);
           }
         } catch (error) {
           console.error(`Error processing POAP data for token ${i}:`, error);
