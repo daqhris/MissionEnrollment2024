@@ -1,6 +1,5 @@
-import { ethers } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { gnosisProvider, poapContract, safePoapContractCall } from "../../config";
+import { gnosisProvider, safePoapContractCall } from "../../config";
 
 // Simple in-memory rate limiting
 const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
@@ -107,7 +106,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           const response = await fetch(tokenURI);
           const metadata = await response.json();
 
-          const eventStartDate = new Date(metadata.attributes.find((attr: any) => attr.trait_type === "start_date")?.value);
+          const eventStartDate = new Date(metadata.attributes.find((attr: { trait_type: string; value: string }) => attr.trait_type === "start_date")?.value);
           const eventName = metadata.name;
 
           const isCorrectEvent = eventName.toLowerCase().includes("ethglobal brussels") && eventName.toLowerCase().includes("2024");
