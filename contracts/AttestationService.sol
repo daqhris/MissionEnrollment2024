@@ -26,7 +26,7 @@ contract AttestationService is AccessControl {
     require(_eas != address(0) && _schemaRegistry != address(0), "Invalid address");
     eas = IEAS(_eas);
     schemaRegistry = ISchemaRegistry(_schemaRegistry);
-    _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
   }
 
   function initialize() external onlyRole(DEFAULT_ADMIN_ROLE) {
