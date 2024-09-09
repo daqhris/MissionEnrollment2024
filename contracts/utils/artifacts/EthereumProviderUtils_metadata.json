@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/utils/EthereumProviderUtils.sol": "EthereumProviderUtils"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/utils/EthereumProviderUtils.sol": {
+			"keccak256": "0xaf6144340e79bdaa8b6230f04bed43266e231b833fbbf3311a84abb4716aac85",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1ea07f42d082e84f824f9117dc8610cc92f8a15d9e179b4b39a10d22e7b4bccb",
+				"dweb:/ipfs/QmaAzXMQTfVgznDBNUD2vheeCgU9XVcDvXVaEbFe3gEnwR"
+			]
+		}
+	},
+	"version": 1
+}
