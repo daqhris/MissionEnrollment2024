@@ -1,0 +1,67 @@
+{
+	"compiler": {
+		"version": "0.4.11+commit.68ef5810"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "name",
+				"outputs": [
+					{
+						"name": "",
+						"type": "string"
+					}
+				],
+				"payable": false,
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "test",
+				"outputs": [
+					{
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/utils/DummyOldResolver.sol": "DummyOldResolver"
+		},
+		"libraries": {},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/utils/DummyOldResolver.sol": {
+			"keccak256": "0xd247c22728ffaf1a0f1f13843a9c0a8145bf9742b4b8a154aeee4928950ddcb3",
+			"urls": [
+				"bzzr://4b5aed57c1bce962e15955ff9fe51966c6be7ade67b0c11adbed0d072ca1e861"
+			]
+		}
+	},
+	"version": 1
+}

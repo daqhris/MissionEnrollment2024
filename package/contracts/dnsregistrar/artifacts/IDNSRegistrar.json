@@ -1,0 +1,128 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"proveAndClaim(bytes,(bytes,bytes)[])": "29d56630",
+			"proveAndClaimWithResolver(bytes,(bytes,bytes)[],address,address)": "06963218"
+		}
+	},
+	"abi": [
+		{
+			"inputs": [
+				{
+					"internalType": "bytes",
+					"name": "name",
+					"type": "bytes"
+				},
+				{
+					"components": [
+						{
+							"internalType": "bytes",
+							"name": "rrset",
+							"type": "bytes"
+						},
+						{
+							"internalType": "bytes",
+							"name": "sig",
+							"type": "bytes"
+						}
+					],
+					"internalType": "struct DNSSEC.RRSetWithSignature[]",
+					"name": "input",
+					"type": "tuple[]"
+				}
+			],
+			"name": "proveAndClaim",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes",
+					"name": "name",
+					"type": "bytes"
+				},
+				{
+					"components": [
+						{
+							"internalType": "bytes",
+							"name": "rrset",
+							"type": "bytes"
+						},
+						{
+							"internalType": "bytes",
+							"name": "sig",
+							"type": "bytes"
+						}
+					],
+					"internalType": "struct DNSSEC.RRSetWithSignature[]",
+					"name": "input",
+					"type": "tuple[]"
+				},
+				{
+					"internalType": "address",
+					"name": "resolver",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "addr",
+					"type": "address"
+				}
+			],
+			"name": "proveAndClaimWithResolver",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	]
+}

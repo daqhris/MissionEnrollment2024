@@ -1,0 +1,373 @@
+{
+	"id": "c4575423fe457096ee2d07a7e22d0e02",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.20",
+	"solcLongVersion": "0.8.20+commit.a1b79de6",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"package/contracts/wrapper/INameWrapperUpgrade.sol": {
+				"content": "//SPDX-License-Identifier: MIT\npragma solidity ~0.8.17;\n\ninterface INameWrapperUpgrade {\n  function wrapFromUpgrade(\n    bytes calldata name,\n    address wrappedOwner,\n    uint32 fuses,\n    uint64 expiry,\n    address approved,\n    bytes calldata extraData\n  ) external;\n}\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": [],
+			"evmVersion": "paris"
+		}
+	},
+	"output": {
+		"contracts": {
+			"package/contracts/wrapper/INameWrapperUpgrade.sol": {
+				"INameWrapperUpgrade": {
+					"abi": [
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "name",
+									"type": "bytes"
+								},
+								{
+									"internalType": "address",
+									"name": "wrappedOwner",
+									"type": "address"
+								},
+								{
+									"internalType": "uint32",
+									"name": "fuses",
+									"type": "uint32"
+								},
+								{
+									"internalType": "uint64",
+									"name": "expiry",
+									"type": "uint64"
+								},
+								{
+									"internalType": "address",
+									"name": "approved",
+									"type": "address"
+								},
+								{
+									"internalType": "bytes",
+									"name": "extraData",
+									"type": "bytes"
+								}
+							],
+							"name": "wrapFromUpgrade",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"wrapFromUpgrade(bytes,address,uint32,uint64,address,bytes)": "9198c276"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"name\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"wrappedOwner\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"fuses\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"expiry\",\"type\":\"uint64\"},{\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\"}],\"name\":\"wrapFromUpgrade\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"package/contracts/wrapper/INameWrapperUpgrade.sol\":\"INameWrapperUpgrade\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"package/contracts/wrapper/INameWrapperUpgrade.sol\":{\"keccak256\":\"0xf7e8c5d439054faeec8bab1b4c1798f749975bc006244ff1f53ed5d56c5d6988\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://110aecdd0f1cf5e77d111e4e708f332d71ef03cc3b547b8048c473e98a570b75\",\"dweb:/ipfs/QmX6VRL5KRHHBQ3LuyGh4UtQMPkD4wnbw3SFdRm656wanm\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {},
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"package/contracts/wrapper/INameWrapperUpgrade.sol": {
+				"ast": {
+					"absolutePath": "package/contracts/wrapper/INameWrapperUpgrade.sol",
+					"exportedSymbols": {
+						"INameWrapperUpgrade": [
+							17
+						]
+					},
+					"id": 18,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"~",
+								"0.8",
+								".17"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "31:24:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "INameWrapperUpgrade",
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"fullyImplemented": false,
+							"id": 17,
+							"linearizedBaseContracts": [
+								17
+							],
+							"name": "INameWrapperUpgrade",
+							"nameLocation": "67:19:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"functionSelector": "9198c276",
+									"id": 16,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "wrapFromUpgrade",
+									"nameLocation": "100:15:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 14,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 3,
+												"mutability": "mutable",
+												"name": "name",
+												"nameLocation": "136:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 16,
+												"src": "121:19:0",
+												"stateVariable": false,
+												"storageLocation": "calldata",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_calldata_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 2,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "121:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 5,
+												"mutability": "mutable",
+												"name": "wrappedOwner",
+												"nameLocation": "154:12:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 16,
+												"src": "146:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 4,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "146:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 7,
+												"mutability": "mutable",
+												"name": "fuses",
+												"nameLocation": "179:5:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 16,
+												"src": "172:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												},
+												"typeName": {
+													"id": 6,
+													"name": "uint32",
+													"nodeType": "ElementaryTypeName",
+													"src": "172:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint32",
+														"typeString": "uint32"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 9,
+												"mutability": "mutable",
+												"name": "expiry",
+												"nameLocation": "197:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 16,
+												"src": "190:13:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint64",
+													"typeString": "uint64"
+												},
+												"typeName": {
+													"id": 8,
+													"name": "uint64",
+													"nodeType": "ElementaryTypeName",
+													"src": "190:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint64",
+														"typeString": "uint64"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 11,
+												"mutability": "mutable",
+												"name": "approved",
+												"nameLocation": "217:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 16,
+												"src": "209:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 10,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "209:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 13,
+												"mutability": "mutable",
+												"name": "extraData",
+												"nameLocation": "246:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 16,
+												"src": "231:24:0",
+												"stateVariable": false,
+												"storageLocation": "calldata",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_calldata_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 12,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "231:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "115:144:0"
+									},
+									"returnParameters": {
+										"id": 15,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "268:0:0"
+									},
+									"scope": 17,
+									"src": "91:178:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 18,
+							"src": "57:214:0",
+							"usedErrors": [],
+							"usedEvents": []
+						}
+					],
+					"src": "31:241:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}

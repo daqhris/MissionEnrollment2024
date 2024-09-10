@@ -1,0 +1,76 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_metaDataUri",
+						"type": "string"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "uri",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/wrapper/StaticMetadataService.sol": "StaticMetadataService"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/wrapper/StaticMetadataService.sol": {
+			"keccak256": "0x2457e7f9bafa003234205c5ed3e23c46e778a4a3769728fe411917da505ebb14",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://480a19171657ba437c8c27d72049eb3a60fc36f847a7aaa34bdd900edc33cb81",
+				"dweb:/ipfs/QmS7QrdfEd7xsCcU1AUiMiVJikajV5QT1wqT8PRnZ9W76M"
+			]
+		}
+	},
+	"version": 1
+}

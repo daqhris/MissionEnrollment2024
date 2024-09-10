@@ -1,0 +1,85 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/dnsregistrar/DNSClaimChecker.sol": "DNSClaimChecker"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@ensdomains/buffer/contracts/Buffer.sol": {
+			"keccak256": "0xd6dd3b0b327288f8e1b711a609f4040fea602e2ad4bba9febdf2f33b4e56eb0c",
+			"license": "BSD-2-Clause",
+			"urls": [
+				"bzz-raw://78a722152d40d778a97595e5224fac1d138f4e659dcb1a926148909ef4c4bdca",
+				"dweb:/ipfs/QmRxScF53x5ywsChLNpMUCdg2TSoCWTfo8G65Mo3sGY55b"
+			]
+		},
+		"package/contracts/dnsregistrar/DNSClaimChecker.sol": {
+			"keccak256": "0xe9b5096904052abc5bbf8b05acd9c5345c2e530ae1da410b8eacf1e769f7c81d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1b4d398926ebd425802cd2fc7d2a44e3505d34d6c74cd3bf7b7bbc3c86ccafe7",
+				"dweb:/ipfs/QmahV6oHSuoDPeBPw7PuN1pr5nQNzBpi11dtmQyYa3Chod"
+			]
+		},
+		"package/contracts/dnssec-oracle/DNSSEC.sol": {
+			"keccak256": "0xb3f95adc7de3f9043c0b83ad69baa273e388fa3f6c1638f26bed32b080950a0c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0edea6cccf9196623c04315191a5ce878db8a9fe9039f64bd7ba9ec7ba01fb9c",
+				"dweb:/ipfs/QmXAJQtMFeasYeprb9r3JpWS2FWopf2qhL4pyG6PQhvpgf"
+			]
+		},
+		"package/contracts/dnssec-oracle/RRUtils.sol": {
+			"keccak256": "0x25540b3e0f20bb98dc5aa8be284505ecb4b7e954c49d9ad9407e4de8ed17c13c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c3a8018454d4eba6cdb9442887bc1e64824d4737d9af8507a4ec5be9a4996d1c",
+				"dweb:/ipfs/QmcjSWkspKCdvV1WkPBVDfqnGHy3KoCRvARwUKhVEu11mK"
+			]
+		},
+		"package/contracts/utils/BytesUtils.sol": {
+			"keccak256": "0xee3d14e0fba9c94d86fd9f21394aac1b78e0234ec879d8c522248f604e8f6a0f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://68d45fe829823e3a79b20db39050ca0bbb4c88574a330bcc801fde26fde9d2a3",
+				"dweb:/ipfs/QmPyj2Us1MDuL49wMCHfSaxNABL3Pb6b5XG8TWuhHyYqG8"
+			]
+		},
+		"package/contracts/utils/HexUtils.sol": {
+			"keccak256": "0xd98bed1354489479fad699ce4777a0b510da275e5cad21f3d324b2dd5507d31f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://867c6a943cb3fdd67c5537997af9cbea8b84b90fae58aca19b27e75cbfde32b4",
+				"dweb:/ipfs/QmT91qkSZu9mordzSpQJQ1YzbznktpsFVioWMDdVBNwJWz"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,0 +1,53 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/utils/NameEncoder.sol": "NameEncoder"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/utils/BytesUtils.sol": {
+			"keccak256": "0xee3d14e0fba9c94d86fd9f21394aac1b78e0234ec879d8c522248f604e8f6a0f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://68d45fe829823e3a79b20db39050ca0bbb4c88574a330bcc801fde26fde9d2a3",
+				"dweb:/ipfs/QmPyj2Us1MDuL49wMCHfSaxNABL3Pb6b5XG8TWuhHyYqG8"
+			]
+		},
+		"package/contracts/utils/NameEncoder.sol": {
+			"keccak256": "0x898e14d59c3d2b61ddd729c9f84ab49fb3a558293374076a6baa049b8f22b9b8",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1f074b8f1900611b91fe1286453fc0fd80f0065a024069024be80099a131fc1a",
+				"dweb:/ipfs/QmVcEBMRBbzFx4C7FQVqSWkETz2vxtFTWJp56ruezqN1Ex"
+			]
+		}
+	},
+	"version": 1
+}

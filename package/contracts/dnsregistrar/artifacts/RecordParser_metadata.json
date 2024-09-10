@@ -1,0 +1,53 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/dnsregistrar/RecordParser.sol": "RecordParser"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/dnsregistrar/RecordParser.sol": {
+			"keccak256": "0xe696429b38248b55d86f15de98aa9f3a1a8a60529a66a2d90ffde5baa2872ccf",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://16115bf55603a6ec0d5c328719a4df9ad5b8ff6fd520aec2d25d72599d345d1d",
+				"dweb:/ipfs/QmShz31w3TzFt2ZPzVNtpXrKZ5VycDTuxjbhXdjB5iVSSd"
+			]
+		},
+		"package/contracts/utils/BytesUtils.sol": {
+			"keccak256": "0xee3d14e0fba9c94d86fd9f21394aac1b78e0234ec879d8c522248f604e8f6a0f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://68d45fe829823e3a79b20db39050ca0bbb4c88574a330bcc801fde26fde9d2a3",
+				"dweb:/ipfs/QmPyj2Us1MDuL49wMCHfSaxNABL3Pb6b5XG8TWuhHyYqG8"
+			]
+		}
+	},
+	"version": 1
+}

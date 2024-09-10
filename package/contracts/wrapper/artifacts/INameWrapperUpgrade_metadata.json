@@ -1,0 +1,84 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"internalType": "address",
+						"name": "wrappedOwner",
+						"type": "address"
+					},
+					{
+						"internalType": "uint32",
+						"name": "fuses",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint64",
+						"name": "expiry",
+						"type": "uint64"
+					},
+					{
+						"internalType": "address",
+						"name": "approved",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "extraData",
+						"type": "bytes"
+					}
+				],
+				"name": "wrapFromUpgrade",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/wrapper/INameWrapperUpgrade.sol": "INameWrapperUpgrade"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/wrapper/INameWrapperUpgrade.sol": {
+			"keccak256": "0xf7e8c5d439054faeec8bab1b4c1798f749975bc006244ff1f53ed5d56c5d6988",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://110aecdd0f1cf5e77d111e4e708f332d71ef03cc3b547b8048c473e98a570b75",
+				"dweb:/ipfs/QmX6VRL5KRHHBQ3LuyGh4UtQMPkD4wnbw3SFdRm656wanm"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,0 +1,80 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					}
+				],
+				"name": "isPublicSuffix",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "A public suffix list that treats all TLDs as public suffixes.",
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/dnsregistrar/TLDPublicSuffixList.sol": "TLDPublicSuffixList"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/dnsregistrar/PublicSuffixList.sol": {
+			"keccak256": "0x4388ffe708c97762b7ef33a7f5f04b05be341e47fd3cafa76a024af5298e1493",
+			"urls": [
+				"bzz-raw://95410dedcee1e4ca1d428df18fb06d4759811c3246562386943d33bc138d3130",
+				"dweb:/ipfs/QmdmHFDCVFYKT2cuaqqvTGhKTHHV4YtTHczcMVUMHE8Muf"
+			]
+		},
+		"package/contracts/dnsregistrar/TLDPublicSuffixList.sol": {
+			"keccak256": "0x88daf5482dbb76cd3700b8deacd6b10748eecb12933ff2553ff2f77360c4d6cc",
+			"urls": [
+				"bzz-raw://1b4338bb7d3fb64785956a3f0fb3a638e498985cfe702b0dc1076bce98192ca3",
+				"dweb:/ipfs/QmdJyk9zePmnRhRqqWtKhn9reS5TJsvB5awVmN7Yk3UBDa"
+			]
+		},
+		"package/contracts/utils/BytesUtils.sol": {
+			"keccak256": "0xee3d14e0fba9c94d86fd9f21394aac1b78e0234ec879d8c522248f604e8f6a0f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://68d45fe829823e3a79b20db39050ca0bbb4c88574a330bcc801fde26fde9d2a3",
+				"dweb:/ipfs/QmPyj2Us1MDuL49wMCHfSaxNABL3Pb6b5XG8TWuhHyYqG8"
+			]
+		}
+	},
+	"version": 1
+}

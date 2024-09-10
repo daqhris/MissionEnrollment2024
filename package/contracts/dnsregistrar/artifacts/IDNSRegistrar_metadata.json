@@ -1,0 +1,124 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"components": [
+							{
+								"internalType": "bytes",
+								"name": "rrset",
+								"type": "bytes"
+							},
+							{
+								"internalType": "bytes",
+								"name": "sig",
+								"type": "bytes"
+							}
+						],
+						"internalType": "struct DNSSEC.RRSetWithSignature[]",
+						"name": "input",
+						"type": "tuple[]"
+					}
+				],
+				"name": "proveAndClaim",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"components": [
+							{
+								"internalType": "bytes",
+								"name": "rrset",
+								"type": "bytes"
+							},
+							{
+								"internalType": "bytes",
+								"name": "sig",
+								"type": "bytes"
+							}
+						],
+						"internalType": "struct DNSSEC.RRSetWithSignature[]",
+						"name": "input",
+						"type": "tuple[]"
+					},
+					{
+						"internalType": "address",
+						"name": "resolver",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					}
+				],
+				"name": "proveAndClaimWithResolver",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/dnsregistrar/IDNSRegistrar.sol": "IDNSRegistrar"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/dnsregistrar/IDNSRegistrar.sol": {
+			"keccak256": "0x0a2f9834e96444f137a5b3f505e633a238b1a0ee5aca21e08eff00ea4b990e01",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://919d232efb1dd6cbefc3485d0817342f4f9279474e289743ec53ca54b64a9677",
+				"dweb:/ipfs/Qmd7f4gbZ4vmmpttvePFAnR656E8VWVk7V8DtAJBLX3mWr"
+			]
+		},
+		"package/contracts/dnssec-oracle/DNSSEC.sol": {
+			"keccak256": "0xb3f95adc7de3f9043c0b83ad69baa273e388fa3f6c1638f26bed32b080950a0c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0edea6cccf9196623c04315191a5ce878db8a9fe9039f64bd7ba9ec7ba01fb9c",
+				"dweb:/ipfs/QmXAJQtMFeasYeprb9r3JpWS2FWopf2qhL4pyG6PQhvpgf"
+			]
+		}
+	},
+	"version": 1
+}

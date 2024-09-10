@@ -1,0 +1,64 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					}
+				],
+				"name": "isPublicSuffix",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/dnsregistrar/PublicSuffixList.sol": "PublicSuffixList"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/dnsregistrar/PublicSuffixList.sol": {
+			"keccak256": "0x4388ffe708c97762b7ef33a7f5f04b05be341e47fd3cafa76a024af5298e1493",
+			"urls": [
+				"bzz-raw://95410dedcee1e4ca1d428df18fb06d4759811c3246562386943d33bc138d3130",
+				"dweb:/ipfs/QmdmHFDCVFYKT2cuaqqvTGhKTHHV4YtTHczcMVUMHE8Muf"
+			]
+		}
+	},
+	"version": 1
+}

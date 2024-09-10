@@ -1,0 +1,65 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "uri",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/wrapper/IMetadataService.sol": "IMetadataService"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/wrapper/IMetadataService.sol": {
+			"keccak256": "0xac2dd4ad14a2117d4f15685eb99e4ce62b170e27ac0b1e8ec192b79d6937a8a4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1137497f4ef2a5fec99ed75b9bc77703fdd9d0cb2213ba4b481cec476d926790",
+				"dweb:/ipfs/QmXpo7KVuSa2WE6bLc2AV2ipedebmFGoVdUX5NfUMtPwnD"
+			]
+		}
+	},
+	"version": 1
+}

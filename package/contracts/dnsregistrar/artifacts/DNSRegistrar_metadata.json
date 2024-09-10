@@ -1,0 +1,557 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_previousRegistrar",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_resolver",
+						"type": "address"
+					},
+					{
+						"internalType": "contract DNSSEC",
+						"name": "_dnssec",
+						"type": "address"
+					},
+					{
+						"internalType": "contract PublicSuffixList",
+						"name": "_suffixes",
+						"type": "address"
+					},
+					{
+						"internalType": "contract ENS",
+						"name": "_ens",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					}
+				],
+				"name": "InvalidPublicSuffix",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "NoOwnerRecordFound",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "offset",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "length",
+						"type": "uint256"
+					}
+				],
+				"name": "OffsetOutOfBoundsError",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "caller",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "PermissionDenied",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "PreconditionNotMet",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "StaleProof",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "dnsname",
+						"type": "bytes"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint32",
+						"name": "inception",
+						"type": "uint32"
+					}
+				],
+				"name": "Claim",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "suffixes",
+						"type": "address"
+					}
+				],
+				"name": "NewPublicSuffixList",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "domain",
+						"type": "bytes"
+					}
+				],
+				"name": "enableNode",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "ens",
+				"outputs": [
+					{
+						"internalType": "contract ENS",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "inceptions",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "oracle",
+				"outputs": [
+					{
+						"internalType": "contract DNSSEC",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "previousRegistrar",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"components": [
+							{
+								"internalType": "bytes",
+								"name": "rrset",
+								"type": "bytes"
+							},
+							{
+								"internalType": "bytes",
+								"name": "sig",
+								"type": "bytes"
+							}
+						],
+						"internalType": "struct DNSSEC.RRSetWithSignature[]",
+						"name": "input",
+						"type": "tuple[]"
+					}
+				],
+				"name": "proveAndClaim",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"components": [
+							{
+								"internalType": "bytes",
+								"name": "rrset",
+								"type": "bytes"
+							},
+							{
+								"internalType": "bytes",
+								"name": "sig",
+								"type": "bytes"
+							}
+						],
+						"internalType": "struct DNSSEC.RRSetWithSignature[]",
+						"name": "input",
+						"type": "tuple[]"
+					},
+					{
+						"internalType": "address",
+						"name": "resolver",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					}
+				],
+				"name": "proveAndClaimWithResolver",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "resolver",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "contract PublicSuffixList",
+						"name": "_suffixes",
+						"type": "address"
+					}
+				],
+				"name": "setPublicSuffixList",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "suffixes",
+				"outputs": [
+					{
+						"internalType": "contract PublicSuffixList",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceID",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "An ENS registrar that allows the owner of a DNS name to claim the      corresponding name in ENS.",
+			"kind": "dev",
+			"methods": {
+				"proveAndClaim(bytes,(bytes,bytes)[])": {
+					"details": "Submits proofs to the DNSSEC oracle, then claims a name using those proofs.",
+					"params": {
+						"input": "A chain of signed DNS RRSETs ending with a text record.",
+						"name": "The name to claim, in DNS wire format."
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/dnsregistrar/DNSRegistrar.sol": "DNSRegistrar"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@ensdomains/buffer/contracts/Buffer.sol": {
+			"keccak256": "0xd6dd3b0b327288f8e1b711a609f4040fea602e2ad4bba9febdf2f33b4e56eb0c",
+			"license": "BSD-2-Clause",
+			"urls": [
+				"bzz-raw://78a722152d40d778a97595e5224fac1d138f4e659dcb1a926148909ef4c4bdca",
+				"dweb:/ipfs/QmRxScF53x5ywsChLNpMUCdg2TSoCWTfo8G65Mo3sGY55b"
+			]
+		},
+		"@openzeppelin/contracts/access/Ownable.sol": {
+			"keccak256": "0x1cae4f85f114ff17b90414f5da67365b1d00337abb5bce9bf944eb78a2c0673c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d5ff16b336ce8f906478d5f2eecc6435e00833bdc0b92f6b209cf9e92cb5b2b7",
+				"dweb:/ipfs/QmRD1rAZEqQ73C33cdA3QoUyBDMEWnNKNMc6PNkAZWHeQQ"
+			]
+		},
+		"@openzeppelin/contracts/utils/Context.sol": {
+			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fc2bfdea0d2562c76fb3c4cf70a86c6ba25c5a30e8f8515c95aafdf8383f8395",
+				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
+			]
+		},
+		"@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+			"keccak256": "0x5718c5df9bd67ac68a796961df938821bb5dc0cd4c6118d77e9145afb187409b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d10e1d9b26042424789246603906ad06143bf9a928f4e99de8b5e3bdc662f549",
+				"dweb:/ipfs/Qmejonoaj5MLekPus229rJQHcC6E9dz2xorjHJR84fMfmn"
+			]
+		},
+		"@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://796ab6e88af7bf0e78def0f059310c903af6a312b565344e0ff524a0f26e81c6",
+				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
+			]
+		},
+		"package/contracts/dnsregistrar/DNSClaimChecker.sol": {
+			"keccak256": "0xe9b5096904052abc5bbf8b05acd9c5345c2e530ae1da410b8eacf1e769f7c81d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1b4d398926ebd425802cd2fc7d2a44e3505d34d6c74cd3bf7b7bbc3c86ccafe7",
+				"dweb:/ipfs/QmahV6oHSuoDPeBPw7PuN1pr5nQNzBpi11dtmQyYa3Chod"
+			]
+		},
+		"package/contracts/dnsregistrar/DNSRegistrar.sol": {
+			"keccak256": "0x6bf7b2e4f7c4cb3f0a5ffd72be0b46d86a9d5567b6b77c467bc2b6b4877125d2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://bfddaca7b1d60c4cc8796d0d77affadd0bc415099deb954dab9f57a06cfe71d8",
+				"dweb:/ipfs/QmXYXEGRTU72r3p4b1WwZGLQFCD3H8vkmBqmvP68RyhJ1T"
+			]
+		},
+		"package/contracts/dnsregistrar/IDNSRegistrar.sol": {
+			"keccak256": "0x0a2f9834e96444f137a5b3f505e633a238b1a0ee5aca21e08eff00ea4b990e01",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://919d232efb1dd6cbefc3485d0817342f4f9279474e289743ec53ca54b64a9677",
+				"dweb:/ipfs/Qmd7f4gbZ4vmmpttvePFAnR656E8VWVk7V8DtAJBLX3mWr"
+			]
+		},
+		"package/contracts/dnsregistrar/PublicSuffixList.sol": {
+			"keccak256": "0x4388ffe708c97762b7ef33a7f5f04b05be341e47fd3cafa76a024af5298e1493",
+			"urls": [
+				"bzz-raw://95410dedcee1e4ca1d428df18fb06d4759811c3246562386943d33bc138d3130",
+				"dweb:/ipfs/QmdmHFDCVFYKT2cuaqqvTGhKTHHV4YtTHczcMVUMHE8Muf"
+			]
+		},
+		"package/contracts/dnssec-oracle/DNSSEC.sol": {
+			"keccak256": "0xb3f95adc7de3f9043c0b83ad69baa273e388fa3f6c1638f26bed32b080950a0c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0edea6cccf9196623c04315191a5ce878db8a9fe9039f64bd7ba9ec7ba01fb9c",
+				"dweb:/ipfs/QmXAJQtMFeasYeprb9r3JpWS2FWopf2qhL4pyG6PQhvpgf"
+			]
+		},
+		"package/contracts/dnssec-oracle/RRUtils.sol": {
+			"keccak256": "0x25540b3e0f20bb98dc5aa8be284505ecb4b7e954c49d9ad9407e4de8ed17c13c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c3a8018454d4eba6cdb9442887bc1e64824d4737d9af8507a4ec5be9a4996d1c",
+				"dweb:/ipfs/QmcjSWkspKCdvV1WkPBVDfqnGHy3KoCRvARwUKhVEu11mK"
+			]
+		},
+		"package/contracts/registry/ENS.sol": {
+			"keccak256": "0xcc1d60392693813028a258e400d16dd9632261c8e26ca33061c9d8286edcfc43",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0bfe5a249c38c9e3605f31a2772029ea2796c1fba7d43974f14ec31a453535e4",
+				"dweb:/ipfs/Qmbi8ZdzVkmewoGtgtVD4T56vLceLEG265Vt3Zqcpy5Fwx"
+			]
+		},
+		"package/contracts/registry/ENSRegistry.sol": {
+			"keccak256": "0x68e491e6785925117d382e8e18e96985a833aa423361f178c6314af22f647c04",
+			"urls": [
+				"bzz-raw://11eb62dc7f683c2810d098ce20ccfe109c6e74829f8a17d67c7d484472b62823",
+				"dweb:/ipfs/QmWLyiY9D3TsxVaJGL4fSFftaooP4ftXM8DKjUKhA7VmM9"
+			]
+		},
+		"package/contracts/resolvers/ResolverBase.sol": {
+			"keccak256": "0xd658518ab7ba2f0dac8bb87b55f87546aebb9270dac00ca8d185a21e0cad84d6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://bd09d9eb153b95b9087ce336af2ac6010a83f1d355e400255011d95ffd14eb6a",
+				"dweb:/ipfs/QmPZwBi5RBbpNCcrjbpbasDF6kEX7PtybtTx29Kyaa9Dcv"
+			]
+		},
+		"package/contracts/resolvers/profiles/AddrResolver.sol": {
+			"keccak256": "0xc9234498bcd0ea2dd21dc662460e32018850dd4d9dc1e2319dea06ae79b6b7f1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://35f79de4e0af6245dd20c25d20e47f296a0f91fee2e25c0cf6a2b1a610722095",
+				"dweb:/ipfs/QmY5oCD3nFQ4UfNywiRnmzMwyqQxqZkJQM4ZTHeXNcsX6p"
+			]
+		},
+		"package/contracts/resolvers/profiles/IAddrResolver.sol": {
+			"keccak256": "0xbcd9810777380ca702291fc3e74690c492fc49f6fa0f78256fbc7a3e01315732",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7f17ed77c17f2d61815c50060a50ac5afe4b84761b04e961a6f085694f3011b2",
+				"dweb:/ipfs/QmcsxD4nwQSuWVMXUs6sU2rgBGcASWg8bhnNbJS8SP9SUr"
+			]
+		},
+		"package/contracts/resolvers/profiles/IAddressResolver.sol": {
+			"keccak256": "0xa6bc0f0833a1c4052674cd41d245c8c23908e0ccb090c9ef0adffb21907fdf54",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://dfa3dd50b7175f69b457744f2378949ee33ff5a1ed26d1368fa36337503edde4",
+				"dweb:/ipfs/QmSC2P6ZPETKDkUrEwVtP8b9awK1w68FRhQQRth5GbvoGn"
+			]
+		},
+		"package/contracts/resolvers/profiles/IVersionableResolver.sol": {
+			"keccak256": "0x13c536aaead9efa1c25afcdc6b096834e4a13902633b0577370932d1918a4d82",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ffc7ef55b8ea9cea5370db8b164c37db2bcc57ba6979f9241864c578f7805bc0",
+				"dweb:/ipfs/QmXSFaDsUHNskxqt6w9r76ZXc3gGtBGT1nGUCSu8TrHonR"
+			]
+		},
+		"package/contracts/root/Controllable.sol": {
+			"keccak256": "0xcee9f181ac8794a3f262e6225789aa044727a54759468c44616548287ef40f30",
+			"urls": [
+				"bzz-raw://ca9b8716544827b5c388983e8ba35ad8fc58861c5a5a1cba5e33fe1b9fb3cf09",
+				"dweb:/ipfs/QmS4Hd9bgHQMxLqAa1Sm5pN7f95o7PbUBNDYJW8TjHzW3d"
+			]
+		},
+		"package/contracts/root/Root.sol": {
+			"keccak256": "0x5f7da8ae51d39a9d3dd8f3b7b062856a805b6b7fadc85a20770baa689584fae1",
+			"urls": [
+				"bzz-raw://3853681d4ea8824f8b4904fc2cb99eae36e93ea4273221a8b6766a67466eb893",
+				"dweb:/ipfs/QmUJX9YeSgVbHvqjyKy2SN1SS8exD8hAy3jYuGMo6rpP1k"
+			]
+		},
+		"package/contracts/utils/BytesUtils.sol": {
+			"keccak256": "0xee3d14e0fba9c94d86fd9f21394aac1b78e0234ec879d8c522248f604e8f6a0f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://68d45fe829823e3a79b20db39050ca0bbb4c88574a330bcc801fde26fde9d2a3",
+				"dweb:/ipfs/QmPyj2Us1MDuL49wMCHfSaxNABL3Pb6b5XG8TWuhHyYqG8"
+			]
+		},
+		"package/contracts/utils/HexUtils.sol": {
+			"keccak256": "0xd98bed1354489479fad699ce4777a0b510da275e5cad21f3d324b2dd5507d31f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://867c6a943cb3fdd67c5537997af9cbea8b84b90fae58aca19b27e75cbfde32b4",
+				"dweb:/ipfs/QmT91qkSZu9mordzSpQJQ1YzbznktpsFVioWMDdVBNwJWz"
+			]
+		}
+	},
+	"version": 1
+}

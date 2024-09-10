@@ -1,0 +1,168 @@
+{
+	"compiler": {
+		"version": "0.8.20+commit.a1b79de6"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "suffix",
+						"type": "bytes"
+					}
+				],
+				"name": "SuffixAdded",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes[]",
+						"name": "names",
+						"type": "bytes[]"
+					}
+				],
+				"name": "addPublicSuffixes",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					}
+				],
+				"name": "isOwner",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					}
+				],
+				"name": "isPublicSuffix",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/dnsregistrar/SimplePublicSuffixList.sol": "SimplePublicSuffixList"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/dnsregistrar/PublicSuffixList.sol": {
+			"keccak256": "0x4388ffe708c97762b7ef33a7f5f04b05be341e47fd3cafa76a024af5298e1493",
+			"urls": [
+				"bzz-raw://95410dedcee1e4ca1d428df18fb06d4759811c3246562386943d33bc138d3130",
+				"dweb:/ipfs/QmdmHFDCVFYKT2cuaqqvTGhKTHHV4YtTHczcMVUMHE8Muf"
+			]
+		},
+		"package/contracts/dnsregistrar/SimplePublicSuffixList.sol": {
+			"keccak256": "0x17fba3eff055a2ccbff44e1f060e9bbc8a4466ced7fb7d13498b2ad4bc48ca2b",
+			"urls": [
+				"bzz-raw://1004c89b15ea833d2f41507faed84721fd3259f689e2d17868412a80bd164f6b",
+				"dweb:/ipfs/QmfWFYE2EnUtKzbZPZZgo1Apn5Ejs5SNqaEdcWZxajAgpT"
+			]
+		},
+		"package/contracts/root/Ownable.sol": {
+			"keccak256": "0x2685b4ccbe3a4d7da94179e7024682751d9a1106fb4b58ad31ebb106f5108bab",
+			"urls": [
+				"bzz-raw://6324cb3f57c7a48c663af831c8b16f992dcf9e9463d51d639c1933b4b084bf26",
+				"dweb:/ipfs/QmeFgjCerwvk2JmJyrcW6ZX8fYFg8ABQi1T23nuWiRd36e"
+			]
+		}
+	},
+	"version": 1
+}

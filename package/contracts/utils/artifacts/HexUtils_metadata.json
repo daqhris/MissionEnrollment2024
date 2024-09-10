@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/utils/HexUtils.sol": "HexUtils"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/utils/HexUtils.sol": {
+			"keccak256": "0xd98bed1354489479fad699ce4777a0b510da275e5cad21f3d324b2dd5507d31f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://867c6a943cb3fdd67c5537997af9cbea8b84b90fae58aca19b27e75cbfde32b4",
+				"dweb:/ipfs/QmT91qkSZu9mordzSpQJQ1YzbznktpsFVioWMDdVBNwJWz"
+			]
+		}
+	},
+	"version": 1
+}

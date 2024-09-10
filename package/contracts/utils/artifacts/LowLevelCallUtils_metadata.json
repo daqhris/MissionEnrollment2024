@@ -1,0 +1,53 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/utils/LowLevelCallUtils.sol": "LowLevelCallUtils"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/utils/Address.sol": {
+			"keccak256": "0x069b2631bb5b5193a58ccf7a06266c7361bd2c20095667af4402817605627f45",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6a4c96fafff76deda5697c3c5c98cade6e6e1b178254544c106bf360c079ce4e",
+				"dweb:/ipfs/QmXmxubE3jnatFgZuN8ay1VV6hZ8WRmhvUjNpeVjki15HX"
+			]
+		},
+		"package/contracts/utils/LowLevelCallUtils.sol": {
+			"keccak256": "0x77c18db57f3f483fcc0776ad4d376130bbbe606720b2ea1f9f6f64df27f0b5b9",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6df645df2e6b03b2cd4cd3f43b00a91196c3454ef37033f6182a2f53138af4fe",
+				"dweb:/ipfs/QmcqQrHRwzCURjqYT3byR5jcjsoF9JNYP5foPEma8G61Hk"
+			]
+		}
+	},
+	"version": 1
+}

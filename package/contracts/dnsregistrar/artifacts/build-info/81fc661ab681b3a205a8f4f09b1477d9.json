@@ -1,0 +1,1269 @@
+{
+	"id": "81fc661ab681b3a205a8f4f09b1477d9",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.20",
+	"solcLongVersion": "0.8.20+commit.a1b79de6",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"package/contracts/dnsregistrar/IDNSRegistrar.sol": {
+				"content": "//SPDX-License-Identifier: MIT\npragma solidity ^0.8.4;\n\nimport \"../dnssec-oracle/DNSSEC.sol\";\n\ninterface IDNSRegistrar {\n  function proveAndClaim(bytes memory name, DNSSEC.RRSetWithSignature[] memory input) external;\n\n  function proveAndClaimWithResolver(\n    bytes memory name,\n    DNSSEC.RRSetWithSignature[] memory input,\n    address resolver,\n    address addr\n  ) external;\n}\n"
+			},
+			"package/contracts/dnssec-oracle/DNSSEC.sol": {
+				"content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.4;\npragma experimental ABIEncoderV2;\n\nabstract contract DNSSEC {\n  bytes public anchors;\n\n  struct RRSetWithSignature {\n    bytes rrset;\n    bytes sig;\n  }\n\n  event AlgorithmUpdated(uint8 id, address addr);\n  event DigestUpdated(uint8 id, address addr);\n\n  function verifyRRSet(\n    RRSetWithSignature[] memory input\n  ) external view virtual returns (bytes memory rrs, uint32 inception);\n\n  function verifyRRSet(\n    RRSetWithSignature[] memory input,\n    uint256 now\n  ) public view virtual returns (bytes memory rrs, uint32 inception);\n}\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": [],
+			"evmVersion": "paris"
+		}
+	},
+	"output": {
+		"contracts": {
+			"package/contracts/dnsregistrar/IDNSRegistrar.sol": {
+				"IDNSRegistrar": {
+					"abi": [
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "name",
+									"type": "bytes"
+								},
+								{
+									"components": [
+										{
+											"internalType": "bytes",
+											"name": "rrset",
+											"type": "bytes"
+										},
+										{
+											"internalType": "bytes",
+											"name": "sig",
+											"type": "bytes"
+										}
+									],
+									"internalType": "struct DNSSEC.RRSetWithSignature[]",
+									"name": "input",
+									"type": "tuple[]"
+								}
+							],
+							"name": "proveAndClaim",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "name",
+									"type": "bytes"
+								},
+								{
+									"components": [
+										{
+											"internalType": "bytes",
+											"name": "rrset",
+											"type": "bytes"
+										},
+										{
+											"internalType": "bytes",
+											"name": "sig",
+											"type": "bytes"
+										}
+									],
+									"internalType": "struct DNSSEC.RRSetWithSignature[]",
+									"name": "input",
+									"type": "tuple[]"
+								},
+								{
+									"internalType": "address",
+									"name": "resolver",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "addr",
+									"type": "address"
+								}
+							],
+							"name": "proveAndClaimWithResolver",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"proveAndClaim(bytes,(bytes,bytes)[])": "29d56630",
+							"proveAndClaimWithResolver(bytes,(bytes,bytes)[],address,address)": "06963218"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"name\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"rrset\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"sig\",\"type\":\"bytes\"}],\"internalType\":\"struct DNSSEC.RRSetWithSignature[]\",\"name\":\"input\",\"type\":\"tuple[]\"}],\"name\":\"proveAndClaim\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"name\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"rrset\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"sig\",\"type\":\"bytes\"}],\"internalType\":\"struct DNSSEC.RRSetWithSignature[]\",\"name\":\"input\",\"type\":\"tuple[]\"},{\"internalType\":\"address\",\"name\":\"resolver\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"proveAndClaimWithResolver\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"package/contracts/dnsregistrar/IDNSRegistrar.sol\":\"IDNSRegistrar\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"package/contracts/dnsregistrar/IDNSRegistrar.sol\":{\"keccak256\":\"0x0a2f9834e96444f137a5b3f505e633a238b1a0ee5aca21e08eff00ea4b990e01\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://919d232efb1dd6cbefc3485d0817342f4f9279474e289743ec53ca54b64a9677\",\"dweb:/ipfs/Qmd7f4gbZ4vmmpttvePFAnR656E8VWVk7V8DtAJBLX3mWr\"]},\"package/contracts/dnssec-oracle/DNSSEC.sol\":{\"keccak256\":\"0xb3f95adc7de3f9043c0b83ad69baa273e388fa3f6c1638f26bed32b080950a0c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0edea6cccf9196623c04315191a5ce878db8a9fe9039f64bd7ba9ec7ba01fb9c\",\"dweb:/ipfs/QmXAJQtMFeasYeprb9r3JpWS2FWopf2qhL4pyG6PQhvpgf\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {},
+						"version": 1
+					}
+				}
+			},
+			"package/contracts/dnssec-oracle/DNSSEC.sol": {
+				"DNSSEC": {
+					"abi": [
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint8",
+									"name": "id",
+									"type": "uint8"
+								},
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "addr",
+									"type": "address"
+								}
+							],
+							"name": "AlgorithmUpdated",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint8",
+									"name": "id",
+									"type": "uint8"
+								},
+								{
+									"indexed": false,
+									"internalType": "address",
+									"name": "addr",
+									"type": "address"
+								}
+							],
+							"name": "DigestUpdated",
+							"type": "event"
+						},
+						{
+							"inputs": [],
+							"name": "anchors",
+							"outputs": [
+								{
+									"internalType": "bytes",
+									"name": "",
+									"type": "bytes"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"components": [
+										{
+											"internalType": "bytes",
+											"name": "rrset",
+											"type": "bytes"
+										},
+										{
+											"internalType": "bytes",
+											"name": "sig",
+											"type": "bytes"
+										}
+									],
+									"internalType": "struct DNSSEC.RRSetWithSignature[]",
+									"name": "input",
+									"type": "tuple[]"
+								},
+								{
+									"internalType": "uint256",
+									"name": "now",
+									"type": "uint256"
+								}
+							],
+							"name": "verifyRRSet",
+							"outputs": [
+								{
+									"internalType": "bytes",
+									"name": "rrs",
+									"type": "bytes"
+								},
+								{
+									"internalType": "uint32",
+									"name": "inception",
+									"type": "uint32"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"components": [
+										{
+											"internalType": "bytes",
+											"name": "rrset",
+											"type": "bytes"
+										},
+										{
+											"internalType": "bytes",
+											"name": "sig",
+											"type": "bytes"
+										}
+									],
+									"internalType": "struct DNSSEC.RRSetWithSignature[]",
+									"name": "input",
+									"type": "tuple[]"
+								}
+							],
+							"name": "verifyRRSet",
+							"outputs": [
+								{
+									"internalType": "bytes",
+									"name": "rrs",
+									"type": "bytes"
+								},
+								{
+									"internalType": "uint32",
+									"name": "inception",
+									"type": "uint32"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"anchors()": "98d35f20",
+							"verifyRRSet((bytes,bytes)[])": "bdf95fef",
+							"verifyRRSet((bytes,bytes)[],uint256)": "440f3d42"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"id\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AlgorithmUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"id\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"DigestUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"anchors\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"rrset\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"sig\",\"type\":\"bytes\"}],\"internalType\":\"struct DNSSEC.RRSetWithSignature[]\",\"name\":\"input\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256\",\"name\":\"now\",\"type\":\"uint256\"}],\"name\":\"verifyRRSet\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"rrs\",\"type\":\"bytes\"},{\"internalType\":\"uint32\",\"name\":\"inception\",\"type\":\"uint32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"rrset\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"sig\",\"type\":\"bytes\"}],\"internalType\":\"struct DNSSEC.RRSetWithSignature[]\",\"name\":\"input\",\"type\":\"tuple[]\"}],\"name\":\"verifyRRSet\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"rrs\",\"type\":\"bytes\"},{\"internalType\":\"uint32\",\"name\":\"inception\",\"type\":\"uint32\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"package/contracts/dnssec-oracle/DNSSEC.sol\":\"DNSSEC\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"package/contracts/dnssec-oracle/DNSSEC.sol\":{\"keccak256\":\"0xb3f95adc7de3f9043c0b83ad69baa273e388fa3f6c1638f26bed32b080950a0c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0edea6cccf9196623c04315191a5ce878db8a9fe9039f64bd7ba9ec7ba01fb9c\",\"dweb:/ipfs/QmXAJQtMFeasYeprb9r3JpWS2FWopf2qhL4pyG6PQhvpgf\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [
+							{
+								"astId": 30,
+								"contract": "package/contracts/dnssec-oracle/DNSSEC.sol:DNSSEC",
+								"label": "anchors",
+								"offset": 0,
+								"slot": "0",
+								"type": "t_bytes_storage"
+							}
+						],
+						"types": {
+							"t_bytes_storage": {
+								"encoding": "bytes",
+								"label": "bytes",
+								"numberOfBytes": "32"
+							}
+						}
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {},
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"package/contracts/dnsregistrar/IDNSRegistrar.sol": {
+				"ast": {
+					"absolutePath": "package/contracts/dnsregistrar/IDNSRegistrar.sol",
+					"exportedSymbols": {
+						"DNSSEC": [
+							72
+						],
+						"IDNSRegistrar": [
+							25
+						]
+					},
+					"id": 26,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".4"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "31:23:0"
+						},
+						{
+							"absolutePath": "package/contracts/dnssec-oracle/DNSSEC.sol",
+							"file": "../dnssec-oracle/DNSSEC.sol",
+							"id": 2,
+							"nameLocation": "-1:-1:-1",
+							"nodeType": "ImportDirective",
+							"scope": 26,
+							"sourceUnit": 73,
+							"src": "56:37:0",
+							"symbolAliases": [],
+							"unitAlias": ""
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "IDNSRegistrar",
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"fullyImplemented": false,
+							"id": 25,
+							"linearizedBaseContracts": [
+								25
+							],
+							"name": "IDNSRegistrar",
+							"nameLocation": "105:13:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"functionSelector": "29d56630",
+									"id": 11,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "proveAndClaim",
+									"nameLocation": "132:13:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 9,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 4,
+												"mutability": "mutable",
+												"name": "name",
+												"nameLocation": "159:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 11,
+												"src": "146:17:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 3,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "146:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 8,
+												"mutability": "mutable",
+												"name": "input",
+												"nameLocation": "200:5:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 11,
+												"src": "165:40:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_array$_t_struct$_RRSetWithSignature_$35_memory_ptr_$dyn_memory_ptr",
+													"typeString": "struct DNSSEC.RRSetWithSignature[]"
+												},
+												"typeName": {
+													"baseType": {
+														"id": 6,
+														"nodeType": "UserDefinedTypeName",
+														"pathNode": {
+															"id": 5,
+															"name": "DNSSEC.RRSetWithSignature",
+															"nameLocations": [
+																"165:6:0",
+																"172:18:0"
+															],
+															"nodeType": "IdentifierPath",
+															"referencedDeclaration": 35,
+															"src": "165:25:0"
+														},
+														"referencedDeclaration": 35,
+														"src": "165:25:0",
+														"typeDescriptions": {
+															"typeIdentifier": "t_struct$_RRSetWithSignature_$35_storage_ptr",
+															"typeString": "struct DNSSEC.RRSetWithSignature"
+														}
+													},
+													"id": 7,
+													"nodeType": "ArrayTypeName",
+													"src": "165:27:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_array$_t_struct$_RRSetWithSignature_$35_storage_$dyn_storage_ptr",
+														"typeString": "struct DNSSEC.RRSetWithSignature[]"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "145:61:0"
+									},
+									"returnParameters": {
+										"id": 10,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "215:0:0"
+									},
+									"scope": 25,
+									"src": "123:93:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "06963218",
+									"id": 24,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "proveAndClaimWithResolver",
+									"nameLocation": "229:25:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 22,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 13,
+												"mutability": "mutable",
+												"name": "name",
+												"nameLocation": "273:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 24,
+												"src": "260:17:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 12,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "260:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 17,
+												"mutability": "mutable",
+												"name": "input",
+												"nameLocation": "318:5:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 24,
+												"src": "283:40:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_array$_t_struct$_RRSetWithSignature_$35_memory_ptr_$dyn_memory_ptr",
+													"typeString": "struct DNSSEC.RRSetWithSignature[]"
+												},
+												"typeName": {
+													"baseType": {
+														"id": 15,
+														"nodeType": "UserDefinedTypeName",
+														"pathNode": {
+															"id": 14,
+															"name": "DNSSEC.RRSetWithSignature",
+															"nameLocations": [
+																"283:6:0",
+																"290:18:0"
+															],
+															"nodeType": "IdentifierPath",
+															"referencedDeclaration": 35,
+															"src": "283:25:0"
+														},
+														"referencedDeclaration": 35,
+														"src": "283:25:0",
+														"typeDescriptions": {
+															"typeIdentifier": "t_struct$_RRSetWithSignature_$35_storage_ptr",
+															"typeString": "struct DNSSEC.RRSetWithSignature"
+														}
+													},
+													"id": 16,
+													"nodeType": "ArrayTypeName",
+													"src": "283:27:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_array$_t_struct$_RRSetWithSignature_$35_storage_$dyn_storage_ptr",
+														"typeString": "struct DNSSEC.RRSetWithSignature[]"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 19,
+												"mutability": "mutable",
+												"name": "resolver",
+												"nameLocation": "337:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 24,
+												"src": "329:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 18,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "329:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 21,
+												"mutability": "mutable",
+												"name": "addr",
+												"nameLocation": "359:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 24,
+												"src": "351:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 20,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "351:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "254:113:0"
+									},
+									"returnParameters": {
+										"id": 23,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "376:0:0"
+									},
+									"scope": 25,
+									"src": "220:157:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 26,
+							"src": "95:284:0",
+							"usedErrors": [],
+							"usedEvents": []
+						}
+					],
+					"src": "31:349:0"
+				},
+				"id": 0
+			},
+			"package/contracts/dnssec-oracle/DNSSEC.sol": {
+				"ast": {
+					"absolutePath": "package/contracts/dnssec-oracle/DNSSEC.sol",
+					"exportedSymbols": {
+						"DNSSEC": [
+							72
+						]
+					},
+					"id": 73,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 27,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".4"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "32:23:1"
+						},
+						{
+							"id": 28,
+							"literals": [
+								"experimental",
+								"ABIEncoderV2"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "56:33:1"
+						},
+						{
+							"abstract": true,
+							"baseContracts": [],
+							"canonicalName": "DNSSEC",
+							"contractDependencies": [],
+							"contractKind": "contract",
+							"fullyImplemented": false,
+							"id": 72,
+							"linearizedBaseContracts": [
+								72
+							],
+							"name": "DNSSEC",
+							"nameLocation": "109:6:1",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"constant": false,
+									"functionSelector": "98d35f20",
+									"id": 30,
+									"mutability": "mutable",
+									"name": "anchors",
+									"nameLocation": "133:7:1",
+									"nodeType": "VariableDeclaration",
+									"scope": 72,
+									"src": "120:20:1",
+									"stateVariable": true,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_bytes_storage",
+										"typeString": "bytes"
+									},
+									"typeName": {
+										"id": 29,
+										"name": "bytes",
+										"nodeType": "ElementaryTypeName",
+										"src": "120:5:1",
+										"typeDescriptions": {
+											"typeIdentifier": "t_bytes_storage_ptr",
+											"typeString": "bytes"
+										}
+									},
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "DNSSEC.RRSetWithSignature",
+									"id": 35,
+									"members": [
+										{
+											"constant": false,
+											"id": 32,
+											"mutability": "mutable",
+											"name": "rrset",
+											"nameLocation": "183:5:1",
+											"nodeType": "VariableDeclaration",
+											"scope": 35,
+											"src": "177:11:1",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes_storage_ptr",
+												"typeString": "bytes"
+											},
+											"typeName": {
+												"id": 31,
+												"name": "bytes",
+												"nodeType": "ElementaryTypeName",
+												"src": "177:5:1",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_storage_ptr",
+													"typeString": "bytes"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 34,
+											"mutability": "mutable",
+											"name": "sig",
+											"nameLocation": "200:3:1",
+											"nodeType": "VariableDeclaration",
+											"scope": 35,
+											"src": "194:9:1",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes_storage_ptr",
+												"typeString": "bytes"
+											},
+											"typeName": {
+												"id": 33,
+												"name": "bytes",
+												"nodeType": "ElementaryTypeName",
+												"src": "194:5:1",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_storage_ptr",
+													"typeString": "bytes"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "RRSetWithSignature",
+									"nameLocation": "152:18:1",
+									"nodeType": "StructDefinition",
+									"scope": 72,
+									"src": "145:63:1",
+									"visibility": "public"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "f73c3c226af96b7f1ba666a21b3ceaf2be3ee6a365e3178fd9cd1eaae0075aa8",
+									"id": 41,
+									"name": "AlgorithmUpdated",
+									"nameLocation": "218:16:1",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 40,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 37,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "id",
+												"nameLocation": "241:2:1",
+												"nodeType": "VariableDeclaration",
+												"scope": 41,
+												"src": "235:8:1",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												},
+												"typeName": {
+													"id": 36,
+													"name": "uint8",
+													"nodeType": "ElementaryTypeName",
+													"src": "235:5:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint8",
+														"typeString": "uint8"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 39,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "addr",
+												"nameLocation": "253:4:1",
+												"nodeType": "VariableDeclaration",
+												"scope": 41,
+												"src": "245:12:1",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 38,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "245:7:1",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "234:24:1"
+									},
+									"src": "212:47:1"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "2fcc274c3b72dd483ab201bfa87295e3817e8b9b10693219873b722ca1af00c7",
+									"id": 47,
+									"name": "DigestUpdated",
+									"nameLocation": "268:13:1",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 46,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 43,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "id",
+												"nameLocation": "288:2:1",
+												"nodeType": "VariableDeclaration",
+												"scope": 47,
+												"src": "282:8:1",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint8",
+													"typeString": "uint8"
+												},
+												"typeName": {
+													"id": 42,
+													"name": "uint8",
+													"nodeType": "ElementaryTypeName",
+													"src": "282:5:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint8",
+														"typeString": "uint8"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 45,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "addr",
+												"nameLocation": "300:4:1",
+												"nodeType": "VariableDeclaration",
+												"scope": 47,
+												"src": "292:12:1",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 44,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "292:7:1",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "281:24:1"
+									},
+									"src": "262:44:1"
+								},
+								{
+									"functionSelector": "bdf95fef",
+									"id": 58,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "verifyRRSet",
+									"nameLocation": "319:11:1",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 52,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 51,
+												"mutability": "mutable",
+												"name": "input",
+												"nameLocation": "364:5:1",
+												"nodeType": "VariableDeclaration",
+												"scope": 58,
+												"src": "336:33:1",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_array$_t_struct$_RRSetWithSignature_$35_memory_ptr_$dyn_memory_ptr",
+													"typeString": "struct DNSSEC.RRSetWithSignature[]"
+												},
+												"typeName": {
+													"baseType": {
+														"id": 49,
+														"nodeType": "UserDefinedTypeName",
+														"pathNode": {
+															"id": 48,
+															"name": "RRSetWithSignature",
+															"nameLocations": [
+																"336:18:1"
+															],
+															"nodeType": "IdentifierPath",
+															"referencedDeclaration": 35,
+															"src": "336:18:1"
+														},
+														"referencedDeclaration": 35,
+														"src": "336:18:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_struct$_RRSetWithSignature_$35_storage_ptr",
+															"typeString": "struct DNSSEC.RRSetWithSignature"
+														}
+													},
+													"id": 50,
+													"nodeType": "ArrayTypeName",
+													"src": "336:20:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_array$_t_struct$_RRSetWithSignature_$35_storage_$dyn_storage_ptr",
+														"typeString": "struct DNSSEC.RRSetWithSignature[]"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "330:43:1"
+									},
+									"returnParameters": {
+										"id": 57,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 54,
+												"mutability": "mutable",
+												"name": "rrs",
+												"nameLocation": "418:3:1",
+												"nodeType": "VariableDeclaration",
+												"scope": 58,
+												"src": "405:16:1",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 53,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "405:5:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 56,
+												"mutability": "mutable",
+												"name": "inception",
+												"nameLocation": "430:9:1",
+												"nodeType": "VariableDeclaration",
+												"scope": 58,
+												"src": "423:16:1",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												},
+												"typeName": {
+													"id": 55,
+													"name": "uint32",
+													"nodeType": "ElementaryTypeName",
+													"src": "423:6:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint32",
+														"typeString": "uint32"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "404:36:1"
+									},
+									"scope": 72,
+									"src": "310:131:1",
+									"stateMutability": "view",
+									"virtual": true,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "440f3d42",
+									"id": 71,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "verifyRRSet",
+									"nameLocation": "454:11:1",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 65,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 62,
+												"mutability": "mutable",
+												"name": "input",
+												"nameLocation": "499:5:1",
+												"nodeType": "VariableDeclaration",
+												"scope": 71,
+												"src": "471:33:1",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_array$_t_struct$_RRSetWithSignature_$35_memory_ptr_$dyn_memory_ptr",
+													"typeString": "struct DNSSEC.RRSetWithSignature[]"
+												},
+												"typeName": {
+													"baseType": {
+														"id": 60,
+														"nodeType": "UserDefinedTypeName",
+														"pathNode": {
+															"id": 59,
+															"name": "RRSetWithSignature",
+															"nameLocations": [
+																"471:18:1"
+															],
+															"nodeType": "IdentifierPath",
+															"referencedDeclaration": 35,
+															"src": "471:18:1"
+														},
+														"referencedDeclaration": 35,
+														"src": "471:18:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_struct$_RRSetWithSignature_$35_storage_ptr",
+															"typeString": "struct DNSSEC.RRSetWithSignature"
+														}
+													},
+													"id": 61,
+													"nodeType": "ArrayTypeName",
+													"src": "471:20:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_array$_t_struct$_RRSetWithSignature_$35_storage_$dyn_storage_ptr",
+														"typeString": "struct DNSSEC.RRSetWithSignature[]"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 64,
+												"mutability": "mutable",
+												"name": "now",
+												"nameLocation": "518:3:1",
+												"nodeType": "VariableDeclaration",
+												"scope": 71,
+												"src": "510:11:1",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 63,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "510:7:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "465:60:1"
+									},
+									"returnParameters": {
+										"id": 70,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 67,
+												"mutability": "mutable",
+												"name": "rrs",
+												"nameLocation": "568:3:1",
+												"nodeType": "VariableDeclaration",
+												"scope": 71,
+												"src": "555:16:1",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 66,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "555:5:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 69,
+												"mutability": "mutable",
+												"name": "inception",
+												"nameLocation": "580:9:1",
+												"nodeType": "VariableDeclaration",
+												"scope": 71,
+												"src": "573:16:1",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint32",
+													"typeString": "uint32"
+												},
+												"typeName": {
+													"id": 68,
+													"name": "uint32",
+													"nodeType": "ElementaryTypeName",
+													"src": "573:6:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint32",
+														"typeString": "uint32"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "554:36:1"
+									},
+									"scope": 72,
+									"src": "445:146:1",
+									"stateMutability": "view",
+									"virtual": true,
+									"visibility": "public"
+								}
+							],
+							"scope": 73,
+							"src": "91:502:1",
+							"usedErrors": [],
+							"usedEvents": [
+								41,
+								47
+							]
+						}
+					],
+					"src": "32:562:1"
+				},
+				"id": 1
+			}
+		}
+	}
+}
