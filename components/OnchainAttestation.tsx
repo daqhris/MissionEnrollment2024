@@ -18,7 +18,10 @@ interface Poap {
 // This component uses the Ethereum Attestation Service (EAS) protocol
 // to create attestations on both Base and Optimism rollups
 
-const EAS_CONTRACT_ADDRESS: `0x${string}` = "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"; // Sepolia testnet
+const EAS_CONTRACT_ADDRESS: Record<string, `0x${string}`> = {
+  base: "0xC2679fBD37d54388Ce493F1DB75320D236e1815e",
+  optimism: "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"
+};
 const SCHEMA_UID: `0x${string}` = "0x40e5abe23a3378a9a43b7e874c5cb8dfd4d6b0823501d317acee41e08d3af4dd"; // Actual schema UID for mission enrollment
 const ATTESTER_ADDRESS: `0x${string}` = "0xF0bC5CC2B4866dAAeCb069430c60b24520077037"; // Actual address of daqhris.eth
 const ATTESTER_NAME = "mission-enrollment.daqhris.eth";
@@ -52,14 +55,15 @@ const OnchainAttestation: React.FC<OnchainAttestationProps> = ({
 const initializeEAS = async (
   walletClient: WalletClient,
   setEAS: React.Dispatch<React.SetStateAction<EAS | null>>,
-  setAttestationStatus: React.Dispatch<React.SetStateAction<string | null>>
+  setAttestationStatus: React.Dispatch<React.SetStateAction<string | null>>,
+  selectedRollup: "base" | "optimism"
 ): Promise<void> => {
   if (!walletClient) {
     setAttestationStatus('Wallet client not available. Please connect your wallet.');
     return;
   }
   try {
-    const easInstance = new EAS(EAS_CONTRACT_ADDRESS);
+    const easInstance = new EAS(EAS_CONTRACT_ADDRESS[selectedRollup] as `0x${string}`);
 
     if (!('signTypedData' in walletClient)) {
       throw new Error("Wallet client does not support signing typed data");
@@ -75,7 +79,7 @@ const initializeEAS = async (
     await easInstance.connect(signer);
 
     setEAS(easInstance);
-    setAttestationStatus('EAS initialized successfully');
+    setAttestationStatus(`EAS initialized successfully for ${selectedRollup}`);
   } catch (error: unknown) {
     console.error('Error initializing EAS:', error);
     setAttestationStatus(
@@ -89,9 +93,9 @@ const initializeEAS = async (
 
 useEffect(() => {
   if (walletClient) {
-    void initializeEAS(walletClient, setEAS, setAttestationStatus);
+    void initializeEAS(walletClient, setEAS, setAttestationStatus, selectedRollup);
   }
-}, [walletClient]);
+}, [walletClient, selectedRollup]);
 
   const handleAttestation = async (): Promise<void> => {
     if (!address || !walletClient || !publicClient || !eas) {
