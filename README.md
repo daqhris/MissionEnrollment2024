@@ -131,8 +131,13 @@ The app builder participated in this global hackathon when it was held for the f
 
 The AttestationService contract has been deployed on the following networks:
 
-### Optimism Sepolia and Base Sepolia
-- Contract Address: 0x4255840565231A11Dd6c6BE1FbD279A1F7826E78
+### Base Sepolia
+- Proxy Address: 0x9f040BD10a6D6e70772ea3Ab055FFfc8E5Af6deF
+- Implementation Address: 0x23E6C11A0cd7322498c0eC85cfCCaeeD3F3E7843
+
+### Optimism Sepolia
+- Proxy Address: 0x2909d5554944ba93d75F418429249C6105CbeBff
+- Implementation Address: 0x23E6C11A0cd7322498c0eC85cfCCaeeD3F3E7843
 
 Both deployments use the following addresses:
 - EAS Contract Address: 0xC2679fBD37d54388Ce493F1DB75320D236e1815e

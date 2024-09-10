@@ -7,6 +7,7 @@ require("@nomiclabs/hardhat-waffle");
 require("hardhat-deploy");
 require("hardhat-gas-reporter");
 require("@nomicfoundation/hardhat-verify");
+require("@openzeppelin/hardhat-upgrades");
 
 // Add console log to check environment variable values
 console.log('ALCHEMY_API_KEY:', process.env.ALCHEMY_API_KEY);
