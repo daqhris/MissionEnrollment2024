@@ -3,16 +3,16 @@ pragma solidity ^0.8.20;
 
 import "@ethereum-attestation-service/eas-contracts/contracts/IEAS.sol";
 import "@ethereum-attestation-service/eas-contracts/contracts/ISchemaRegistry.sol";
-import "@ethereum-attestation-service/eas-contracts/contracts/resolver/ISchemaResolver.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
 import {Attestation} from "@ethereum-attestation-service/eas-contracts/contracts/Common.sol";
+import "./utils/AttestationUtils.sol";
 
 contract AttestationService is Initializable, AccessControlUpgradeable, UUPSUpgradeable {
     IEAS private eas;
     ISchemaRegistry private schemaRegistry;
+    AttestationUtils.EAS private easStruct;
 
     bytes32 private _missionEnrollmentSchema;
     bytes32 public constant ATTESTATION_CREATOR_ROLE = keccak256("ATTESTATION_CREATOR_ROLE");
@@ -41,10 +41,9 @@ contract AttestationService is Initializable, AccessControlUpgradeable, UUPSUpgr
 
     function createMissionEnrollmentSchema() external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(_missionEnrollmentSchema == bytes32(0), "Schema already created");
-        string memory schema = "address userAddress,uint256 tokenId,uint256 timestamp,address attester";
-        bytes32 schemaId = schemaRegistry.register(schema, ISchemaResolver(address(0)), true);
-        _missionEnrollmentSchema = schemaId;
-        emit SchemaCreated(schemaId);
+        AttestationUtils.EAS memory easInstance = AttestationUtils.EAS(eas, schemaRegistry);
+        _missionEnrollmentSchema = AttestationUtils.createMissionEnrollmentSchema(easInstance);
+        emit SchemaCreated(_missionEnrollmentSchema);
     }
 
     function createMissionEnrollmentAttestation(address recipient, uint256 tokenId) external returns (bytes32) {
@@ -53,21 +52,20 @@ contract AttestationService is Initializable, AccessControlUpgradeable, UUPSUpgr
         require(recipient != address(0), "Invalid recipient");
         require(tokenId != 0, "Invalid token ID");
 
-        bytes memory data = abi.encode(recipient, tokenId, block.timestamp, msg.sender);
-
-        AttestationRequest memory request = AttestationRequest({
-            schema: _missionEnrollmentSchema,
-            data: AttestationRequestData({
-                recipient: recipient,
-                expirationTime: 0,
-                revocable: true,
-                refUID: bytes32(0),
-                data: data,
-                value: 0
-            })
+        AttestationUtils.EAS memory easInstance = AttestationUtils.EAS({
+            eas: eas,
+            schemaRegistry: schemaRegistry
         });
 
-        bytes32 attestationId = eas.attest(request);
+        bytes memory data = abi.encode(recipient, tokenId, block.timestamp, msg.sender);
+        bytes32 attestationId = AttestationUtils.submitAttestation(
+            easInstance,
+            _missionEnrollmentSchema,
+            recipient,
+            tokenId,
+            data
+        );
+
         emit AttestationCreated(attestationId, recipient, msg.sender);
         return attestationId;
     }
