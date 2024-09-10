@@ -33,10 +33,11 @@
 	},
 	"sources": {
 		"package/contracts/utils/StringUtils.sol": {
-			"keccak256": "0x795edefd24bdab51805e87227c0f35084ff6e728ecd78770d6f9f67a2207ad3a",
+			"keccak256": "0xb7db8deb73a77d9b8f1bc9079c99129e79ea366492c1859feadae46616f5734a",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://3e38b3ed5fb9130dd13deaab4388a5cacc33338889ea5a3cf5c5ce38d9dc0950",
-				"dweb:/ipfs/QmSzZ2WyLvEnnsYuGnnRrz2VR3LkYmFfWrJDQdgmbp4qpZ"
+				"bzz-raw://a0cdbff2f03c07e2ef2a5919d2379cf2dfb50eeb3d2c2159b634991bf900a4d0",
+				"dweb:/ipfs/QmZ6c2HE1fPWoRSBWBvMCu78bqRgmMkoVKCYupufkTuAUA"
 			]
 		}
 	},
