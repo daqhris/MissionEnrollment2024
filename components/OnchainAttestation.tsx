@@ -22,10 +22,6 @@ const EAS_CONTRACT_ADDRESS: Record<string, `0x${string}`> = {
   base: "0xC2679fBD37d54388Ce493F1DB75320D236e1815e",
   optimism: "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"
 };
-const ATTESTATION_SERVICE_ADDRESS: Record<string, `0x${string}`> = {
-  base: "0x9f040BD10a6D6e70772ea3Ab055FFfc8E5Af6deF",
-  optimism: "0x2909d5554944ba93d75F418429249C6105CbeBff"
-};
 const SCHEMA_UID: `0x${string}` = "0x40e5abe23a3378a9a43b7e874c5cb8dfd4d6b0823501d317acee41e08d3af4dd"; // Actual schema UID for mission enrollment
 const ATTESTER_ADDRESS: `0x${string}` = "0xF0bC5CC2B4866dAAeCb069430c60b24520077037"; // Actual address of daqhris.eth
 const ATTESTER_NAME = "mission-enrollment.daqhris.eth";
