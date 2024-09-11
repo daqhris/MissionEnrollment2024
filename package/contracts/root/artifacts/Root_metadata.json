@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.20+commit.a1b79de6"
+		"version": "0.8.27+commit.40a35a09"
 	},
 	"language": "Solidity",
 	"output": {
@@ -295,17 +295,19 @@
 			]
 		},
 		"package/contracts/root/Controllable.sol": {
-			"keccak256": "0xcee9f181ac8794a3f262e6225789aa044727a54759468c44616548287ef40f30",
+			"keccak256": "0x8d264e1f321c9c7566ddaf2f7aa09ea705f12776130ba1ea09804cbc52c6ee6a",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://ca9b8716544827b5c388983e8ba35ad8fc58861c5a5a1cba5e33fe1b9fb3cf09",
-				"dweb:/ipfs/QmS4Hd9bgHQMxLqAa1Sm5pN7f95o7PbUBNDYJW8TjHzW3d"
+				"bzz-raw://2f00adb8e9e25d502965ee4ea98271a1a1bcd03df2e426c7e3a73a0b41b15937",
+				"dweb:/ipfs/QmZ4uFKpjdKMfhiT6Dh731LEqP7ygTCEr1yvTQjJJuALTj"
 			]
 		},
 		"package/contracts/root/Root.sol": {
-			"keccak256": "0x5f7da8ae51d39a9d3dd8f3b7b062856a805b6b7fadc85a20770baa689584fae1",
+			"keccak256": "0xec4241b2d5d72e01ef1683bab036adb8e20407f954e0a59d150499e99d72420b",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://3853681d4ea8824f8b4904fc2cb99eae36e93ea4273221a8b6766a67466eb893",
-				"dweb:/ipfs/QmUJX9YeSgVbHvqjyKy2SN1SS8exD8hAy3jYuGMo6rpP1k"
+				"bzz-raw://8cc62783f63020ceda872d0824a55b27d9ff2f512c783083e34b3827144bb1b5",
+				"dweb:/ipfs/QmTp3scdYTEY8nemJkvW2MoCCadBgSsHcA4tXXDtkGrBGL"
 			]
 		}
 	},

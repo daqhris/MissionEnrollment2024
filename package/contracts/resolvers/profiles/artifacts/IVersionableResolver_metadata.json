@@ -1,0 +1,84 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint64",
+						"name": "newVersion",
+						"type": "uint64"
+					}
+				],
+				"name": "VersionChanged",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "recordVersions",
+				"outputs": [
+					{
+						"internalType": "uint64",
+						"name": "",
+						"type": "uint64"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/resolvers/profiles/IVersionableResolver.sol": "IVersionableResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/resolvers/profiles/IVersionableResolver.sol": {
+			"keccak256": "0x13c536aaead9efa1c25afcdc6b096834e4a13902633b0577370932d1918a4d82",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ffc7ef55b8ea9cea5370db8b164c37db2bcc57ba6979f9241864c578f7805bc0",
+				"dweb:/ipfs/QmXSFaDsUHNskxqt6w9r76ZXc3gGtBGT1nGUCSu8TrHonR"
+			]
+		}
+	},
+	"version": 1
+}

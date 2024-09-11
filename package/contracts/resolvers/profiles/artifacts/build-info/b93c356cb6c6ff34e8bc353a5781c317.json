@@ -1,0 +1,309 @@
+{
+	"id": "b93c356cb6c6ff34e8bc353a5781c317",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.27",
+	"solcLongVersion": "0.8.27+commit.40a35a09",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"package/contracts/resolvers/profiles/IExtendedDNSResolver.sol": {
+				"content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.4;\n\ninterface IExtendedDNSResolver {\n  function resolve(bytes memory name, bytes memory data, bytes memory context) external view returns (bytes memory);\n}\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": [],
+			"evmVersion": "paris"
+		}
+	},
+	"output": {
+		"contracts": {
+			"package/contracts/resolvers/profiles/IExtendedDNSResolver.sol": {
+				"IExtendedDNSResolver": {
+					"abi": [
+						{
+							"inputs": [
+								{
+									"internalType": "bytes",
+									"name": "name",
+									"type": "bytes"
+								},
+								{
+									"internalType": "bytes",
+									"name": "data",
+									"type": "bytes"
+								},
+								{
+									"internalType": "bytes",
+									"name": "context",
+									"type": "bytes"
+								}
+							],
+							"name": "resolve",
+							"outputs": [
+								{
+									"internalType": "bytes",
+									"name": "",
+									"type": "bytes"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"resolve(bytes,bytes,bytes)": "8ef98a7e"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.27+commit.40a35a09\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"name\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"context\",\"type\":\"bytes\"}],\"name\":\"resolve\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"package/contracts/resolvers/profiles/IExtendedDNSResolver.sol\":\"IExtendedDNSResolver\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"package/contracts/resolvers/profiles/IExtendedDNSResolver.sol\":{\"keccak256\":\"0xe5e7fb2c041777695383e21108c860cf131c21dfdc3d301aed696ac6ff1819b3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e518fb7f76b7aee5a350c94c1624ea94c4a1ec71aa78d0c3c81654bfd00ffd1b\",\"dweb:/ipfs/QmYABANCNukxP5jhwVyo3e4jGVZRTZYjLTyQF7BALonhWz\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {},
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"package/contracts/resolvers/profiles/IExtendedDNSResolver.sol": {
+				"ast": {
+					"absolutePath": "package/contracts/resolvers/profiles/IExtendedDNSResolver.sol",
+					"exportedSymbols": {
+						"IExtendedDNSResolver": [
+							13
+						]
+					},
+					"id": 14,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".4"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "32:23:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "IExtendedDNSResolver",
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"fullyImplemented": false,
+							"id": 13,
+							"linearizedBaseContracts": [
+								13
+							],
+							"name": "IExtendedDNSResolver",
+							"nameLocation": "67:20:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"functionSelector": "8ef98a7e",
+									"id": 12,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "resolve",
+									"nameLocation": "101:7:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 8,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 3,
+												"mutability": "mutable",
+												"name": "name",
+												"nameLocation": "122:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 12,
+												"src": "109:17:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 2,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "109:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 5,
+												"mutability": "mutable",
+												"name": "data",
+												"nameLocation": "141:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 12,
+												"src": "128:17:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 4,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "128:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 7,
+												"mutability": "mutable",
+												"name": "context",
+												"nameLocation": "160:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 12,
+												"src": "147:20:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 6,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "147:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "108:60:0"
+									},
+									"returnParameters": {
+										"id": 11,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 10,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 12,
+												"src": "192:12:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 9,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "192:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "191:14:0"
+									},
+									"scope": 13,
+									"src": "92:114:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 14,
+							"src": "57:151:0",
+							"usedErrors": [],
+							"usedEvents": []
+						}
+					],
+					"src": "32:177:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}

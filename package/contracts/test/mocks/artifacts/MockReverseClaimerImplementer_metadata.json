@@ -1,0 +1,86 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "contract ENS",
+						"name": "ens",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "claimant",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/test/mocks/MockReverseClaimerImplementer.sol": "MockReverseClaimerImplementer"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/registry/ENS.sol": {
+			"keccak256": "0xcc1d60392693813028a258e400d16dd9632261c8e26ca33061c9d8286edcfc43",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0bfe5a249c38c9e3605f31a2772029ea2796c1fba7d43974f14ec31a453535e4",
+				"dweb:/ipfs/Qmbi8ZdzVkmewoGtgtVD4T56vLceLEG265Vt3Zqcpy5Fwx"
+			]
+		},
+		"package/contracts/reverseRegistrar/IReverseRegistrar.sol": {
+			"keccak256": "0x492417694417c86e92a32ece7c08a56020cf9047525a22b0379fd51540070c53",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6079ddb86269d68be0d956ba0397e40162924f991a97342b6679128ab8fe6f37",
+				"dweb:/ipfs/QmcekuMXqTzBcbe4XmioAs8DqDXGXHs3UeJW7MAJuNyq2c"
+			]
+		},
+		"package/contracts/reverseRegistrar/ReverseClaimer.sol": {
+			"keccak256": "0x9ab958d582d6d1267c26a31db88b8d9367a833e2c552c1bcee84baff5cc9aba5",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9ba4b507f33e213d60a686d53ac283e3bb5cccd8e3ed2e97a637026aaba428b3",
+				"dweb:/ipfs/QmbdD3SmVQEXbeaykiGm6MwThBLdR6B6cGN8Cpe93xcSGu"
+			]
+		},
+		"package/contracts/test/mocks/MockReverseClaimerImplementer.sol": {
+			"keccak256": "0x7840c9ed85ace5a97d55addd05845568941d6f9652769c9e24c400d9c83057e3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://301a7914c73eaaa4004b217dfa7c9af4f191fc22bb25debd10f293ebcc4249b2",
+				"dweb:/ipfs/QmewDFsw9CWa5Kb84mCSg8HAS9wkrqMJy7FzQvzQL9og6e"
+			]
+		}
+	},
+	"version": 1
+}

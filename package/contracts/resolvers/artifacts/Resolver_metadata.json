@@ -1,0 +1,1195 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "contentType",
+						"type": "uint256"
+					}
+				],
+				"name": "ABIChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "a",
+						"type": "address"
+					}
+				],
+				"name": "AddrChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "coinType",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "newAddress",
+						"type": "bytes"
+					}
+				],
+				"name": "AddressChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "hash",
+						"type": "bytes32"
+					}
+				],
+				"name": "ContentChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "hash",
+						"type": "bytes"
+					}
+				],
+				"name": "ContenthashChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint16",
+						"name": "resource",
+						"type": "uint16"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "record",
+						"type": "bytes"
+					}
+				],
+				"name": "DNSRecordChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint16",
+						"name": "resource",
+						"type": "uint16"
+					}
+				],
+				"name": "DNSRecordDeleted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "lastzonehash",
+						"type": "bytes"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "zonehash",
+						"type": "bytes"
+					}
+				],
+				"name": "DNSZonehashChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes4",
+						"name": "interfaceID",
+						"type": "bytes4"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "implementer",
+						"type": "address"
+					}
+				],
+				"name": "InterfaceChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					}
+				],
+				"name": "NameChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "x",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "y",
+						"type": "bytes32"
+					}
+				],
+				"name": "PubkeyChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "indexedKey",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "key",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "value",
+						"type": "string"
+					}
+				],
+				"name": "TextChanged",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "contentTypes",
+						"type": "uint256"
+					}
+				],
+				"name": "ABI",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "addr",
+				"outputs": [
+					{
+						"internalType": "address payable",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "coinType",
+						"type": "uint256"
+					}
+				],
+				"name": "addr",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "delegate",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "approved",
+						"type": "bool"
+					}
+				],
+				"name": "approve",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "content",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "contenthash",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "name",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint16",
+						"name": "resource",
+						"type": "uint16"
+					}
+				],
+				"name": "dnsRecord",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "interfaceID",
+						"type": "bytes4"
+					}
+				],
+				"name": "interfaceImplementer",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "delegate",
+						"type": "address"
+					}
+				],
+				"name": "isApprovedFor",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "operator",
+						"type": "address"
+					}
+				],
+				"name": "isApprovedForAll",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes[]",
+						"name": "data",
+						"type": "bytes[]"
+					}
+				],
+				"name": "multicall",
+				"outputs": [
+					{
+						"internalType": "bytes[]",
+						"name": "results",
+						"type": "bytes[]"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "nodehash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes[]",
+						"name": "data",
+						"type": "bytes[]"
+					}
+				],
+				"name": "multicallWithNodeCheck",
+				"outputs": [
+					{
+						"internalType": "bytes[]",
+						"name": "results",
+						"type": "bytes[]"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "multihash",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "name",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "pubkey",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "x",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "y",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "resolve",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "contentType",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "setABI",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "coinType",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "a",
+						"type": "bytes"
+					}
+				],
+				"name": "setAddr",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					}
+				],
+				"name": "setAddr",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"name": "setApprovalForAll",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "hash",
+						"type": "bytes32"
+					}
+				],
+				"name": "setContent",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes",
+						"name": "hash",
+						"type": "bytes"
+					}
+				],
+				"name": "setContenthash",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "setDnsrr",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "interfaceID",
+						"type": "bytes4"
+					},
+					{
+						"internalType": "address",
+						"name": "implementer",
+						"type": "address"
+					}
+				],
+				"name": "setInterface",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes",
+						"name": "hash",
+						"type": "bytes"
+					}
+				],
+				"name": "setMultihash",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					}
+				],
+				"name": "setName",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "x",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "y",
+						"type": "bytes32"
+					}
+				],
+				"name": "setPubkey",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "key",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "value",
+						"type": "string"
+					}
+				],
+				"name": "setText",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "key",
+						"type": "string"
+					}
+				],
+				"name": "text",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "zonehash",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"ABI(bytes32,uint256)": {
+					"params": {
+						"contentTypes": "A bitwise OR of the ABI formats accepted by the caller.",
+						"node": "The ENS node to query"
+					},
+					"returns": {
+						"_0": "contentType The content type of the return value",
+						"_1": "data The ABI data"
+					}
+				},
+				"addr(bytes32)": {
+					"params": {
+						"node": "The ENS node to query."
+					},
+					"returns": {
+						"_0": "The associated address."
+					}
+				},
+				"contenthash(bytes32)": {
+					"params": {
+						"node": "The ENS node to query."
+					},
+					"returns": {
+						"_0": "The associated contenthash."
+					}
+				},
+				"dnsRecord(bytes32,bytes32,uint16)": {
+					"params": {
+						"name": "the keccak-256 hash of the fully-qualified name for which to fetch the record",
+						"node": "the namehash of the node for which to fetch the record",
+						"resource": "the ID of the resource as per https://en.wikipedia.org/wiki/List_of_DNS_record_types"
+					},
+					"returns": {
+						"_0": "the DNS record in wire format if present, otherwise empty"
+					}
+				},
+				"interfaceImplementer(bytes32,bytes4)": {
+					"params": {
+						"interfaceID": "The EIP 165 interface ID to check for.",
+						"node": "The ENS node to query."
+					},
+					"returns": {
+						"_0": "The address that implements this interface, or 0 if the interface is unsupported."
+					}
+				},
+				"name(bytes32)": {
+					"params": {
+						"node": "The ENS node to query."
+					},
+					"returns": {
+						"_0": "The associated name."
+					}
+				},
+				"pubkey(bytes32)": {
+					"params": {
+						"node": "The ENS node to query"
+					},
+					"returns": {
+						"x": "The X coordinate of the curve point for the public key.",
+						"y": "The Y coordinate of the curve point for the public key."
+					}
+				},
+				"supportsInterface(bytes4)": {
+					"details": "Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas."
+				},
+				"text(bytes32,string)": {
+					"params": {
+						"key": "The text data key to query.",
+						"node": "The ENS node to query."
+					},
+					"returns": {
+						"_0": "The associated text data."
+					}
+				},
+				"zonehash(bytes32)": {
+					"params": {
+						"node": "The ENS node to query."
+					},
+					"returns": {
+						"_0": "The associated contenthash."
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"ABI(bytes32,uint256)": {
+					"notice": "Returns the ABI associated with an ENS node. Defined in EIP205."
+				},
+				"addr(bytes32)": {
+					"notice": "Returns the address associated with an ENS node."
+				},
+				"contenthash(bytes32)": {
+					"notice": "Returns the contenthash associated with an ENS node."
+				},
+				"dnsRecord(bytes32,bytes32,uint16)": {
+					"notice": "Obtain a DNS record."
+				},
+				"interfaceImplementer(bytes32,bytes4)": {
+					"notice": "Returns the address of a contract that implements the specified interface for this name. If an implementer has not been set for this interfaceID and name, the resolver will query the contract at `addr()`. If `addr()` is set, a contract exists at that address, and that contract implements EIP165 and returns `true` for the specified interfaceID, its address will be returned."
+				},
+				"name(bytes32)": {
+					"notice": "Returns the name associated with an ENS node, for reverse records. Defined in EIP181."
+				},
+				"pubkey(bytes32)": {
+					"notice": "Returns the SECP256k1 public key associated with an ENS node. Defined in EIP 619."
+				},
+				"text(bytes32,string)": {
+					"notice": "Returns the text data associated with an ENS node and key."
+				},
+				"zonehash(bytes32)": {
+					"notice": "zonehash obtains the hash for the zone."
+				}
+			},
+			"notice": "A generic resolver interface which includes all the functions including the ones deprecated",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/resolvers/Resolver.sol": "Resolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://796ab6e88af7bf0e78def0f059310c903af6a312b565344e0ff524a0f26e81c6",
+				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
+			]
+		},
+		"package/contracts/resolvers/Resolver.sol": {
+			"keccak256": "0xda9ca352faee1eb4841e910c4e8eb223dc24dcd8ab2e3b00047e7e669b72af56",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c61691ae2eb36e8e8511c3770c2773e80fc43952eb0f271ec73bd753eb93dab4",
+				"dweb:/ipfs/QmRm5mcQCAT12X1DEbrDvvGD6W3PFeAW6M7KSQhZ2EeNts"
+			]
+		},
+		"package/contracts/resolvers/profiles/IABIResolver.sol": {
+			"keccak256": "0x56e138d363d3ce001205e96492a8ac0a35114e76fd1cef4e428823904de9a0a2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://68d933b313718d6086847ec7783b64f2263a2af1e92f580dbd452fdcab57139e",
+				"dweb:/ipfs/QmZcWzn1iNPDYQ3i1JmsQqmujPMEVsRv76RYkxoDSSPUFq"
+			]
+		},
+		"package/contracts/resolvers/profiles/IAddrResolver.sol": {
+			"keccak256": "0xbcd9810777380ca702291fc3e74690c492fc49f6fa0f78256fbc7a3e01315732",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7f17ed77c17f2d61815c50060a50ac5afe4b84761b04e961a6f085694f3011b2",
+				"dweb:/ipfs/QmcsxD4nwQSuWVMXUs6sU2rgBGcASWg8bhnNbJS8SP9SUr"
+			]
+		},
+		"package/contracts/resolvers/profiles/IAddressResolver.sol": {
+			"keccak256": "0xa6bc0f0833a1c4052674cd41d245c8c23908e0ccb090c9ef0adffb21907fdf54",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://dfa3dd50b7175f69b457744f2378949ee33ff5a1ed26d1368fa36337503edde4",
+				"dweb:/ipfs/QmSC2P6ZPETKDkUrEwVtP8b9awK1w68FRhQQRth5GbvoGn"
+			]
+		},
+		"package/contracts/resolvers/profiles/IContentHashResolver.sol": {
+			"keccak256": "0x43e90f6c6f3ba68d48bc98c3d2d5b26d8ca1047dfbf074f6a4cb88f77dca396d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c9149233ee11eb1fe42a3c41d1a35eee67576e7a44d6618dfe123e78c2c4f487",
+				"dweb:/ipfs/QmRefBeJpcxxjQ5EgCeKaCehUR7a2tWCAKLszCGUXLXHxu"
+			]
+		},
+		"package/contracts/resolvers/profiles/IDNSRecordResolver.sol": {
+			"keccak256": "0xf01e1226dc438f32be21a5feb2528942dffecd96ab0c4eb1a582c476050d4f4d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4c70ec59ae9d902f117cf1a35dc51dbfcf46a80ca20a0165b1389bb9e70bdf2f",
+				"dweb:/ipfs/QmZF5WW7THenMr9CMJHuFoB7gxb7r8BpnibmdBcPT2ZEhR"
+			]
+		},
+		"package/contracts/resolvers/profiles/IDNSZoneResolver.sol": {
+			"keccak256": "0x704bc5fd3ba96b2449fd1daeaf2c6d4579f839e6c6a908a321f7e8eb9a40d7a4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b269396e0de96220b38c8af016d0dff90925f3b582a23a44e9bb2409079da25a",
+				"dweb:/ipfs/Qmd384Gkh4BcHShQtu49zxhBW5gkCLrkM7gDgBq6r89Cfq"
+			]
+		},
+		"package/contracts/resolvers/profiles/IExtendedResolver.sol": {
+			"keccak256": "0x603c4bd5b9219a7d6a6248e7687a848966bf27c3dc10ca2315f168d8e069d804",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1ff87e44b0383833cc11a8ef197c11c3cc0d8ebe10cb42178dc420b50520e63a",
+				"dweb:/ipfs/QmfFwNHy1wCT73vG8YDuSrkor1LFH8rD6EvQW5oSB4WZfz"
+			]
+		},
+		"package/contracts/resolvers/profiles/IInterfaceResolver.sol": {
+			"keccak256": "0xbbe45357ac199d06362207c454ffa7580bd187b13007aea9c1f061da4e99c45d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://de6fe99256d83a41512eb2a979d280c5ae3c44683ebb3d60b85fc8c9815e59c1",
+				"dweb:/ipfs/QmTXHWWQy3EBFZisvw3TQ4VGKvH81dtunX7HiCgGdywYaP"
+			]
+		},
+		"package/contracts/resolvers/profiles/INameResolver.sol": {
+			"keccak256": "0xce8c74368be656cc2880b1ba3147198eeb36f244d0887b16caf4fe5eef7438b7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2e8b508225bbf9643ba8b6fedabe655e66ab5367305d7dc20666ddf7b5785857",
+				"dweb:/ipfs/QmXFCgg3QAr1SxJkZdTBBuLFhF8eYohxQ7eAaKZ8KcAeTM"
+			]
+		},
+		"package/contracts/resolvers/profiles/IPubkeyResolver.sol": {
+			"keccak256": "0x32cf06260cfe504394b1ee106a403ead28eb649ed36c8ef4047ef5979f90b21c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fc7de7b3a258cd7d629eaba226b363f2d119973e2a89f1643ebbb20d44631fe6",
+				"dweb:/ipfs/QmTAjTFKMdstqWx9GbR5U2ee7F5esSgW1S5n8La3QjzwuX"
+			]
+		},
+		"package/contracts/resolvers/profiles/ITextResolver.sol": {
+			"keccak256": "0x1a38ad6fcdd080f359defb1ce17d10a83eca14c278f170b3be45f6c43899b312",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7c72a32532dac56b993e6c9494a3cbdd83c83649bae5e5a8218ec0ae9720228b",
+				"dweb:/ipfs/QmdodGsBd4hTfDzCVym9ga2csZ9jJTmViZstekfxFGD5Qa"
+			]
+		}
+	},
+	"version": 1
+}

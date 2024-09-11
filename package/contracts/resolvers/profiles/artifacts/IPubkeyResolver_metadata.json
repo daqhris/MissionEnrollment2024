@@ -1,0 +1,109 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "x",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "y",
+						"type": "bytes32"
+					}
+				],
+				"name": "PubkeyChanged",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "pubkey",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "x",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "y",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"pubkey(bytes32)": {
+					"params": {
+						"node": "The ENS node to query"
+					},
+					"returns": {
+						"x": "The X coordinate of the curve point for the public key.",
+						"y": "The Y coordinate of the curve point for the public key."
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"pubkey(bytes32)": {
+					"notice": "Returns the SECP256k1 public key associated with an ENS node. Defined in EIP 619."
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/resolvers/profiles/IPubkeyResolver.sol": "IPubkeyResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/resolvers/profiles/IPubkeyResolver.sol": {
+			"keccak256": "0x32cf06260cfe504394b1ee106a403ead28eb649ed36c8ef4047ef5979f90b21c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fc7de7b3a258cd7d629eaba226b363f2d119973e2a89f1643ebbb20d44631fe6",
+				"dweb:/ipfs/QmTAjTFKMdstqWx9GbR5U2ee7F5esSgW1S5n8La3QjzwuX"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,0 +1,115 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "indexedKey",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "key",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "value",
+						"type": "string"
+					}
+				],
+				"name": "TextChanged",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "key",
+						"type": "string"
+					}
+				],
+				"name": "text",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"text(bytes32,string)": {
+					"params": {
+						"key": "The text data key to query.",
+						"node": "The ENS node to query."
+					},
+					"returns": {
+						"_0": "The associated text data."
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"text(bytes32,string)": {
+					"notice": "Returns the text data associated with an ENS node and key."
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/resolvers/profiles/ITextResolver.sol": "ITextResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/resolvers/profiles/ITextResolver.sol": {
+			"keccak256": "0x1a38ad6fcdd080f359defb1ce17d10a83eca14c278f170b3be45f6c43899b312",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7c72a32532dac56b993e6c9494a3cbdd83c83649bae5e5a8218ec0ae9720228b",
+				"dweb:/ipfs/QmdodGsBd4hTfDzCVym9ga2csZ9jJTmViZstekfxFGD5Qa"
+			]
+		}
+	},
+	"version": 1
+}

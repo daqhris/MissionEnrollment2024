@@ -1,0 +1,191 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "string[]",
+						"name": "urls",
+						"type": "string[]"
+					},
+					{
+						"internalType": "bytes",
+						"name": "callData",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "callbackFunction",
+						"type": "bytes4"
+					},
+					{
+						"internalType": "bytes",
+						"name": "extraData",
+						"type": "bytes"
+					}
+				],
+				"name": "OffchainLookup",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "addr",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "resolve",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "response",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "extraData",
+						"type": "bytes"
+					}
+				],
+				"name": "resolveCallback",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"supportsInterface(bytes4)": {
+					"details": "See {IERC165-supportsInterface}."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/test/mocks/MockOffchainResolver.sol": "MockOffchainResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+			"keccak256": "0x5718c5df9bd67ac68a796961df938821bb5dc0cd4c6118d77e9145afb187409b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d10e1d9b26042424789246603906ad06143bf9a928f4e99de8b5e3bdc662f549",
+				"dweb:/ipfs/Qmejonoaj5MLekPus229rJQHcC6E9dz2xorjHJR84fMfmn"
+			]
+		},
+		"@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://796ab6e88af7bf0e78def0f059310c903af6a312b565344e0ff524a0f26e81c6",
+				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
+			]
+		},
+		"package/contracts/resolvers/profiles/IExtendedResolver.sol": {
+			"keccak256": "0x603c4bd5b9219a7d6a6248e7687a848966bf27c3dc10ca2315f168d8e069d804",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1ff87e44b0383833cc11a8ef197c11c3cc0d8ebe10cb42178dc420b50520e63a",
+				"dweb:/ipfs/QmfFwNHy1wCT73vG8YDuSrkor1LFH8rD6EvQW5oSB4WZfz"
+			]
+		},
+		"package/contracts/test/mocks/MockOffchainResolver.sol": {
+			"keccak256": "0xd4fcee92b499b368386bc7ecfc9f1d834077d88fd5d42e99351c77265afa04d1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://5339778375ca485d6c4aadbb8e377d253e92814d31c8782e66d86c8dd12c7754",
+				"dweb:/ipfs/QmNsUY59w5cMX9LH8ybh3p4tRmLKHzQbGnuwjvenap7hea"
+			]
+		}
+	},
+	"version": 1
+}

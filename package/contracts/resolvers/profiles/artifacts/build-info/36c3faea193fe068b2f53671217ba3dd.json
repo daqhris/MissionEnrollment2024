@@ -1,0 +1,391 @@
+{
+	"id": "36c3faea193fe068b2f53671217ba3dd",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.27",
+	"solcLongVersion": "0.8.27+commit.40a35a09",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"package/contracts/resolvers/profiles/IDNSZoneResolver.sol": {
+				"content": "// SPDX-License-Identifier: MIT\npragma solidity >=0.8.4;\n\ninterface IDNSZoneResolver {\n  // DNSZonehashChanged is emitted whenever a given node's zone hash is updated.\n  event DNSZonehashChanged(bytes32 indexed node, bytes lastzonehash, bytes zonehash);\n\n  /**\n   * zonehash obtains the hash for the zone.\n   * @param node The ENS node to query.\n   * @return The associated contenthash.\n   */\n  function zonehash(bytes32 node) external view returns (bytes memory);\n}\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": [],
+			"evmVersion": "paris"
+		}
+	},
+	"output": {
+		"contracts": {
+			"package/contracts/resolvers/profiles/IDNSZoneResolver.sol": {
+				"IDNSZoneResolver": {
+					"abi": [
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "bytes32",
+									"name": "node",
+									"type": "bytes32"
+								},
+								{
+									"indexed": false,
+									"internalType": "bytes",
+									"name": "lastzonehash",
+									"type": "bytes"
+								},
+								{
+									"indexed": false,
+									"internalType": "bytes",
+									"name": "zonehash",
+									"type": "bytes"
+								}
+							],
+							"name": "DNSZonehashChanged",
+							"type": "event"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes32",
+									"name": "node",
+									"type": "bytes32"
+								}
+							],
+							"name": "zonehash",
+							"outputs": [
+								{
+									"internalType": "bytes",
+									"name": "",
+									"type": "bytes"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {
+							"zonehash(bytes32)": {
+								"params": {
+									"node": "The ENS node to query."
+								},
+								"returns": {
+									"_0": "The associated contenthash."
+								}
+							}
+						},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"zonehash(bytes32)": "5c98042b"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.27+commit.40a35a09\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"node\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"lastzonehash\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"zonehash\",\"type\":\"bytes\"}],\"name\":\"DNSZonehashChanged\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"node\",\"type\":\"bytes32\"}],\"name\":\"zonehash\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"zonehash(bytes32)\":{\"params\":{\"node\":\"The ENS node to query.\"},\"returns\":{\"_0\":\"The associated contenthash.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"zonehash(bytes32)\":{\"notice\":\"zonehash obtains the hash for the zone.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"package/contracts/resolvers/profiles/IDNSZoneResolver.sol\":\"IDNSZoneResolver\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"package/contracts/resolvers/profiles/IDNSZoneResolver.sol\":{\"keccak256\":\"0x704bc5fd3ba96b2449fd1daeaf2c6d4579f839e6c6a908a321f7e8eb9a40d7a4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b269396e0de96220b38c8af016d0dff90925f3b582a23a44e9bb2409079da25a\",\"dweb:/ipfs/Qmd384Gkh4BcHShQtu49zxhBW5gkCLrkM7gDgBq6r89Cfq\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {
+							"zonehash(bytes32)": {
+								"notice": "zonehash obtains the hash for the zone."
+							}
+						},
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"package/contracts/resolvers/profiles/IDNSZoneResolver.sol": {
+				"ast": {
+					"absolutePath": "package/contracts/resolvers/profiles/IDNSZoneResolver.sol",
+					"exportedSymbols": {
+						"IDNSZoneResolver": [
+							18
+						]
+					},
+					"id": 19,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								">=",
+								"0.8",
+								".4"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "32:24:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "IDNSZoneResolver",
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"fullyImplemented": false,
+							"id": 18,
+							"linearizedBaseContracts": [
+								18
+							],
+							"name": "IDNSZoneResolver",
+							"nameLocation": "68:16:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"anonymous": false,
+									"eventSelector": "8f15ed4b723ef428f250961da8315675b507046737e19319fc1a4d81bfe87f85",
+									"id": 9,
+									"name": "DNSZonehashChanged",
+									"nameLocation": "176:18:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 8,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 3,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "node",
+												"nameLocation": "211:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 9,
+												"src": "195:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												},
+												"typeName": {
+													"id": 2,
+													"name": "bytes32",
+													"nodeType": "ElementaryTypeName",
+													"src": "195:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes32",
+														"typeString": "bytes32"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 5,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "lastzonehash",
+												"nameLocation": "223:12:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 9,
+												"src": "217:18:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 4,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "217:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 7,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "zonehash",
+												"nameLocation": "243:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 9,
+												"src": "237:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 6,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "237:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "194:58:0"
+									},
+									"src": "170:83:0"
+								},
+								{
+									"documentation": {
+										"id": 10,
+										"nodeType": "StructuredDocumentation",
+										"src": "257:135:0",
+										"text": " zonehash obtains the hash for the zone.\n @param node The ENS node to query.\n @return The associated contenthash."
+									},
+									"functionSelector": "5c98042b",
+									"id": 17,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "zonehash",
+									"nameLocation": "404:8:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 13,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 12,
+												"mutability": "mutable",
+												"name": "node",
+												"nameLocation": "421:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 17,
+												"src": "413:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												},
+												"typeName": {
+													"id": 11,
+													"name": "bytes32",
+													"nodeType": "ElementaryTypeName",
+													"src": "413:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes32",
+														"typeString": "bytes32"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "412:14:0"
+									},
+									"returnParameters": {
+										"id": 16,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 15,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 17,
+												"src": "450:12:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 14,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "450:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "449:14:0"
+									},
+									"scope": 18,
+									"src": "395:69:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 19,
+							"src": "58:408:0",
+							"usedErrors": [],
+							"usedEvents": [
+								9
+							]
+						}
+					],
+					"src": "32:435:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}

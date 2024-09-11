@@ -1,0 +1,75 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "context",
+						"type": "bytes"
+					}
+				],
+				"name": "resolve",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/resolvers/profiles/IExtendedDNSResolver.sol": "IExtendedDNSResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/resolvers/profiles/IExtendedDNSResolver.sol": {
+			"keccak256": "0xe5e7fb2c041777695383e21108c860cf131c21dfdc3d301aed696ac6ff1819b3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e518fb7f76b7aee5a350c94c1624ea94c4a1ec71aa78d0c3c81654bfd00ffd1b",
+				"dweb:/ipfs/QmYABANCNukxP5jhwVyo3e4jGVZRTZYjLTyQF7BALonhWz"
+			]
+		}
+	},
+	"version": 1
+}

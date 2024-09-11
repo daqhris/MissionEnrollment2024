@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.20+commit.a1b79de6"
+		"version": "0.8.27+commit.40a35a09"
 	},
 	"language": "Solidity",
 	"output": {
@@ -103,10 +103,11 @@
 	},
 	"sources": {
 		"package/contracts/root/Ownable.sol": {
-			"keccak256": "0x2685b4ccbe3a4d7da94179e7024682751d9a1106fb4b58ad31ebb106f5108bab",
+			"keccak256": "0x2727bf33096042f795bfee825c54674a3f0bd9737396bf38bb0fcd4be619203e",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://6324cb3f57c7a48c663af831c8b16f992dcf9e9463d51d639c1933b4b084bf26",
-				"dweb:/ipfs/QmeFgjCerwvk2JmJyrcW6ZX8fYFg8ABQi1T23nuWiRd36e"
+				"bzz-raw://5ee40c4cb941720ff4ae7940585a03ef9d4663514a045b9f0a3b1aa87f0d834a",
+				"dweb:/ipfs/QmPK1rXRzw8M7DKDRmbRfws7QDRnLqeHe3wbGW3dstdjyz"
 			]
 		}
 	},

@@ -1,0 +1,260 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "x",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "y",
+						"type": "bytes32"
+					}
+				],
+				"name": "PubkeyChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint64",
+						"name": "newVersion",
+						"type": "uint64"
+					}
+				],
+				"name": "VersionChanged",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "clearRecords",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "pubkey",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "x",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "y",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "recordVersions",
+				"outputs": [
+					{
+						"internalType": "uint64",
+						"name": "",
+						"type": "uint64"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "x",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "y",
+						"type": "bytes32"
+					}
+				],
+				"name": "setPubkey",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceID",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"clearRecords(bytes32)": {
+					"params": {
+						"node": "The node to update."
+					}
+				},
+				"pubkey(bytes32)": {
+					"params": {
+						"node": "The ENS node to query"
+					},
+					"returns": {
+						"x": "The X coordinate of the curve point for the public key.",
+						"y": "The Y coordinate of the curve point for the public key."
+					}
+				},
+				"setPubkey(bytes32,bytes32,bytes32)": {
+					"params": {
+						"node": "The ENS node to query",
+						"x": "the X coordinate of the curve point for the public key.",
+						"y": "the Y coordinate of the curve point for the public key."
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"clearRecords(bytes32)": {
+					"notice": "Increments the record version associated with an ENS node. May only be called by the owner of that node in the ENS registry."
+				},
+				"pubkey(bytes32)": {
+					"notice": "Returns the SECP256k1 public key associated with an ENS node. Defined in EIP 619."
+				},
+				"setPubkey(bytes32,bytes32,bytes32)": {
+					"notice": "Sets the SECP256k1 public key associated with an ENS node."
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/resolvers/profiles/PubkeyResolver.sol": "PubkeyResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+			"keccak256": "0x5718c5df9bd67ac68a796961df938821bb5dc0cd4c6118d77e9145afb187409b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d10e1d9b26042424789246603906ad06143bf9a928f4e99de8b5e3bdc662f549",
+				"dweb:/ipfs/Qmejonoaj5MLekPus229rJQHcC6E9dz2xorjHJR84fMfmn"
+			]
+		},
+		"@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://796ab6e88af7bf0e78def0f059310c903af6a312b565344e0ff524a0f26e81c6",
+				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
+			]
+		},
+		"package/contracts/resolvers/ResolverBase.sol": {
+			"keccak256": "0xd658518ab7ba2f0dac8bb87b55f87546aebb9270dac00ca8d185a21e0cad84d6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://bd09d9eb153b95b9087ce336af2ac6010a83f1d355e400255011d95ffd14eb6a",
+				"dweb:/ipfs/QmPZwBi5RBbpNCcrjbpbasDF6kEX7PtybtTx29Kyaa9Dcv"
+			]
+		},
+		"package/contracts/resolvers/profiles/IPubkeyResolver.sol": {
+			"keccak256": "0x32cf06260cfe504394b1ee106a403ead28eb649ed36c8ef4047ef5979f90b21c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fc7de7b3a258cd7d629eaba226b363f2d119973e2a89f1643ebbb20d44631fe6",
+				"dweb:/ipfs/QmTAjTFKMdstqWx9GbR5U2ee7F5esSgW1S5n8La3QjzwuX"
+			]
+		},
+		"package/contracts/resolvers/profiles/IVersionableResolver.sol": {
+			"keccak256": "0x13c536aaead9efa1c25afcdc6b096834e4a13902633b0577370932d1918a4d82",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ffc7ef55b8ea9cea5370db8b164c37db2bcc57ba6979f9241864c578f7805bc0",
+				"dweb:/ipfs/QmXSFaDsUHNskxqt6w9r76ZXc3gGtBGT1nGUCSu8TrHonR"
+			]
+		},
+		"package/contracts/resolvers/profiles/PubkeyResolver.sol": {
+			"keccak256": "0xa85ffdbb4979b995cf2ca3c960bff1cd4328a0a7bf67d32ed0607e170c77fbf6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e27e633d1ecf8bf428ca29efbaadfa62053a817efe0acb94f7b40fcd57f37005",
+				"dweb:/ipfs/QmeT9raU3N9e2AYo98NCLD53qkyyX1XBZoJSSeYB85wMLm"
+			]
+		}
+	},
+	"version": 1
+}

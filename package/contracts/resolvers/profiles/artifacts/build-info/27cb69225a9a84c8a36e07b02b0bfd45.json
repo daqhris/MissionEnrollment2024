@@ -1,0 +1,357 @@
+{
+	"id": "27cb69225a9a84c8a36e07b02b0bfd45",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.27",
+	"solcLongVersion": "0.8.27+commit.40a35a09",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"package/contracts/resolvers/profiles/INameResolver.sol": {
+				"content": "// SPDX-License-Identifier: MIT\npragma solidity >=0.8.4;\n\ninterface INameResolver {\n  event NameChanged(bytes32 indexed node, string name);\n\n  /**\n   * Returns the name associated with an ENS node, for reverse records.\n   * Defined in EIP181.\n   * @param node The ENS node to query.\n   * @return The associated name.\n   */\n  function name(bytes32 node) external view returns (string memory);\n}\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": [],
+			"evmVersion": "paris"
+		}
+	},
+	"output": {
+		"contracts": {
+			"package/contracts/resolvers/profiles/INameResolver.sol": {
+				"INameResolver": {
+					"abi": [
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "bytes32",
+									"name": "node",
+									"type": "bytes32"
+								},
+								{
+									"indexed": false,
+									"internalType": "string",
+									"name": "name",
+									"type": "string"
+								}
+							],
+							"name": "NameChanged",
+							"type": "event"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes32",
+									"name": "node",
+									"type": "bytes32"
+								}
+							],
+							"name": "name",
+							"outputs": [
+								{
+									"internalType": "string",
+									"name": "",
+									"type": "string"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {
+							"name(bytes32)": {
+								"params": {
+									"node": "The ENS node to query."
+								},
+								"returns": {
+									"_0": "The associated name."
+								}
+							}
+						},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"name(bytes32)": "691f3431"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.27+commit.40a35a09\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"node\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"NameChanged\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"node\",\"type\":\"bytes32\"}],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"name(bytes32)\":{\"params\":{\"node\":\"The ENS node to query.\"},\"returns\":{\"_0\":\"The associated name.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"name(bytes32)\":{\"notice\":\"Returns the name associated with an ENS node, for reverse records. Defined in EIP181.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"package/contracts/resolvers/profiles/INameResolver.sol\":\"INameResolver\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"package/contracts/resolvers/profiles/INameResolver.sol\":{\"keccak256\":\"0xce8c74368be656cc2880b1ba3147198eeb36f244d0887b16caf4fe5eef7438b7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2e8b508225bbf9643ba8b6fedabe655e66ab5367305d7dc20666ddf7b5785857\",\"dweb:/ipfs/QmXFCgg3QAr1SxJkZdTBBuLFhF8eYohxQ7eAaKZ8KcAeTM\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {
+							"name(bytes32)": {
+								"notice": "Returns the name associated with an ENS node, for reverse records. Defined in EIP181."
+							}
+						},
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"package/contracts/resolvers/profiles/INameResolver.sol": {
+				"ast": {
+					"absolutePath": "package/contracts/resolvers/profiles/INameResolver.sol",
+					"exportedSymbols": {
+						"INameResolver": [
+							16
+						]
+					},
+					"id": 17,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								">=",
+								"0.8",
+								".4"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "32:24:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "INameResolver",
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"fullyImplemented": false,
+							"id": 16,
+							"linearizedBaseContracts": [
+								16
+							],
+							"name": "INameResolver",
+							"nameLocation": "68:13:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"anonymous": false,
+									"eventSelector": "b7d29e911041e8d9b843369e890bcb72c9388692ba48b65ac54e7214c4c348f7",
+									"id": 7,
+									"name": "NameChanged",
+									"nameLocation": "92:11:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 6,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 3,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "node",
+												"nameLocation": "120:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 7,
+												"src": "104:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												},
+												"typeName": {
+													"id": 2,
+													"name": "bytes32",
+													"nodeType": "ElementaryTypeName",
+													"src": "104:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes32",
+														"typeString": "bytes32"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 5,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "name",
+												"nameLocation": "133:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 7,
+												"src": "126:11:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_string_memory_ptr",
+													"typeString": "string"
+												},
+												"typeName": {
+													"id": 4,
+													"name": "string",
+													"nodeType": "ElementaryTypeName",
+													"src": "126:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_string_storage_ptr",
+														"typeString": "string"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "103:35:0"
+									},
+									"src": "86:53:0"
+								},
+								{
+									"documentation": {
+										"id": 8,
+										"nodeType": "StructuredDocumentation",
+										"src": "143:179:0",
+										"text": " Returns the name associated with an ENS node, for reverse records.\n Defined in EIP181.\n @param node The ENS node to query.\n @return The associated name."
+									},
+									"functionSelector": "691f3431",
+									"id": 15,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "name",
+									"nameLocation": "334:4:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 11,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 10,
+												"mutability": "mutable",
+												"name": "node",
+												"nameLocation": "347:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 15,
+												"src": "339:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												},
+												"typeName": {
+													"id": 9,
+													"name": "bytes32",
+													"nodeType": "ElementaryTypeName",
+													"src": "339:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes32",
+														"typeString": "bytes32"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "338:14:0"
+									},
+									"returnParameters": {
+										"id": 14,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 13,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 15,
+												"src": "376:13:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_string_memory_ptr",
+													"typeString": "string"
+												},
+												"typeName": {
+													"id": 12,
+													"name": "string",
+													"nodeType": "ElementaryTypeName",
+													"src": "376:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_string_storage_ptr",
+														"typeString": "string"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "375:15:0"
+									},
+									"scope": 16,
+									"src": "325:66:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 17,
+							"src": "58:335:0",
+							"usedErrors": [],
+							"usedEvents": [
+								7
+							]
+						}
+					],
+					"src": "32:362:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}

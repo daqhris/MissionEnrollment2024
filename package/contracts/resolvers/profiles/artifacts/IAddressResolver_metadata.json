@@ -1,0 +1,96 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "coinType",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "newAddress",
+						"type": "bytes"
+					}
+				],
+				"name": "AddressChanged",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "coinType",
+						"type": "uint256"
+					}
+				],
+				"name": "addr",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"notice": "Interface for the new (multicoin) addr function.",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/resolvers/profiles/IAddressResolver.sol": "IAddressResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/resolvers/profiles/IAddressResolver.sol": {
+			"keccak256": "0xa6bc0f0833a1c4052674cd41d245c8c23908e0ccb090c9ef0adffb21907fdf54",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://dfa3dd50b7175f69b457744f2378949ee33ff5a1ed26d1368fa36337503edde4",
+				"dweb:/ipfs/QmSC2P6ZPETKDkUrEwVtP8b9awK1w68FRhQQRth5GbvoGn"
+			]
+		}
+	},
+	"version": 1
+}

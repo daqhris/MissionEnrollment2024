@@ -1,0 +1,860 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_registry",
+						"type": "address"
+					},
+					{
+						"internalType": "string[]",
+						"name": "_urls",
+						"type": "string[]"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "string[]",
+						"name": "urls",
+						"type": "string[]"
+					},
+					{
+						"internalType": "bytes",
+						"name": "callData",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "callbackFunction",
+						"type": "bytes4"
+					},
+					{
+						"internalType": "bytes",
+						"name": "extraData",
+						"type": "bytes"
+					}
+				],
+				"name": "OffchainLookup",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "returnData",
+						"type": "bytes"
+					}
+				],
+				"name": "ResolverError",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "ResolverNotContract",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "ResolverNotFound",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "ResolverWildcardNotSupported",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					},
+					{
+						"internalType": "string[]",
+						"name": "gateways",
+						"type": "string[]"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "callbackFunction",
+						"type": "bytes4"
+					},
+					{
+						"internalType": "bytes",
+						"name": "metaData",
+						"type": "bytes"
+					}
+				],
+				"name": "_resolveSingle",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "batchGatewayURLs",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					}
+				],
+				"name": "findResolver",
+				"outputs": [
+					{
+						"internalType": "contract Resolver",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "registry",
+				"outputs": [
+					{
+						"internalType": "contract ENS",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					},
+					{
+						"internalType": "string[]",
+						"name": "gateways",
+						"type": "string[]"
+					}
+				],
+				"name": "resolve",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes[]",
+						"name": "data",
+						"type": "bytes[]"
+					}
+				],
+				"name": "resolve",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "bool",
+								"name": "success",
+								"type": "bool"
+							},
+							{
+								"internalType": "bytes",
+								"name": "returnData",
+								"type": "bytes"
+							}
+						],
+						"internalType": "struct Result[]",
+						"name": "",
+						"type": "tuple[]"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes[]",
+						"name": "data",
+						"type": "bytes[]"
+					},
+					{
+						"internalType": "string[]",
+						"name": "gateways",
+						"type": "string[]"
+					}
+				],
+				"name": "resolve",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "bool",
+								"name": "success",
+								"type": "bool"
+							},
+							{
+								"internalType": "bytes",
+								"name": "returnData",
+								"type": "bytes"
+							}
+						],
+						"internalType": "struct Result[]",
+						"name": "",
+						"type": "tuple[]"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "resolve",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "response",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "extraData",
+						"type": "bytes"
+					}
+				],
+				"name": "resolveCallback",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "bool",
+								"name": "success",
+								"type": "bool"
+							},
+							{
+								"internalType": "bytes",
+								"name": "returnData",
+								"type": "bytes"
+							}
+						],
+						"internalType": "struct Result[]",
+						"name": "",
+						"type": "tuple[]"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "response",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "extraData",
+						"type": "bytes"
+					}
+				],
+				"name": "resolveSingleCallback",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "reverseName",
+						"type": "bytes"
+					},
+					{
+						"internalType": "string[]",
+						"name": "gateways",
+						"type": "string[]"
+					}
+				],
+				"name": "reverse",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "reverseName",
+						"type": "bytes"
+					}
+				],
+				"name": "reverse",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "response",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "extraData",
+						"type": "bytes"
+					}
+				],
+				"name": "reverseCallback",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string[]",
+						"name": "_urls",
+						"type": "string[]"
+					}
+				],
+				"name": "setGatewayURLs",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"findResolver(bytes)": {
+					"details": "Finds a resolver by recursively querying the registry, starting at the longest name and progressively      removing labels until it finds a result.",
+					"params": {
+						"name": "The name to resolve, in DNS-encoded and normalised form."
+					},
+					"returns": {
+						"_0": "resolver The Resolver responsible for this name.",
+						"_1": "namehash The namehash of the full name.",
+						"_2": "finalOffset The offset of the first label with a resolver."
+					}
+				},
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				},
+				"resolve(bytes,bytes)": {
+					"details": "Performs ENS name resolution for the supplied name and resolution data.",
+					"params": {
+						"data": "The resolution data, as specified in ENSIP-10.",
+						"name": "The name to resolve, in normalised and DNS-encoded form."
+					},
+					"returns": {
+						"_0": "The result of resolving the name."
+					}
+				},
+				"reverse(bytes,string[])": {
+					"details": "Performs ENS name reverse resolution for the supplied reverse name.",
+					"params": {
+						"reverseName": "The reverse name to resolve, in normalised and DNS-encoded form. e.g. b6E040C9ECAaE172a89bD561c5F73e1C48d28cd9.addr.reverse"
+					},
+					"returns": {
+						"_0": "The resolved name, the resolved address, the reverse resolver address, and the resolver address."
+					}
+				},
+				"supportsInterface(bytes4)": {
+					"details": "See {IERC165-supportsInterface}."
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"notice": "The Universal Resolver is a contract that handles the work of resolving a name entirely onchain, making it possible to make a single smart contract call to resolve an ENS name.",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/utils/UniversalResolver.sol": "UniversalResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/access/Ownable.sol": {
+			"keccak256": "0x1cae4f85f114ff17b90414f5da67365b1d00337abb5bce9bf944eb78a2c0673c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d5ff16b336ce8f906478d5f2eecc6435e00833bdc0b92f6b209cf9e92cb5b2b7",
+				"dweb:/ipfs/QmRD1rAZEqQ73C33cdA3QoUyBDMEWnNKNMc6PNkAZWHeQQ"
+			]
+		},
+		"@openzeppelin/contracts/utils/Address.sol": {
+			"keccak256": "0x069b2631bb5b5193a58ccf7a06266c7361bd2c20095667af4402817605627f45",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6a4c96fafff76deda5697c3c5c98cade6e6e1b178254544c106bf360c079ce4e",
+				"dweb:/ipfs/QmXmxubE3jnatFgZuN8ay1VV6hZ8WRmhvUjNpeVjki15HX"
+			]
+		},
+		"@openzeppelin/contracts/utils/Context.sol": {
+			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fc2bfdea0d2562c76fb3c4cf70a86c6ba25c5a30e8f8515c95aafdf8383f8395",
+				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
+			]
+		},
+		"@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+			"keccak256": "0x5718c5df9bd67ac68a796961df938821bb5dc0cd4c6118d77e9145afb187409b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d10e1d9b26042424789246603906ad06143bf9a928f4e99de8b5e3bdc662f549",
+				"dweb:/ipfs/Qmejonoaj5MLekPus229rJQHcC6E9dz2xorjHJR84fMfmn"
+			]
+		},
+		"@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://796ab6e88af7bf0e78def0f059310c903af6a312b565344e0ff524a0f26e81c6",
+				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
+			]
+		},
+		"package/contracts/registry/ENS.sol": {
+			"keccak256": "0xcc1d60392693813028a258e400d16dd9632261c8e26ca33061c9d8286edcfc43",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0bfe5a249c38c9e3605f31a2772029ea2796c1fba7d43974f14ec31a453535e4",
+				"dweb:/ipfs/Qmbi8ZdzVkmewoGtgtVD4T56vLceLEG265Vt3Zqcpy5Fwx"
+			]
+		},
+		"package/contracts/resolvers/Resolver.sol": {
+			"keccak256": "0xda9ca352faee1eb4841e910c4e8eb223dc24dcd8ab2e3b00047e7e669b72af56",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c61691ae2eb36e8e8511c3770c2773e80fc43952eb0f271ec73bd753eb93dab4",
+				"dweb:/ipfs/QmRm5mcQCAT12X1DEbrDvvGD6W3PFeAW6M7KSQhZ2EeNts"
+			]
+		},
+		"package/contracts/resolvers/profiles/IABIResolver.sol": {
+			"keccak256": "0x56e138d363d3ce001205e96492a8ac0a35114e76fd1cef4e428823904de9a0a2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://68d933b313718d6086847ec7783b64f2263a2af1e92f580dbd452fdcab57139e",
+				"dweb:/ipfs/QmZcWzn1iNPDYQ3i1JmsQqmujPMEVsRv76RYkxoDSSPUFq"
+			]
+		},
+		"package/contracts/resolvers/profiles/IAddrResolver.sol": {
+			"keccak256": "0xbcd9810777380ca702291fc3e74690c492fc49f6fa0f78256fbc7a3e01315732",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7f17ed77c17f2d61815c50060a50ac5afe4b84761b04e961a6f085694f3011b2",
+				"dweb:/ipfs/QmcsxD4nwQSuWVMXUs6sU2rgBGcASWg8bhnNbJS8SP9SUr"
+			]
+		},
+		"package/contracts/resolvers/profiles/IAddressResolver.sol": {
+			"keccak256": "0xa6bc0f0833a1c4052674cd41d245c8c23908e0ccb090c9ef0adffb21907fdf54",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://dfa3dd50b7175f69b457744f2378949ee33ff5a1ed26d1368fa36337503edde4",
+				"dweb:/ipfs/QmSC2P6ZPETKDkUrEwVtP8b9awK1w68FRhQQRth5GbvoGn"
+			]
+		},
+		"package/contracts/resolvers/profiles/IContentHashResolver.sol": {
+			"keccak256": "0x43e90f6c6f3ba68d48bc98c3d2d5b26d8ca1047dfbf074f6a4cb88f77dca396d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c9149233ee11eb1fe42a3c41d1a35eee67576e7a44d6618dfe123e78c2c4f487",
+				"dweb:/ipfs/QmRefBeJpcxxjQ5EgCeKaCehUR7a2tWCAKLszCGUXLXHxu"
+			]
+		},
+		"package/contracts/resolvers/profiles/IDNSRecordResolver.sol": {
+			"keccak256": "0xf01e1226dc438f32be21a5feb2528942dffecd96ab0c4eb1a582c476050d4f4d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4c70ec59ae9d902f117cf1a35dc51dbfcf46a80ca20a0165b1389bb9e70bdf2f",
+				"dweb:/ipfs/QmZF5WW7THenMr9CMJHuFoB7gxb7r8BpnibmdBcPT2ZEhR"
+			]
+		},
+		"package/contracts/resolvers/profiles/IDNSZoneResolver.sol": {
+			"keccak256": "0x704bc5fd3ba96b2449fd1daeaf2c6d4579f839e6c6a908a321f7e8eb9a40d7a4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b269396e0de96220b38c8af016d0dff90925f3b582a23a44e9bb2409079da25a",
+				"dweb:/ipfs/Qmd384Gkh4BcHShQtu49zxhBW5gkCLrkM7gDgBq6r89Cfq"
+			]
+		},
+		"package/contracts/resolvers/profiles/IExtendedResolver.sol": {
+			"keccak256": "0x603c4bd5b9219a7d6a6248e7687a848966bf27c3dc10ca2315f168d8e069d804",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1ff87e44b0383833cc11a8ef197c11c3cc0d8ebe10cb42178dc420b50520e63a",
+				"dweb:/ipfs/QmfFwNHy1wCT73vG8YDuSrkor1LFH8rD6EvQW5oSB4WZfz"
+			]
+		},
+		"package/contracts/resolvers/profiles/IInterfaceResolver.sol": {
+			"keccak256": "0xbbe45357ac199d06362207c454ffa7580bd187b13007aea9c1f061da4e99c45d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://de6fe99256d83a41512eb2a979d280c5ae3c44683ebb3d60b85fc8c9815e59c1",
+				"dweb:/ipfs/QmTXHWWQy3EBFZisvw3TQ4VGKvH81dtunX7HiCgGdywYaP"
+			]
+		},
+		"package/contracts/resolvers/profiles/INameResolver.sol": {
+			"keccak256": "0xce8c74368be656cc2880b1ba3147198eeb36f244d0887b16caf4fe5eef7438b7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2e8b508225bbf9643ba8b6fedabe655e66ab5367305d7dc20666ddf7b5785857",
+				"dweb:/ipfs/QmXFCgg3QAr1SxJkZdTBBuLFhF8eYohxQ7eAaKZ8KcAeTM"
+			]
+		},
+		"package/contracts/resolvers/profiles/IPubkeyResolver.sol": {
+			"keccak256": "0x32cf06260cfe504394b1ee106a403ead28eb649ed36c8ef4047ef5979f90b21c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fc7de7b3a258cd7d629eaba226b363f2d119973e2a89f1643ebbb20d44631fe6",
+				"dweb:/ipfs/QmTAjTFKMdstqWx9GbR5U2ee7F5esSgW1S5n8La3QjzwuX"
+			]
+		},
+		"package/contracts/resolvers/profiles/ITextResolver.sol": {
+			"keccak256": "0x1a38ad6fcdd080f359defb1ce17d10a83eca14c278f170b3be45f6c43899b312",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7c72a32532dac56b993e6c9494a3cbdd83c83649bae5e5a8218ec0ae9720228b",
+				"dweb:/ipfs/QmdodGsBd4hTfDzCVym9ga2csZ9jJTmViZstekfxFGD5Qa"
+			]
+		},
+		"package/contracts/utils/BytesUtils.sol": {
+			"keccak256": "0xee3d14e0fba9c94d86fd9f21394aac1b78e0234ec879d8c522248f604e8f6a0f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://68d45fe829823e3a79b20db39050ca0bbb4c88574a330bcc801fde26fde9d2a3",
+				"dweb:/ipfs/QmPyj2Us1MDuL49wMCHfSaxNABL3Pb6b5XG8TWuhHyYqG8"
+			]
+		},
+		"package/contracts/utils/HexUtils.sol": {
+			"keccak256": "0xd98bed1354489479fad699ce4777a0b510da275e5cad21f3d324b2dd5507d31f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://867c6a943cb3fdd67c5537997af9cbea8b84b90fae58aca19b27e75cbfde32b4",
+				"dweb:/ipfs/QmT91qkSZu9mordzSpQJQ1YzbznktpsFVioWMDdVBNwJWz"
+			]
+		},
+		"package/contracts/utils/LowLevelCallUtils.sol": {
+			"keccak256": "0x77c18db57f3f483fcc0776ad4d376130bbbe606720b2ea1f9f6f64df27f0b5b9",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6df645df2e6b03b2cd4cd3f43b00a91196c3454ef37033f6182a2f53138af4fe",
+				"dweb:/ipfs/QmcqQrHRwzCURjqYT3byR5jcjsoF9JNYP5foPEma8G61Hk"
+			]
+		},
+		"package/contracts/utils/NameEncoder.sol": {
+			"keccak256": "0x898e14d59c3d2b61ddd729c9f84ab49fb3a558293374076a6baa049b8f22b9b8",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1f074b8f1900611b91fe1286453fc0fd80f0065a024069024be80099a131fc1a",
+				"dweb:/ipfs/QmVcEBMRBbzFx4C7FQVqSWkETz2vxtFTWJp56ruezqN1Ex"
+			]
+		},
+		"package/contracts/utils/UniversalResolver.sol": {
+			"keccak256": "0x9c3755948d7439ac8873dde31e4a9b6b24d8124b373dc86936ccb1585f8fd721",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9e1a8169d12f875aaf5190e8117d07a8d64ec7e2c3f388d2e129915642520404",
+				"dweb:/ipfs/QmRZpnrSj7NPutYW9kzcQeVYzkeKcGDGsHSCHqiEoNYUG7"
+			]
+		}
+	},
+	"version": 1
+}

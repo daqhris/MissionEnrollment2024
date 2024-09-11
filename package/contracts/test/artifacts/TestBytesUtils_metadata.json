@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.20+commit.a1b79de6"
+		"version": "0.8.27+commit.40a35a09"
 	},
 	"language": "Solidity",
 	"output": {
@@ -143,10 +143,10 @@
 			]
 		},
 		"package/contracts/test/TestBytesUtils.sol": {
-			"keccak256": "0xddea2e60f8825c43ee603a01748d16a6fa4dc4664f30e3b3c896e6a7e94ee2e4",
+			"keccak256": "0xfcc55ecdc1417bd69ff841b024edd497798927206fc02fd98ae3245d1968ece1",
 			"urls": [
-				"bzz-raw://36ca6f6a9468173ccdd78224905bfaf485a5d68bc950488327ac87bea96e458b",
-				"dweb:/ipfs/QmZ7qNQbzcmaT6ZFX31qYrtaXq66Wi5MncXEYucz7M6dzR"
+				"bzz-raw://9987c5390aeaba04163ea99e1cc684f167dce864331b31416edb6733ac24c1ed",
+				"dweb:/ipfs/QmR6DYSJ9CUzCKVi2W5vhbvgcTmrNKv6xgtzP7fSTy9Pej"
 			]
 		},
 		"package/contracts/utils/BytesUtils.sol": {

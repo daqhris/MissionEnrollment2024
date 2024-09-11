@@ -1,0 +1,179 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "addr",
+						"type": "bytes"
+					}
+				],
+				"name": "InvalidAddressFormat",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "NotImplemented",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "context",
+						"type": "bytes"
+					}
+				],
+				"name": "resolve",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "Resolves names on ENS by interpreting record data stored in a DNS TXT record.      This resolver implements the IExtendedDNSResolver interface, meaning that when      a DNS name specifies it as the resolver via a TXT record, this resolver's      resolve() method is invoked, and is passed any additional information from that      text record. This resolver implements a simple text parser allowing a variety      of records to be specified in text, which will then be used to resolve the name      in ENS.      To use this, set a TXT record on your DNS name in the following format:          ENS1 <address or name of ExtendedDNSResolver> <record data>      For example:          ENS1 2.dnsname.ens.eth a[60]=0x1234...      The record data consists of a series of key=value pairs, separated by spaces. Keys      may have an optional argument in square brackets, and values may be either unquoted       - in which case they may not contain spaces - or single-quoted. Single quotes in      a quoted value may be backslash-escaped.                                       ┌────────┐                                       │ ┌───┐  │        ┌──────────────────────────────┴─┤\" \"│◄─┴────────────────────────────────────────┐        │                                └───┘                                           │        │  ┌───┐    ┌───┐    ┌───┐    ┌───┐    ┌───┐    ┌───┐    ┌────────────┐    ┌───┐ │      ^─┴─►│key├─┬─►│\"[\"├───►│arg├───►│\"]\"├─┬─►│\"=\"├─┬─►│\"'\"├───►│quoted_value├───►│\"'\"├─┼─$           └───┘ │  └───┘    └───┘    └───┘ │  └───┘ │  └───┘    └────────────┘    └───┘ │                 └──────────────────────────┘        │          ┌──────────────┐         │                                                     └─────────►│unquoted_value├─────────┘                                                                └──────────────┘      Record types:       - a[<coinType>] - Specifies how an `addr()` request should be resolved for the specified         `coinType`. Ethereum has `coinType` 60. The value must be 0x-prefixed hexadecimal, and will         be returned unmodified; this means that non-EVM addresses will need to be translated         into binary format and then encoded in hex.         Examples:          - a[60]=0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7          - a[0]=0x00149010587f8364b964fcaa70687216b53bd2cbd798       - a[e<chainId>] - Specifies how an `addr()` request should be resolved for the specified         `chainId`. The value must be 0x-prefixed hexadecimal. When encoding an address for an         EVM-based cryptocurrency that uses a chainId instead of a coinType, this syntax *must*         be used in place of the coin type - eg, Optimism is `a[e10]`, not `a[2147483658]`.         A list of supported cryptocurrencies for both syntaxes can be found here:           https://github.com/ensdomains/address-encoder/blob/master/docs/supported-cryptocurrencies.md         Example:          - a[e10]=0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7       - t[<key>] - Specifies how a `text()` request should be resolved for the specified `key`.         Examples:          - t[com.twitter]=nicksdjohnson          - t[url]='https://ens.domains/'          - t[note]='I\\'m great'",
+			"kind": "dev",
+			"methods": {
+				"supportsInterface(bytes4)": {
+					"details": "Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/resolvers/profiles/ExtendedDNSResolver.sol": "ExtendedDNSResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/utils/Strings.sol": {
+			"keccak256": "0x456e9b3a2bfe189b5249857f624f4139e59331db518483b456c4e587a20552e0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1123c9545decc48a011370ebab4bf53dda98524fa21f9498e68851ba8f0ffc0f",
+				"dweb:/ipfs/QmUpgMg8EFDnv87ePKUjXxXpJT3qwHRj9VDNSnRxu7T9sy"
+			]
+		},
+		"@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://796ab6e88af7bf0e78def0f059310c903af6a312b565344e0ff524a0f26e81c6",
+				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
+			]
+		},
+		"package/contracts/resolvers/profiles/ExtendedDNSResolver.sol": {
+			"keccak256": "0x7d241bec6cd9cd578f0747af2bf0a53c4039d9eb3d80c4dc7c88f34c7413029f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7ff1c72ecab660cff1534eb0712a54689061676c19b0d4ded869d0d7a420d59c",
+				"dweb:/ipfs/QmdF3oDMG5pdtiTvxz5anr6N7RAWfh6RWXRuZDBbe5tbHF"
+			]
+		},
+		"package/contracts/resolvers/profiles/IAddrResolver.sol": {
+			"keccak256": "0xbcd9810777380ca702291fc3e74690c492fc49f6fa0f78256fbc7a3e01315732",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7f17ed77c17f2d61815c50060a50ac5afe4b84761b04e961a6f085694f3011b2",
+				"dweb:/ipfs/QmcsxD4nwQSuWVMXUs6sU2rgBGcASWg8bhnNbJS8SP9SUr"
+			]
+		},
+		"package/contracts/resolvers/profiles/IAddressResolver.sol": {
+			"keccak256": "0xa6bc0f0833a1c4052674cd41d245c8c23908e0ccb090c9ef0adffb21907fdf54",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://dfa3dd50b7175f69b457744f2378949ee33ff5a1ed26d1368fa36337503edde4",
+				"dweb:/ipfs/QmSC2P6ZPETKDkUrEwVtP8b9awK1w68FRhQQRth5GbvoGn"
+			]
+		},
+		"package/contracts/resolvers/profiles/IExtendedDNSResolver.sol": {
+			"keccak256": "0xe5e7fb2c041777695383e21108c860cf131c21dfdc3d301aed696ac6ff1819b3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e518fb7f76b7aee5a350c94c1624ea94c4a1ec71aa78d0c3c81654bfd00ffd1b",
+				"dweb:/ipfs/QmYABANCNukxP5jhwVyo3e4jGVZRTZYjLTyQF7BALonhWz"
+			]
+		},
+		"package/contracts/resolvers/profiles/ITextResolver.sol": {
+			"keccak256": "0x1a38ad6fcdd080f359defb1ce17d10a83eca14c278f170b3be45f6c43899b312",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7c72a32532dac56b993e6c9494a3cbdd83c83649bae5e5a8218ec0ae9720228b",
+				"dweb:/ipfs/QmdodGsBd4hTfDzCVym9ga2csZ9jJTmViZstekfxFGD5Qa"
+			]
+		},
+		"package/contracts/utils/BytesUtils.sol": {
+			"keccak256": "0xee3d14e0fba9c94d86fd9f21394aac1b78e0234ec879d8c522248f604e8f6a0f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://68d45fe829823e3a79b20db39050ca0bbb4c88574a330bcc801fde26fde9d2a3",
+				"dweb:/ipfs/QmPyj2Us1MDuL49wMCHfSaxNABL3Pb6b5XG8TWuhHyYqG8"
+			]
+		},
+		"package/contracts/utils/HexUtils.sol": {
+			"keccak256": "0xd98bed1354489479fad699ce4777a0b510da275e5cad21f3d324b2dd5507d31f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://867c6a943cb3fdd67c5537997af9cbea8b84b90fae58aca19b27e75cbfde32b4",
+				"dweb:/ipfs/QmT91qkSZu9mordzSpQJQ1YzbznktpsFVioWMDdVBNwJWz"
+			]
+		}
+	},
+	"version": 1
+}

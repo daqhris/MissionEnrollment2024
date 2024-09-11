@@ -435,7 +435,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"onchain_code.sol": "AttestationService"
+			"onchain_code_base_sepolia.sol": "AttestationService"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -529,7 +529,7 @@
 				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
 			]
 		},
-		"onchain_code.sol": {
+		"onchain_code_base_sepolia.sol": {
 			"keccak256": "0x499bc526d4294b8fc0d1ccf8a20bdd7c46844b4553a5b7a794c4123a3f870cb0",
 			"license": "MIT",
 			"urls": [

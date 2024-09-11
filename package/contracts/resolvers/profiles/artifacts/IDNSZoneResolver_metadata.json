@@ -1,0 +1,103 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "lastzonehash",
+						"type": "bytes"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "zonehash",
+						"type": "bytes"
+					}
+				],
+				"name": "DNSZonehashChanged",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "zonehash",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"zonehash(bytes32)": {
+					"params": {
+						"node": "The ENS node to query."
+					},
+					"returns": {
+						"_0": "The associated contenthash."
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"zonehash(bytes32)": {
+					"notice": "zonehash obtains the hash for the zone."
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/resolvers/profiles/IDNSZoneResolver.sol": "IDNSZoneResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/resolvers/profiles/IDNSZoneResolver.sol": {
+			"keccak256": "0x704bc5fd3ba96b2449fd1daeaf2c6d4579f839e6c6a908a321f7e8eb9a40d7a4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b269396e0de96220b38c8af016d0dff90925f3b582a23a44e9bb2409079da25a",
+				"dweb:/ipfs/Qmd384Gkh4BcHShQtu49zxhBW5gkCLrkM7gDgBq6r89Cfq"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,0 +1,66 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "ownerOf",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "Implements a dummy NameWrapper which returns the caller's address",
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/resolvers/mocks/DummyNameWrapper.sol": "DummyNameWrapper"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/resolvers/mocks/DummyNameWrapper.sol": {
+			"keccak256": "0x0a48be24ec83bc530f90356a4e55e39a67437a1b7320d30b151f7f3a4adb44cd",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://baa871236384596f841169b4fd5bf9d87242d9374c07e77400205d471d573f1b",
+				"dweb:/ipfs/QmWHVhuQoqKMN9vVJ52AedmvuQutF95vKXdyb6zATUTPCx"
+			]
+		}
+	},
+	"version": 1
+}
