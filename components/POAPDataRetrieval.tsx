@@ -42,28 +42,30 @@ const POAPDataRetrieval: React.FC<POAPDataRetrievalProps> = ({ userAddress }) =>
         }
 
         const fetchedPoaps: POAPEvent[] = [];
+        const tokenIds = response.data.result.map((tx: any) => tx.tokenID);
 
-        for (const tx of response.data.result) {
-          try {
-            const tokenId = tx.tokenID;
-            const tokenURI = `https://api.poap.xyz/metadata/${tokenId}`;
+        // Batch API calls to POAP metadata endpoint
+        const batchSize = 10;
+        for (let i = 0; i < tokenIds.length; i += batchSize) {
+          const batch = tokenIds.slice(i, i + batchSize);
+          const metadataPromises = batch.map((tokenId: string) =>
+            axios.get(`https://api.poap.xyz/metadata/${tokenId}`)
+          );
 
-            const metadataResponse = await axios.get(tokenURI);
+          const metadataResponses = await Promise.all(metadataPromises);
+
+          metadataResponses.forEach((metadataResponse, index) => {
             const metadata = metadataResponse.data;
-
             fetchedPoaps.push({
               event: {
-                id: tokenId,
+                id: batch[index],
                 name: metadata.name || "Unknown Event",
                 image_url: metadata.image_url || "",
                 start_date: metadata.start_date || '',
               },
-              token_id: tokenId,
+              token_id: batch[index],
             });
-          } catch (tokenError) {
-            console.warn(`Failed to fetch token data for tokenID ${tx.tokenID}:`, tokenError);
-            continue;
-          }
+          });
         }
 
         setPoaps(fetchedPoaps);
