@@ -11,6 +11,9 @@ interface POAPEvent {
     start_date: string;
   };
   token_id: string;
+  metadata?: {
+    image?: string;
+  } | null;
 }
 
 interface POAPDataRetrievalProps {
@@ -39,6 +42,10 @@ const POAPDataRetrieval: React.FC<POAPDataRetrievalProps> = ({ userAddress }) =>
         const response = await axios.get(poapApiUrl, {
           headers: {
             'X-API-Key': poapApiKey
+          },
+          params: {
+            chain: 'gnosis', // Specify the Gnosis network
+            limit: 100 // Limit the number of POAPs to retrieve
           }
         });
 
@@ -46,15 +53,33 @@ const POAPDataRetrieval: React.FC<POAPDataRetrievalProps> = ({ userAddress }) =>
           throw new Error(`POAP API error: Invalid response format`);
         }
 
-        const fetchedPoaps: POAPEvent[] = response.data.map((poap: any) => ({
-          event: {
-            id: poap.event.id,
-            name: poap.event.name || "Unknown Event",
-            image_url: poap.event.image_url || "",
-            start_date: poap.event.start_date || '',
-          },
-          token_id: poap.tokenId,
-        }));
+        const fetchedPoaps: POAPEvent[] = await Promise.all(
+          response.data
+            .filter((poap: any) => poap.event && poap.event.id) // Ensure valid POAP data
+            .map(async (poap: any) => {
+              let metadata;
+              if (poap.event.image_url && poap.event.image_url.startsWith('ipfs://')) {
+                const ipfsHash = poap.event.image_url.replace('ipfs://', '');
+                const ipfsUrl = `https://ipfs.io/ipfs/${ipfsHash}`;
+                try {
+                  const metadataResponse = await axios.get(ipfsUrl);
+                  metadata = metadataResponse.data;
+                } catch (error) {
+                  console.error(`Error fetching IPFS metadata for POAP ${poap.tokenId}:`, error);
+                }
+              }
+              return {
+                event: {
+                  id: poap.event.id,
+                  name: poap.event.name || "Unknown Event",
+                  image_url: poap.event.image_url || "",
+                  start_date: poap.event.start_date || '',
+                },
+                token_id: poap.tokenId,
+                metadata: metadata || null,
+              };
+            })
+        );
 
         setPoaps(fetchedPoaps);
       } catch (err) {
@@ -81,6 +106,7 @@ const POAPDataRetrieval: React.FC<POAPDataRetrievalProps> = ({ userAddress }) =>
             {poaps.map((poap) => (
               <li key={poap.token_id}>
                 {poap.event.name} - Date: {poap.event.start_date}
+                {poap.metadata && <img src={poap.metadata.image} alt={poap.event.name} />}
               </li>
             ))}
           </ul>
