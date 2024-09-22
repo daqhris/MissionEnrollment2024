@@ -28,45 +28,33 @@ const POAPDataRetrieval: React.FC<POAPDataRetrievalProps> = ({ userAddress }) =>
       setError(null);
 
       try {
-        const gnosisApiKey = process.env.NEXT_PUBLIC_GNOSIS_API_KEY;
-        if (!gnosisApiKey) {
-          throw new Error("Gnosis API key is not available. Please check your environment variables.");
+        const poapApiKey = process.env.NEXT_PUBLIC_POAP_API_KEY;
+        if (!poapApiKey) {
+          throw new Error("POAP API key is not available. Please check your environment variables.");
         }
 
-        // Construct Gnosis API URL to fetch POAP token transfers for the user
-        const gnosisApiUrl = `https://api.gnosisscan.io/api?module=account&action=tokennfttx&contractaddress=${POAP_CONTRACT_ADDRESS}&address=${userAddress}&sort=desc&apikey=${gnosisApiKey}`;
+        // Construct POAP API URL to fetch POAPs for the user
+        const poapApiUrl = `https://api.poap.xyz/actions/scan/${userAddress}`;
 
-        const response = await axios.get(gnosisApiUrl);
-        if (response.data.status !== "1") {
-          throw new Error(`Gnosis API error: ${response.data.message}`);
+        const response = await axios.get(poapApiUrl, {
+          headers: {
+            'X-API-Key': poapApiKey
+          }
+        });
+
+        if (!response.data || !Array.isArray(response.data)) {
+          throw new Error(`POAP API error: Invalid response format`);
         }
 
-        const fetchedPoaps: POAPEvent[] = [];
-        const tokenIds = response.data.result.map((tx: any) => tx.tokenID);
-
-        // Batch API calls to POAP metadata endpoint
-        const batchSize = 10;
-        for (let i = 0; i < tokenIds.length; i += batchSize) {
-          const batch = tokenIds.slice(i, i + batchSize);
-          const metadataPromises = batch.map((tokenId: string) =>
-            axios.get(`https://api.poap.xyz/metadata/${tokenId}`)
-          );
-
-          const metadataResponses = await Promise.all(metadataPromises);
-
-          metadataResponses.forEach((metadataResponse, index) => {
-            const metadata = metadataResponse.data;
-            fetchedPoaps.push({
-              event: {
-                id: batch[index],
-                name: metadata.name || "Unknown Event",
-                image_url: metadata.image_url || "",
-                start_date: metadata.start_date || '',
-              },
-              token_id: batch[index],
-            });
-          });
-        }
+        const fetchedPoaps: POAPEvent[] = response.data.map((poap: any) => ({
+          event: {
+            id: poap.event.id,
+            name: poap.event.name || "Unknown Event",
+            image_url: poap.event.image_url || "",
+            start_date: poap.event.start_date || '',
+          },
+          token_id: poap.tokenId,
+        }));
 
         setPoaps(fetchedPoaps);
       } catch (err) {
