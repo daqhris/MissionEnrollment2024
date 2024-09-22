@@ -40,7 +40,7 @@ function MyApp({ Component, pageProps }: AppProps): React.ReactElement {
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiConfig config={wagmiConfig}>
-        <RainbowKitProvider chains={wagmiConfig.chains}>
+        <RainbowKitProvider>
           <ApolloProvider client={apolloClient}>
             <Component {...pageProps} />
           </ApolloProvider>
