@@ -28,17 +28,17 @@ const POAPDataRetrieval: React.FC<POAPDataRetrievalProps> = ({ userAddress }) =>
       setError(null);
 
       try {
-        const etherscanApiKey = process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY;
-        if (!etherscanApiKey) {
-          throw new Error("Etherscan API key is not available. Please check your environment variables.");
+        const gnosisApiKey = process.env.NEXT_PUBLIC_GNOSIS_API_KEY;
+        if (!gnosisApiKey) {
+          throw new Error("Gnosis API key is not available. Please check your environment variables.");
         }
 
-        // Construct Etherscan API URL to fetch POAP token transfers for the user
-        const etherscanApiUrl = `https://api.etherscan.io/api?module=account&action=tokennfttx&contractaddress=${POAP_CONTRACT_ADDRESS}&address=${userAddress}&sort=desc&apikey=${etherscanApiKey}`;
+        // Construct Gnosis API URL to fetch POAP token transfers for the user
+        const gnosisApiUrl = `https://api.gnosisscan.io/api?module=account&action=tokennfttx&contractaddress=${POAP_CONTRACT_ADDRESS}&address=${userAddress}&sort=desc&apikey=${gnosisApiKey}`;
 
-        const response = await axios.get(etherscanApiUrl);
+        const response = await axios.get(gnosisApiUrl);
         if (response.data.status !== "1") {
-          throw new Error(`Etherscan API error: ${response.data.message}`);
+          throw new Error(`Gnosis API error: ${response.data.message}`);
         }
 
         const fetchedPoaps: POAPEvent[] = [];
