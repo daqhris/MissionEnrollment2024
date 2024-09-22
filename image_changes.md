@@ -32,7 +32,7 @@
 - The current dimensions (1280x640) are suitable for wide logo placements or header banners
 - Consider creating a square version (e.g., 640x640) for situations requiring a more compact logo
 
-## thumbnail.jpg
+## thumbnail.png (formerly thumbnail.jpg)
 
 ### Changes
 - Format: Changed from JPEG to PNG
@@ -51,15 +51,21 @@
    - As a logo: Good. The square format is versatile for various placements
 
 ### Recommendations
-- Rename the file to "thumbnail.png" to reflect its actual format
+
+- Update any references to "thumbnail.jpg" in the codebase to reflect the new PNG format
 - If file size is a concern, consider optimizing the PNG file to reduce its size while maintaining quality
 
-## General Observations
-1. Both images now use the PNG format, ensuring high quality and support for transparency
-2. The file size changes (reduction for logo.png, increase for thumbnail.jpg) suggest quality improvements and format optimizations
-3. Both images are well-suited for their intended purposes as logos and thumbnails in web applications
+## Additional Logo Sizes
 
-## Next Steps
-1. Update any references to "thumbnail.jpg" in the codebase to reflect the new PNG format
-2. Consider creating additional sizes of the logo for different use cases (e.g., favicon, app icon)
-3. Perform browser testing to ensure the images render correctly across different devices and screen sizes
+### favicon.png
+- Dimensions: 32x32 pixels
+- Purpose: For use as a favicon in web browsers
+
+### app_icon.png
+- Dimensions: 180x180 pixels
+- Purpose: For use as an app icon on mobile devices or as a larger favicon for high-resolution displays
+
+## General Observations
+1. Both main images now use the PNG format, ensuring high quality and support for transparency
+2. The file size changes (reduction for logo.png, increase for thumbnail.png) suggest quality improvements and format optimizations
+3. All images are well-suited for their intended purposes as logos, thumbnails, and icons in web and mobile applications
