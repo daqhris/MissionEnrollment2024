@@ -1,0 +1,146 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint16",
+						"name": "resource",
+						"type": "uint16"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "record",
+						"type": "bytes"
+					}
+				],
+				"name": "DNSRecordChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint16",
+						"name": "resource",
+						"type": "uint16"
+					}
+				],
+				"name": "DNSRecordDeleted",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "name",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint16",
+						"name": "resource",
+						"type": "uint16"
+					}
+				],
+				"name": "dnsRecord",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"dnsRecord(bytes32,bytes32,uint16)": {
+					"params": {
+						"name": "the keccak-256 hash of the fully-qualified name for which to fetch the record",
+						"node": "the namehash of the node for which to fetch the record",
+						"resource": "the ID of the resource as per https://en.wikipedia.org/wiki/List_of_DNS_record_types"
+					},
+					"returns": {
+						"_0": "the DNS record in wire format if present, otherwise empty"
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"dnsRecord(bytes32,bytes32,uint16)": {
+					"notice": "Obtain a DNS record."
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/resolvers/profiles/IDNSRecordResolver.sol": "IDNSRecordResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/resolvers/profiles/IDNSRecordResolver.sol": {
+			"keccak256": "0xf01e1226dc438f32be21a5feb2528942dffecd96ab0c4eb1a582c476050d4f4d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4c70ec59ae9d902f117cf1a35dc51dbfcf46a80ca20a0165b1389bb9e70bdf2f",
+				"dweb:/ipfs/QmZF5WW7THenMr9CMJHuFoB7gxb7r8BpnibmdBcPT2ZEhR"
+			]
+		}
+	},
+	"version": 1
+}

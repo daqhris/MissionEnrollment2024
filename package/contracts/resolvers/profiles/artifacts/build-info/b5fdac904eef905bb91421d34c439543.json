@@ -1,0 +1,617 @@
+{
+	"id": "b5fdac904eef905bb91421d34c439543",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.27",
+	"solcLongVersion": "0.8.27+commit.40a35a09",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"package/contracts/resolvers/profiles/IDNSRecordResolver.sol": {
+				"content": "// SPDX-License-Identifier: MIT\npragma solidity >=0.8.4;\n\ninterface IDNSRecordResolver {\n  // DNSRecordChanged is emitted whenever a given node/name/resource's RRSET is updated.\n  event DNSRecordChanged(bytes32 indexed node, bytes name, uint16 resource, bytes record);\n  // DNSRecordDeleted is emitted whenever a given node/name/resource's RRSET is deleted.\n  event DNSRecordDeleted(bytes32 indexed node, bytes name, uint16 resource);\n\n  /**\n   * Obtain a DNS record.\n   * @param node the namehash of the node for which to fetch the record\n   * @param name the keccak-256 hash of the fully-qualified name for which to fetch the record\n   * @param resource the ID of the resource as per https://en.wikipedia.org/wiki/List_of_DNS_record_types\n   * @return the DNS record in wire format if present, otherwise empty\n   */\n  function dnsRecord(bytes32 node, bytes32 name, uint16 resource) external view returns (bytes memory);\n}\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": [],
+			"evmVersion": "paris"
+		}
+	},
+	"output": {
+		"contracts": {
+			"package/contracts/resolvers/profiles/IDNSRecordResolver.sol": {
+				"IDNSRecordResolver": {
+					"abi": [
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "bytes32",
+									"name": "node",
+									"type": "bytes32"
+								},
+								{
+									"indexed": false,
+									"internalType": "bytes",
+									"name": "name",
+									"type": "bytes"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint16",
+									"name": "resource",
+									"type": "uint16"
+								},
+								{
+									"indexed": false,
+									"internalType": "bytes",
+									"name": "record",
+									"type": "bytes"
+								}
+							],
+							"name": "DNSRecordChanged",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "bytes32",
+									"name": "node",
+									"type": "bytes32"
+								},
+								{
+									"indexed": false,
+									"internalType": "bytes",
+									"name": "name",
+									"type": "bytes"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint16",
+									"name": "resource",
+									"type": "uint16"
+								}
+							],
+							"name": "DNSRecordDeleted",
+							"type": "event"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bytes32",
+									"name": "node",
+									"type": "bytes32"
+								},
+								{
+									"internalType": "bytes32",
+									"name": "name",
+									"type": "bytes32"
+								},
+								{
+									"internalType": "uint16",
+									"name": "resource",
+									"type": "uint16"
+								}
+							],
+							"name": "dnsRecord",
+							"outputs": [
+								{
+									"internalType": "bytes",
+									"name": "",
+									"type": "bytes"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {
+							"dnsRecord(bytes32,bytes32,uint16)": {
+								"params": {
+									"name": "the keccak-256 hash of the fully-qualified name for which to fetch the record",
+									"node": "the namehash of the node for which to fetch the record",
+									"resource": "the ID of the resource as per https://en.wikipedia.org/wiki/List_of_DNS_record_types"
+								},
+								"returns": {
+									"_0": "the DNS record in wire format if present, otherwise empty"
+								}
+							}
+						},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"dnsRecord(bytes32,bytes32,uint16)": "a8fa5682"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.27+commit.40a35a09\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"node\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"name\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"resource\",\"type\":\"uint16\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"record\",\"type\":\"bytes\"}],\"name\":\"DNSRecordChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"node\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"name\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"resource\",\"type\":\"uint16\"}],\"name\":\"DNSRecordDeleted\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"node\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"name\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"resource\",\"type\":\"uint16\"}],\"name\":\"dnsRecord\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"dnsRecord(bytes32,bytes32,uint16)\":{\"params\":{\"name\":\"the keccak-256 hash of the fully-qualified name for which to fetch the record\",\"node\":\"the namehash of the node for which to fetch the record\",\"resource\":\"the ID of the resource as per https://en.wikipedia.org/wiki/List_of_DNS_record_types\"},\"returns\":{\"_0\":\"the DNS record in wire format if present, otherwise empty\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"dnsRecord(bytes32,bytes32,uint16)\":{\"notice\":\"Obtain a DNS record.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"package/contracts/resolvers/profiles/IDNSRecordResolver.sol\":\"IDNSRecordResolver\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"package/contracts/resolvers/profiles/IDNSRecordResolver.sol\":{\"keccak256\":\"0xf01e1226dc438f32be21a5feb2528942dffecd96ab0c4eb1a582c476050d4f4d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4c70ec59ae9d902f117cf1a35dc51dbfcf46a80ca20a0165b1389bb9e70bdf2f\",\"dweb:/ipfs/QmZF5WW7THenMr9CMJHuFoB7gxb7r8BpnibmdBcPT2ZEhR\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {
+							"dnsRecord(bytes32,bytes32,uint16)": {
+								"notice": "Obtain a DNS record."
+							}
+						},
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"package/contracts/resolvers/profiles/IDNSRecordResolver.sol": {
+				"ast": {
+					"absolutePath": "package/contracts/resolvers/profiles/IDNSRecordResolver.sol",
+					"exportedSymbols": {
+						"IDNSRecordResolver": [
+							32
+						]
+					},
+					"id": 33,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								">=",
+								"0.8",
+								".4"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "32:24:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "IDNSRecordResolver",
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"fullyImplemented": false,
+							"id": 32,
+							"linearizedBaseContracts": [
+								32
+							],
+							"name": "IDNSRecordResolver",
+							"nameLocation": "68:18:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"anonymous": false,
+									"eventSelector": "52a608b3303a48862d07a73d82fa221318c0027fbbcfb1b2329bface3f19ff2b",
+									"id": 11,
+									"name": "DNSRecordChanged",
+									"nameLocation": "186:16:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 10,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 3,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "node",
+												"nameLocation": "219:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 11,
+												"src": "203:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												},
+												"typeName": {
+													"id": 2,
+													"name": "bytes32",
+													"nodeType": "ElementaryTypeName",
+													"src": "203:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes32",
+														"typeString": "bytes32"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 5,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "name",
+												"nameLocation": "231:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 11,
+												"src": "225:10:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 4,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "225:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 7,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "resource",
+												"nameLocation": "244:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 11,
+												"src": "237:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint16",
+													"typeString": "uint16"
+												},
+												"typeName": {
+													"id": 6,
+													"name": "uint16",
+													"nodeType": "ElementaryTypeName",
+													"src": "237:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint16",
+														"typeString": "uint16"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 9,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "record",
+												"nameLocation": "260:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 11,
+												"src": "254:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 8,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "254:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "202:65:0"
+									},
+									"src": "180:88:0"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "03528ed0c2a3ebc993b12ce3c16bb382f9c7d88ef7d8a1bf290eaf35955a1207",
+									"id": 19,
+									"name": "DNSRecordDeleted",
+									"nameLocation": "366:16:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 18,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 13,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "node",
+												"nameLocation": "399:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 19,
+												"src": "383:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												},
+												"typeName": {
+													"id": 12,
+													"name": "bytes32",
+													"nodeType": "ElementaryTypeName",
+													"src": "383:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes32",
+														"typeString": "bytes32"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 15,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "name",
+												"nameLocation": "411:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 19,
+												"src": "405:10:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 14,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "405:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 17,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "resource",
+												"nameLocation": "424:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 19,
+												"src": "417:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint16",
+													"typeString": "uint16"
+												},
+												"typeName": {
+													"id": 16,
+													"name": "uint16",
+													"nodeType": "ElementaryTypeName",
+													"src": "417:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint16",
+														"typeString": "uint16"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "382:51:0"
+									},
+									"src": "360:74:0"
+								},
+								{
+									"documentation": {
+										"id": 20,
+										"nodeType": "StructuredDocumentation",
+										"src": "438:379:0",
+										"text": " Obtain a DNS record.\n @param node the namehash of the node for which to fetch the record\n @param name the keccak-256 hash of the fully-qualified name for which to fetch the record\n @param resource the ID of the resource as per https://en.wikipedia.org/wiki/List_of_DNS_record_types\n @return the DNS record in wire format if present, otherwise empty"
+									},
+									"functionSelector": "a8fa5682",
+									"id": 31,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "dnsRecord",
+									"nameLocation": "829:9:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 27,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 22,
+												"mutability": "mutable",
+												"name": "node",
+												"nameLocation": "847:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 31,
+												"src": "839:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												},
+												"typeName": {
+													"id": 21,
+													"name": "bytes32",
+													"nodeType": "ElementaryTypeName",
+													"src": "839:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes32",
+														"typeString": "bytes32"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 24,
+												"mutability": "mutable",
+												"name": "name",
+												"nameLocation": "861:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 31,
+												"src": "853:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												},
+												"typeName": {
+													"id": 23,
+													"name": "bytes32",
+													"nodeType": "ElementaryTypeName",
+													"src": "853:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes32",
+														"typeString": "bytes32"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 26,
+												"mutability": "mutable",
+												"name": "resource",
+												"nameLocation": "874:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 31,
+												"src": "867:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint16",
+													"typeString": "uint16"
+												},
+												"typeName": {
+													"id": 25,
+													"name": "uint16",
+													"nodeType": "ElementaryTypeName",
+													"src": "867:6:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint16",
+														"typeString": "uint16"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "838:45:0"
+									},
+									"returnParameters": {
+										"id": 30,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 29,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 31,
+												"src": "907:12:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 28,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "907:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "906:14:0"
+									},
+									"scope": 32,
+									"src": "820:101:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 33,
+							"src": "58:865:0",
+							"usedErrors": [],
+							"usedEvents": [
+								11,
+								19
+							]
+						}
+					],
+					"src": "32:892:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}

@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.20+commit.a1b79de6"
+		"version": "0.8.27+commit.40a35a09"
 	},
 	"language": "Solidity",
 	"output": {
@@ -108,10 +108,11 @@
 			]
 		},
 		"package/contracts/test/TestRRUtils.sol": {
-			"keccak256": "0x60d8d7ecb3b701f24eb9e5e06a4f49fcb194e39f7566cddb4f23ad37e8332184",
+			"keccak256": "0xb80f620e1b8f03cd0fff707a02f685fe46c4d8b0c258196aec8d3e2a556ed2cb",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://20fb79689a4b96ec4f97a7cfc874af7228364e08cd08fd2f9799927620002fc6",
-				"dweb:/ipfs/QmPYPoPZHHtbH2FvY3ZVRe4w34v78mrgr23SmcJQRBb15i"
+				"bzz-raw://ba2e3794789beff9a369307b054c80f473470a9043a4fea55b845f1ba261b066",
+				"dweb:/ipfs/QmdyUjxeJ9AjYDe6wxjuaTPcSRCvvqH7BP1e4rtcq6WPFZ"
 			]
 		},
 		"package/contracts/utils/BytesUtils.sol": {

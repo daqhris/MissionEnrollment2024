@@ -30,39 +30,50 @@ const EventAttendanceProof: React.FC<EventAttendanceProofProps> = ({ onVerified,
     setError(null);
 
     try {
+      console.log("Fetching POAPs for address:", userAddress);
       const response = await axios.get(`/api/fetchPoaps?address=${userAddress}`);
+      console.log("API response:", response.data);
       const fetchedPoaps = response.data.poaps;
+      console.log("Fetched POAPs:", fetchedPoaps);
       setPoaps(fetchedPoaps);
       if (fetchedPoaps.length > 0) {
+        console.log("Searching for ETHGlobal Brussels 2024 POAP");
         const ethGlobalBrusselsPOAP = fetchedPoaps.find(
           (poap: Poap) => poap.event.name.toLowerCase() === "ethglobal brussels 2024",
         );
+        console.log("ETHGlobal Brussels 2024 POAP found:", ethGlobalBrusselsPOAP);
         if (ethGlobalBrusselsPOAP) {
           onVerified();
           toast.success("ETHGlobal Brussels 2024 POAP verified successfully!");
         } else {
+          console.log("ETHGlobal Brussels 2024 POAP not found");
           toast.warning(
             "You have POAPs, but none from ETHGlobal Brussels 2024. Please make sure you've claimed the correct POAP.",
           );
         }
       } else {
+        console.log("No POAPs found for the address");
         toast.info(
           "No POAPs found for this address. Make sure you've claimed your ETHGlobal Brussels 2024 POAP and try again.",
         );
       }
     } catch (err) {
+      console.error("Error fetching POAPs:", err);
       if (axios.isAxiosError(err)) {
         if (err.response) {
+          console.error("API error response:", err.response.data);
           toast.error(`Failed to fetch POAPs: ${err.response.data.error || "Unknown error"}. Please try again later.`);
         } else if (err.request) {
+          console.error("Network error:", err.request);
           toast.error("Network error. Please check your internet connection and try again.");
         } else {
+          console.error("Unexpected error:", err.message);
           toast.error("An unexpected error occurred. Please try again later or contact support if the issue persists.");
         }
       } else {
+        console.error("Non-Axios error:", err);
         toast.error("Failed to fetch POAPs. Please try again later or contact support if the issue persists.");
       }
-      console.error("Error fetching POAPs:", err);
     } finally {
       setLoading(false);
     }

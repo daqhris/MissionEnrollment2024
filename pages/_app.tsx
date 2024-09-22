@@ -7,7 +7,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http } from "viem";
 import { WagmiConfig, createConfig } from "wagmi";
-import { mainnet, sepolia } from "wagmi/chains";
+import { baseSepolia, optimismSepolia } from "wagmi/chains";
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
 
@@ -16,10 +16,10 @@ if (!projectId) {
 }
 
 const wagmiConfig = createConfig({
-  chains: [mainnet, sepolia],
+  chains: [baseSepolia, optimismSepolia],
   transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
+    [baseSepolia.id]: http(),
+    [optimismSepolia.id]: http(),
   },
   connectors: getDefaultWallets({
     projectId,

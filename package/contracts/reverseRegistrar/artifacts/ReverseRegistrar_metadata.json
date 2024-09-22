@@ -1,0 +1,496 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "contract ENS",
+						"name": "ensAddr",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "controller",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "enabled",
+						"type": "bool"
+					}
+				],
+				"name": "ControllerChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "contract NameResolver",
+						"name": "resolver",
+						"type": "address"
+					}
+				],
+				"name": "DefaultResolverChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "node",
+						"type": "bytes32"
+					}
+				],
+				"name": "ReverseClaimed",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "claim",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "resolver",
+						"type": "address"
+					}
+				],
+				"name": "claimForAddr",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "resolver",
+						"type": "address"
+					}
+				],
+				"name": "claimWithResolver",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "controllers",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "defaultResolver",
+				"outputs": [
+					{
+						"internalType": "contract NameResolver",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "ens",
+				"outputs": [
+					{
+						"internalType": "contract ENS",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					}
+				],
+				"name": "node",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "controller",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "enabled",
+						"type": "bool"
+					}
+				],
+				"name": "setController",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "resolver",
+						"type": "address"
+					}
+				],
+				"name": "setDefaultResolver",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					}
+				],
+				"name": "setName",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "resolver",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					}
+				],
+				"name": "setNameForAddr",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"claim(address)": {
+					"details": "Transfers ownership of the reverse ENS record associated with the      calling account.",
+					"params": {
+						"owner": "The address to set as the owner of the reverse record in ENS."
+					},
+					"returns": {
+						"_0": "The ENS node hash of the reverse record."
+					}
+				},
+				"claimForAddr(address,address,address)": {
+					"details": "Transfers ownership of the reverse ENS record associated with the      calling account.",
+					"params": {
+						"addr": "The reverse record to set",
+						"owner": "The address to set as the owner of the reverse record in ENS.",
+						"resolver": "The resolver of the reverse node"
+					},
+					"returns": {
+						"_0": "The ENS node hash of the reverse record."
+					}
+				},
+				"claimWithResolver(address,address)": {
+					"details": "Transfers ownership of the reverse ENS record associated with the      calling account.",
+					"params": {
+						"owner": "The address to set as the owner of the reverse record in ENS.",
+						"resolver": "The address of the resolver to set; 0 to leave unchanged."
+					},
+					"returns": {
+						"_0": "The ENS node hash of the reverse record."
+					}
+				},
+				"constructor": {
+					"details": "Constructor",
+					"params": {
+						"ensAddr": "The address of the ENS registry."
+					}
+				},
+				"node(address)": {
+					"details": "Returns the node hash for a given account's reverse records.",
+					"params": {
+						"addr": "The address to hash"
+					},
+					"returns": {
+						"_0": "The ENS node hash."
+					}
+				},
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				},
+				"setName(string)": {
+					"details": "Sets the `name()` record for the reverse ENS record associated with the calling account. First updates the resolver to the default reverse resolver if necessary.",
+					"params": {
+						"name": "The name to set for this address."
+					},
+					"returns": {
+						"_0": "The ENS node hash of the reverse record."
+					}
+				},
+				"setNameForAddr(address,address,address,string)": {
+					"details": "Sets the `name()` record for the reverse ENS record associated with the account provided. Updates the resolver to a designated resolver Only callable by controllers and authorised users",
+					"params": {
+						"addr": "The reverse record to set",
+						"name": "The name to set for this address.",
+						"owner": "The owner of the reverse node",
+						"resolver": "The resolver of the reverse node"
+					},
+					"returns": {
+						"_0": "The ENS node hash of the reverse record."
+					}
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/reverseRegistrar/ReverseRegistrar.sol": "ReverseRegistrar"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/access/Ownable.sol": {
+			"keccak256": "0x1cae4f85f114ff17b90414f5da67365b1d00337abb5bce9bf944eb78a2c0673c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d5ff16b336ce8f906478d5f2eecc6435e00833bdc0b92f6b209cf9e92cb5b2b7",
+				"dweb:/ipfs/QmRD1rAZEqQ73C33cdA3QoUyBDMEWnNKNMc6PNkAZWHeQQ"
+			]
+		},
+		"@openzeppelin/contracts/utils/Context.sol": {
+			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fc2bfdea0d2562c76fb3c4cf70a86c6ba25c5a30e8f8515c95aafdf8383f8395",
+				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
+			]
+		},
+		"package/contracts/registry/ENS.sol": {
+			"keccak256": "0xcc1d60392693813028a258e400d16dd9632261c8e26ca33061c9d8286edcfc43",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0bfe5a249c38c9e3605f31a2772029ea2796c1fba7d43974f14ec31a453535e4",
+				"dweb:/ipfs/Qmbi8ZdzVkmewoGtgtVD4T56vLceLEG265Vt3Zqcpy5Fwx"
+			]
+		},
+		"package/contracts/reverseRegistrar/IReverseRegistrar.sol": {
+			"keccak256": "0x492417694417c86e92a32ece7c08a56020cf9047525a22b0379fd51540070c53",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6079ddb86269d68be0d956ba0397e40162924f991a97342b6679128ab8fe6f37",
+				"dweb:/ipfs/QmcekuMXqTzBcbe4XmioAs8DqDXGXHs3UeJW7MAJuNyq2c"
+			]
+		},
+		"package/contracts/reverseRegistrar/ReverseRegistrar.sol": {
+			"keccak256": "0x556fe86a36d9510fe53a46bbb84a4db01690cd10272c2829d7fad732133aa282",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4164f6cbf5a0a1645109ca3ed71fb7fc0d86a4d7621ab87bd64d5eb4c742b002",
+				"dweb:/ipfs/QmS4PsVYCqE7cTDdSQLyokR6rWekXWeGQ7xQw3L9aEnBHw"
+			]
+		},
+		"package/contracts/root/Controllable.sol": {
+			"keccak256": "0x8d264e1f321c9c7566ddaf2f7aa09ea705f12776130ba1ea09804cbc52c6ee6a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2f00adb8e9e25d502965ee4ea98271a1a1bcd03df2e426c7e3a73a0b41b15937",
+				"dweb:/ipfs/QmZ4uFKpjdKMfhiT6Dh731LEqP7ygTCEr1yvTQjJJuALTj"
+			]
+		}
+	},
+	"version": 1
+}

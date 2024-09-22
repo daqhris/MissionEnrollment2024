@@ -1,0 +1,70 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "name",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "resolve",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/resolvers/profiles/IExtendedResolver.sol": "IExtendedResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/resolvers/profiles/IExtendedResolver.sol": {
+			"keccak256": "0x603c4bd5b9219a7d6a6248e7687a848966bf27c3dc10ca2315f168d8e069d804",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1ff87e44b0383833cc11a8ef197c11c3cc0d8ebe10cb42178dc420b50520e63a",
+				"dweb:/ipfs/QmfFwNHy1wCT73vG8YDuSrkor1LFH8rD6EvQW5oSB4WZfz"
+			]
+		}
+	},
+	"version": 1
+}

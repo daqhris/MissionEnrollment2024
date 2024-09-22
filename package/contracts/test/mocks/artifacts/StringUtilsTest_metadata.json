@@ -1,0 +1,73 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "testStr",
+						"type": "string"
+					}
+				],
+				"name": "testEscape",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/test/mocks/StringUtilsTest.sol": "StringUtilsTest"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/test/mocks/StringUtilsTest.sol": {
+			"keccak256": "0x6aec438d0e6f8f78b90cda033d26a393ec864cda5b4d602725541d66c7722f84",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9f7ced3b85c6bfdc809690988209a85b19da855baafb0253ef146674b3ff8f7f",
+				"dweb:/ipfs/QmQwqa7gKffq8MUqkGQzDC2bQ8x63EK9jRtWL1cKYMSXb2"
+			]
+		},
+		"package/contracts/utils/StringUtils.sol": {
+			"keccak256": "0xb7db8deb73a77d9b8f1bc9079c99129e79ea366492c1859feadae46616f5734a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a0cdbff2f03c07e2ef2a5919d2379cf2dfb50eeb3d2c2159b634991bf900a4d0",
+				"dweb:/ipfs/QmZ6c2HE1fPWoRSBWBvMCu78bqRgmMkoVKCYupufkTuAUA"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,0 +1,65 @@
+{
+	"compiler": {
+		"version": "0.8.27+commit.40a35a09"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "addr",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"package/contracts/test/mocks/LegacyResolver.sol": "LegacyResolver"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"package/contracts/test/mocks/LegacyResolver.sol": {
+			"keccak256": "0x29b29c8222c00270087863008bdcfa407be828b2bed7b7a3453794507f64baa2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://005aadf307a2cc1d2ed464e8c0bff54890b479a6ce73723f635432eb80bebc7d",
+				"dweb:/ipfs/QmZJHtFMY3wEpbCDGt7bvBaxWxi8XGHRDHGqU5wae572ez"
+			]
+		}
+	},
+	"version": 1
+}
