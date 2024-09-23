@@ -279,13 +279,6 @@ const fetchPOAPs = useCallback(
           Please enter an Ethereum address or connect your wallet to verify attendance.
         </p>
       )}
-        <p className="text-blue-700 mb-6 text-center">Verifying attendance for {manualAddress || userAddress}...</p>
-      )}
-      {!isVerifying && !manualAddress && !userAddress && (
-        <p className="text-yellow-600 mb-6 text-center">
-          Please connect your wallet or enter an Ethereum address or ENS name to verify
-        </p>
-      )}
       {localPoaps && localPoaps.length > 0 && (
         <div className="mt-6 bg-green-100 p-6 rounded-lg">
           <h3 className="text-xl font-semibold text-green-900 mb-4">ETHGlobal Brussels 2024 POAPs Found</h3>
