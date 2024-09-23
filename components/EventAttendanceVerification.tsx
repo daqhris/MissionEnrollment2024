@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Image from "next/image";
 import eventIdsData from "../event_ids.json";
 import { useEnsAddress } from "wagmi";
@@ -254,13 +254,6 @@ const fetchPOAPs = useCallback(
       <button
         onClick={handleVerifyAttendance}
         disabled={isVerifying || (!manualAddress && !userAddress)}
-        className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-      >
-        {isVerifying ? "Verifying..." : "Verify Attendance"}
-      </button>
-      {proofResult && (
-        <p className="mt-4 text-center text-gray-700">{proofResult}</p>
-      )}
         className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 mb-6 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
         title="Click to verify your attendance using POAPs"
       >
