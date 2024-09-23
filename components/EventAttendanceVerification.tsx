@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Image from "next/image";
 import eventIdsData from "../event_ids.json";
 import { useEnsAddress } from "wagmi";
@@ -199,7 +199,7 @@ const fetchPOAPs = useCallback(
   [onVerified, setPoaps, ETH_GLOBAL_BRUSSELS_2024_EVENT_ID],
 );
 
-  useEffect((): void => {
+  const handleVerifyAttendance = (): void => {
     const validAddress = manualAddress || userAddress;
     const isEthereumAddress = isValidEthereumAddress(validAddress);
     const isENS = validAddress?.endsWith(".eth");
@@ -216,8 +216,10 @@ const fetchPOAPs = useCallback(
       }
     } else if (validAddress) {
       setProofResult("Please enter a valid Ethereum address or ENS name");
+    } else {
+      setProofResult("Please enter an Ethereum address or ENS name");
     }
-  }, [userAddress, manualAddress, fetchPOAPs, resolvedAddress, isResolvingENS, ensResolutionError]);
+  };
 
   const isValidEthereumAddress = (address: string): boolean =>
     /^0x[a-fA-F0-9]{40}$/.test(address) || /^[a-zA-Z0-9-]+\.eth$/.test(address);
@@ -250,45 +252,24 @@ const fetchPOAPs = useCallback(
         )}
       </div>
       <button
-        onClick={(): void => {
-          const addressToUse = manualAddress || userAddress;
-          if (addressToUse && isValidEthereumAddress(addressToUse)) {
-            fetchPOAPs(addressToUse);
-          } else {
-            setProofResult("Please enter a valid Ethereum address or ENS name, or connect your wallet");
-          }
-        }}
+        onClick={handleVerifyAttendance}
         disabled={isVerifying || (!manualAddress && !userAddress)}
         className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 mb-6 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
         title="Click to verify your attendance using POAPs"
       >
-        {isVerifying ? (
-          <span className="flex items-center justify-center">
-            <svg
-              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              />
-            </svg>
-            Verifying...
-          </span>
-        ) : (
-          "Verify Attendance"
-        )}
+        {isVerifying ? "Verifying..." : "Verify Attendance"}
       </button>
+      {proofResult && (
+        <p className="mt-4 text-center text-gray-700">{proofResult}</p>
+      )}
       {isVerifying && (
-        <p className="text-blue-700 mb-6 text-center">Verifying attendance for {manualAddress || userAddress}...</p>
+        <p className="text-blue-700 mb-6 text-center">
+          Verifying attendance for {manualAddress || userAddress}...
+        </p>
       )}
       {!isVerifying && !manualAddress && !userAddress && (
-        <p className="text-yellow-600 mb-6 text-center">
-          Please connect your wallet or enter an Ethereum address or ENS name to verify
+        <p className="text-red-600 mb-6 text-center">
+          Please enter an Ethereum address or connect your wallet to verify attendance.
         </p>
       )}
       {localPoaps && localPoaps.length > 0 && (
