@@ -3,7 +3,6 @@ import IdentityVerification from "./IdentityVerification";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor, act } from "@testing-library/react";
 import { useEnsAddress, useEnsName } from "wagmi";
-import { fetchPoaps } from "../utils/fetchPoapsUtil";
 import { isAddress, getAddress } from "viem";
 
 // Mock viem functions
