@@ -15,16 +15,22 @@ describe("POAP Verification", () => {
   // Removed unused verifyPOAPOwnership test suite
 
   describe("verifyETHGlobalBrusselsPOAPOwnership", () => {
-    it("should return true if user owns any ETHGlobal Brussels 2024 POAP", async () => {
+    it("should return { owned: true, imageUrl: string } if user owns any ETHGlobal Brussels 2024 POAP", async () => {
       axios.get.mockResolvedValueOnce({ data: [] }).mockResolvedValueOnce({ data: [{ some: "data" }] });
       const result = await verifyETHGlobalBrusselsPOAPOwnership(mockAddress);
-      expect(result).toBe(true);
+      expect(result).toEqual({
+        owned: true,
+        imageUrl: expect.stringContaining("https://assets.poap.xyz/")
+      });
     });
 
-    it("should return false if user does not own any ETHGlobal Brussels 2024 POAP", async () => {
+    it("should return { owned: false, imageUrl: null } if user does not own any ETHGlobal Brussels 2024 POAP", async () => {
       axios.get.mockResolvedValue({ data: [] });
       const result = await verifyETHGlobalBrusselsPOAPOwnership(mockAddress);
-      expect(result).toBe(false);
+      expect(result).toEqual({
+        owned: false,
+        imageUrl: null
+      });
     });
   });
 });
