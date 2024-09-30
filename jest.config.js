@@ -35,7 +35,7 @@ module.exports = {
   preset: "ts-jest",
   transformIgnorePatterns: ["/node_modules/(?!(wagmi|@wagmi|@tanstack|viem|@viem))"],
   extensionsToTreatAsEsm: [".ts", ".tsx"],
-  setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect", "<rootDir>/jest.setup.js"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   moduleFileExtensions: ["js", "jsx", "ts", "tsx", "json", "node"],
   collectCoverage: true,
   coverageDirectory: "coverage",

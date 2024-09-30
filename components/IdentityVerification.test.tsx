@@ -44,26 +44,28 @@ describe("IdentityVerification", () => {
     }));
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  afterEach(async () => {
+    await jest.clearAllMocks();
   });
 
   // Add a new beforeAll to ensure proper test execution context
-  beforeAll(() => {
-    jest.useFakeTimers();
+  beforeAll(async () => {
+    await jest.useFakeTimers();
   });
 
-  afterAll(() => {
-    jest.useRealTimers();
+  afterAll(async () => {
+    await jest.useRealTimers();
   });
 
-  it("renders input field and verify button", () => {
-    render(<IdentityVerification onVerified={mockOnVerified} />);
+  it("renders input field and verify button", async () => {
+    await act(async () => {
+      render(<IdentityVerification onVerified={mockOnVerified} />);
+    });
 
-    const inputField = screen.getByPlaceholderText("0x...");
+    const inputField = await screen.findByPlaceholderText("0x...");
     expect(inputField).toBeInTheDocument();
 
-    const verifyButton = screen.getByRole("button", { name: /verify/i });
+    const verifyButton = await screen.findByRole("button", { name: /verify/i });
     expect(verifyButton).toBeInTheDocument();
   });
 
