@@ -7,7 +7,7 @@ import { isAddress, getAddress } from "viem";
 
 // Mock viem functions
 jest.mock("viem", () => ({
-  isAddress: jest.fn().mockImplementation((address: string) => /^0x[a-fA-F0-9]{40}$/.test(address)),
+  isAddress: jest.fn().mockImplementation((address: string) => /^0x[a-fA-F0-9]{40}$/i.test(address)),
   getAddress: jest.fn((address: string) => address.toLowerCase()),
 }));
 
@@ -207,7 +207,7 @@ describe("IdentityVerification", () => {
     const validAddress = "0xb5ee030c71e76C3E03B2A8d425dBb9B395037C82";
     (useEnsName as jest.Mock).mockReturnValue({ data: null, isLoading: false, error: null });
     (useEnsAddress as jest.Mock).mockReturnValue({ data: null, isLoading: false, error: null });
-    jest.mocked(isAddress).mockImplementation((address: string) => address === validAddress);
+    jest.mocked(isAddress).mockImplementation((address: string) => /^0x[a-fA-F0-9]{40}$/i.test(address));
 
     render(<IdentityVerification onVerified={mockOnVerified} />);
 

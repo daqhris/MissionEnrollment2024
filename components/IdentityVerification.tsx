@@ -41,7 +41,7 @@ const IdentityVerification: React.FC<IdentityVerificationProps> = ({ onVerified 
         throw new Error("Invalid address after verification");
       }
 
-      onVerified(verifiedAddress);
+      onVerified(verifiedAddress.toLowerCase());
     } catch (err: unknown) {
       console.error("Verification error:", err);
       setError(err instanceof Error ? err.message : "Verification failed");

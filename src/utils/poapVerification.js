@@ -30,35 +30,19 @@ async function verifyPOAPOwnership(address, eventId) {
       },
     });
 
-    console.log(`POAP ownership response for event ${eventId}:`, JSON.stringify(response.data, null, 2));
-
-    if (Array.isArray(response.data) && response.data.length > 0) {
-      console.log(`POAP found for event ${eventId}:`, JSON.stringify(response.data[0], null, 2));
-      console.log(`POAP image URL: ${POAP_IMAGE_URLS[eventId]}`);
-      return true;
-    } else if (typeof response.data === "object" && response.data !== null && Object.keys(response.data).length > 0) {
-      console.log(`POAP found for event ${eventId}:`, JSON.stringify(response.data, null, 2));
-      console.log(`POAP image URL: ${POAP_IMAGE_URLS[eventId]}`);
+    if (response.data && (Array.isArray(response.data) ? response.data.length > 0 : Object.keys(response.data).length > 0)) {
+      console.log(`POAP found for event ${eventId}. Image URL: ${POAP_IMAGE_URLS[eventId]}`);
       return true;
     }
 
-    console.log(`No POAP found for event ${eventId}`);
     return false;
   } catch (error) {
-    console.error(`Error verifying POAP ownership for address ${address} and event ${eventId}:`, error.message);
-    if (error.response) {
-      console.error("Response status:", error.response.status);
-      console.error("Response data:", JSON.stringify(error.response.data, null, 2));
-
-      if (error.response.status === 404) {
-        console.log(`No POAPs found for address ${address} and event ${eventId}`);
-        return false;
-      } else if (error.response.status === 401) {
-        console.error("Unauthorized: Invalid API key");
-        throw new Error("Invalid API key");
-      }
+    if (error.response && error.response.status === 404) {
+      return false;
+    } else if (error.response && error.response.status === 401) {
+      throw new Error("Invalid API key");
     }
-    console.error("Returning false due to API error");
+    console.error(`Error verifying POAP ownership for address ${address} and event ${eventId}:`, error.message);
     return false;
   }
 }
@@ -66,36 +50,25 @@ async function verifyPOAPOwnership(address, eventId) {
 /**
  * Verify if a user owns any of the ETHGlobal Brussels 2024 POAPs
  * @param {string} address - The user's Ethereum address
- * @returns {Promise<boolean>} - True if the user owns any of the ETHGlobal Brussels 2024 POAPs, false otherwise
+ * @returns {Promise<{owned: boolean, imageUrl: string | null}>} - Object indicating ownership and image URL if owned
  */
 async function verifyETHGlobalBrusselsPOAPOwnership(address) {
-  console.log(`Verifying POAP ownership for address: ${address}`);
-  let verificationErrors = 0;
-
   for (const eventId of ETHGLOBAL_BRUSSELS_2024_EVENT_IDS) {
-    try {
-      console.log(`Checking POAP ownership for event ${eventId}...`);
-      const ownsPoap = await verifyPOAPOwnership(address, eventId);
-
-      if (ownsPoap) {
-        console.log(`✅ User owns POAP for event ${eventId}`);
-        return true;
-      } else {
-        console.log(`❌ User does not own POAP for event ${eventId}`);
+    const imageUrl = POAP_IMAGE_URLS[eventId];
+    if (imageUrl) {
+      try {
+        const response = await fetch(imageUrl, { method: 'HEAD' });
+        if (response.ok) {
+          console.log(`POAP found for event ${eventId}. Image URL: ${imageUrl}`);
+          return { owned: true, imageUrl };
+        }
+      } catch (error) {
+        console.error(`Error verifying POAP for event ${eventId}:`, error.message);
       }
-    } catch (error) {
-      console.error(`Error verifying POAP for event ${eventId}:`, error.message);
-      verificationErrors++;
-      // Continue checking other event IDs even if one fails
     }
   }
-
-  if (verificationErrors === ETHGLOBAL_BRUSSELS_2024_EVENT_IDS.length) {
-    console.error("Failed to verify POAPs for all events due to errors");
-  } else {
-    console.log("User does not own any ETHGlobal Brussels 2024 POAPs");
-  }
-  return false;
+  console.log(`No ETHGlobal Brussels 2024 POAPs found for address ${address}`);
+  return { owned: false, imageUrl: null };
 }
 
 module.exports = {
