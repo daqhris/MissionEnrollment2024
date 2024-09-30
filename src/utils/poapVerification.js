@@ -6,6 +6,16 @@ const POAP_API_BASE_URL = "https://api.poap.tech";
 // ETHGlobal Brussels 2024 POAP event IDs
 const ETHGLOBAL_BRUSSELS_2024_EVENT_IDS = ["176334", "176328", "176329", "176330", "176331", "176332"];
 
+// Mapping of POAP event IDs to their corresponding PNG image URLs
+const POAP_IMAGE_URLS = {
+  "176334": "https://assets.poap.xyz/c5cb8bb2-e0ae-428e-bc77-c55d0dc8b02e.png",
+  "176328": "https://assets.poap.xyz/7d38ca82-4fa6-41f4-b526-cfd1894e168b.png",
+  "176329": "https://assets.poap.xyz/ba72648e-b534-4630-80bf-caf648ee9ba9.png",
+  "176330": "https://assets.poap.xyz/50e25677-94d0-424e-8bda-5b7acc655516.png",
+  "176331": "https://assets.poap.xyz/3c556f78-7722-497b-b9fe-b6c45a7a05e4.png",
+  "176332": "https://assets.poap.xyz/9b7601c6-9667-46b9-b5e2-6494726a7793.png"
+};
+
 /**
  * Verify if a user owns a POAP from a specific event
  * @param {string} address - The user's Ethereum address
@@ -22,13 +32,13 @@ async function verifyPOAPOwnership(address, eventId) {
 
     console.log(`POAP ownership response for event ${eventId}:`, JSON.stringify(response.data, null, 2));
 
-    if (Array.isArray(response.data)) {
-      if (response.data.length > 0) {
-        console.log(`POAP found for event ${eventId}:`, JSON.stringify(response.data[0], null, 2));
-        return true;
-      }
-    } else if (typeof response.data === "object" && response.data !== null) {
+    if (Array.isArray(response.data) && response.data.length > 0) {
+      console.log(`POAP found for event ${eventId}:`, JSON.stringify(response.data[0], null, 2));
+      console.log(`POAP image URL: ${POAP_IMAGE_URLS[eventId]}`);
+      return true;
+    } else if (typeof response.data === "object" && response.data !== null && Object.keys(response.data).length > 0) {
       console.log(`POAP found for event ${eventId}:`, JSON.stringify(response.data, null, 2));
+      console.log(`POAP image URL: ${POAP_IMAGE_URLS[eventId]}`);
       return true;
     }
 
@@ -43,6 +53,9 @@ async function verifyPOAPOwnership(address, eventId) {
       if (error.response.status === 404) {
         console.log(`No POAPs found for address ${address} and event ${eventId}`);
         return false;
+      } else if (error.response.status === 401) {
+        console.error("Unauthorized: Invalid API key");
+        throw new Error("Invalid API key");
       }
     }
     console.error("Returning false due to API error");

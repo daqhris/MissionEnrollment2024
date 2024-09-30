@@ -1,6 +1,6 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
-import { fetchPoaps } from '../utils/fetchPoapsUtil';
+const axios = require('axios');
+const MockAdapter = require('axios-mock-adapter');
+const { fetchPoaps } = require('../utils/fetchPoapsUtil');
 
 jest.mock('next/config', () => () => ({
   publicRuntimeConfig: {
@@ -9,9 +9,9 @@ jest.mock('next/config', () => () => ({
 }));
 
 describe('POAP Data Retrieval', () => {
-  let mock: MockAdapter;
+  let mock: typeof MockAdapter;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // Create a new instance of MockAdapter for each test
     mock = new MockAdapter(axios);
 
@@ -24,7 +24,7 @@ describe('POAP Data Retrieval', () => {
     process.env.NEXT_PUBLIC_POAP_API_KEY = 'dummy_poap_api_key';
 
     // Mock the POAP API endpoint
-    mock.onGet(/https:\/\/api\.poap\.xyz\/actions\/scan\/.*/).reply((config) => {
+    mock.onGet(/https:\/\/api\.poap\.xyz\/actions\/scan\/.*/).reply(async (config: any) => {
       if (config.headers && config.headers['X-API-Key'] === process.env.NEXT_PUBLIC_POAP_API_KEY) {
         return [200, [{ event: { id: '123456', name: 'ETHGlobal Brussels 2024', image_url: 'https://example.com/poap.png', start_date: '2024-03-15' }, token_id: '123456' }]];
       }
@@ -32,9 +32,9 @@ describe('POAP Data Retrieval', () => {
     });
   });
 
-  afterEach(() => {
-    mock.reset();
-    jest.restoreAllMocks();
+  afterEach(async () => {
+    await mock.reset();
+    await jest.restoreAllMocks();
   });
 
   it('should fetch POAPs from POAP API', async () => {
@@ -65,7 +65,7 @@ describe('POAP Data Retrieval', () => {
     process.env.NEXT_PUBLIC_POAP_API_KEY = 'dummy_poap_api_key';
 
     // Mock POAP API response
-    mock.onGet(`https://api.poap.xyz/actions/scan/${userAddress}`).reply((config) => {
+    mock.onGet(`https://api.poap.xyz/actions/scan/${userAddress}`).reply(async (config: any) => {
       console.log('Mock POAP API request received:', {
         url: config.url,
         params: config.params,
@@ -86,7 +86,7 @@ describe('POAP Data Retrieval', () => {
 
     const result = await fetchPoaps(userAddress);
 
-    console.log('Actual API request details:', mock.history.get?.map(req => ({
+    console.log('Actual API request details:', mock.history.get?.map((req: any) => ({
       url: req.url,
       params: req.params,
       headers: req.headers,
