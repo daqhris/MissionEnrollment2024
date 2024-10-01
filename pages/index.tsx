@@ -69,6 +69,8 @@ const Home: FC = (): JSX.Element => {
   };
 
   const renderCurrentStage = (): JSX.Element | null => {
+    // Commented out to isolate the cause of the crash
+    /*
     switch (currentStage) {
       case "identity":
         return (
@@ -118,14 +120,14 @@ const Home: FC = (): JSX.Element => {
       default:
         return null;
     }
+    */
+    return null; // Temporary return to isolate crash
   };
 
   return (
-    <div
-      className={`min-h-screen ${
-        theme === "dark" ? "bg-gray-900 text-white" : "bg-gradient-to-br from-gray-100 to-blue-100 text-gray-900"
-      }`}
-    >
+    <div className={`min-h-screen ${
+      theme === "dark" ? "bg-gray-900 text-white" : "bg-gradient-to-br from-gray-100 to-blue-100 text-gray-900"
+    }`}>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -138,6 +140,8 @@ const Home: FC = (): JSX.Element => {
         pauseOnHover
         theme={theme === "dark" ? "dark" : "light"}
       />
+      {/* Commented out to isolate the cause of the crash */}
+      {/*
       <header className={`${theme === "dark" ? "bg-gray-800" : "bg-white"} shadow-md`}>
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
@@ -274,6 +278,8 @@ const Home: FC = (): JSX.Element => {
           )}
         </div>
       </main>
+      */}
+      <div>Simplified content for debugging</div>
     </div>
   );
 };

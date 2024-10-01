@@ -2,7 +2,8 @@ import React, { useCallback, useState } from "react";
 import Image from "next/image";
 import eventIdsData from "../event_ids.json";
 import { useEnsAddress } from "wagmi";
-import { poapContract, safePoapContractCall, ethers } from "../config";
+import { poapContract, safePoapContractCall } from "../config";
+import { ethers } from "ethers";
 
 const { eventIds } = eventIdsData;
 
